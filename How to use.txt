@@ -1,0 +1,20 @@
+
+==================================
+-Open "SazInjector"
+-Select type of injection (Manual Recommended)
+-Select a process
+-Click on "Add" and select a .dll file
+-Choose if you want to add settings (Close After Injection, Add Delay...)
+-You can clear logs before injecting, you will have less chance to get VAC ban
+-Press Inject
+
+Every injected dlls are stocked in the Windows folder (C:\Windows\yourcheat.dll).
+You can delete them after injecting.
+
+/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\
+/!\/!\ DO NOT INJECT UNTRUSTED DLLS /!\/!\
+/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\
+
+==================================
+
+/!\ DON'T FORGET TO READ THE "READ.txt" FILE /!\
