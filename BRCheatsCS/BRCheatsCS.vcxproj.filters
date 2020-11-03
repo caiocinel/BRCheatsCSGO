@@ -194,7 +194,7 @@
     <ClCompile Include="Lang.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Osiris.cpp">
+    <ClCompile Include="BRCheatsCS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

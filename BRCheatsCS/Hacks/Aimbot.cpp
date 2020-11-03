@@ -47,7 +47,7 @@ static bool hitChance(Entity* localPlayer, Entity* entity, Entity* weaponData, c
     const Angle angles(destination + cmd->viewangles);
 
     int hits = 0;
-    const int hitsNeed = static_cast<int>(static_cast<float>(maxSeed)* (static_cast<float>(hitChance) / 100.f));
+    const int hitsNeed = static_cast<int>(static_cast<float>(maxSeed) * (static_cast<float>(hitChance) / 100.f));
 
     const auto weapSpread = weaponData->getSpread();
     const auto weapInaccuracy = weaponData->getInaccuracy();
@@ -254,7 +254,8 @@ void Aimbot::run(UserCmd* cmd) noexcept
         if (!config->aimbot[weaponIndex].keyMode) {
             if (!GetAsyncKeyState(config->aimbot[weaponIndex].key))
                 return;
-        } else {
+        }
+        else {
             static bool toggle = true;
             if (GetAsyncKeyState(config->aimbot[weaponIndex].key) & 1)
                 toggle = !toggle;
@@ -272,7 +273,7 @@ void Aimbot::run(UserCmd* cmd) noexcept
         Vector bestTarget{ };
         const auto localPlayerEyePosition = localPlayer->getEyePosition();
 
-         
+
         auto aimPunch = activeWeapon->requiresRecoilControl() ? localPlayer->getAimPunch() : Vector{ };
         std::vector<Enemies> enemies;
         if (config->aimbot[weaponIndex].standaloneRCS && !config->aimbot[weaponIndex].silent) {
@@ -280,11 +281,11 @@ void Aimbot::run(UserCmd* cmd) noexcept
             if (localPlayer->getShotsFired() > config->aimbot[weaponIndex].shotsFired) {
                 setRandomSeed(*memory->predictionRandomSeed);
                 Vector currentPunch{ lastAimPunch.x - aimPunch.x, lastAimPunch.y - aimPunch.y, 0 };
-                
-                
-                    currentPunch.x *= config->aimbot[weaponIndex].recoilControlX;
-                    currentPunch.y *= config->aimbot[weaponIndex].recoilControlY;
-                
+
+
+                currentPunch.x *= config->aimbot[weaponIndex].recoilControlX;
+                currentPunch.y *= config->aimbot[weaponIndex].recoilControlY;
+
                 cmd->viewangles += currentPunch;
             }
             interfaces->engine->setViewAngles(cmd->viewangles);
@@ -297,19 +298,19 @@ void Aimbot::run(UserCmd* cmd) noexcept
                 || !entity->isOtherEnemy(localPlayer.get()) && !config->aimbot[weaponIndex].friendlyFire || entity->gunGameImmunity())
                 continue;
 
-              auto origin = entity->getAbsOrigin();
+            auto origin = entity->getAbsOrigin();
             auto localPlayerOrigin = localPlayer->getAbsOrigin();
             auto health = entity->health();
             auto distance = localPlayerOrigin.distance(origin);
             enemies.emplace_back(i, health, distance);
         }
 
-    	  std::sort(enemies.begin(), enemies.end());
+        std::sort(enemies.begin(), enemies.end());
 
-    	Vector bestAngle{ };
+        Vector bestAngle{ };
         auto boneList = config->aimbot[weaponIndex].bone == 1 ? std::initializer_list{ 8, 4, 3, 7, 6, 5 } : std::initializer_list{ 8, 7, 6, 5, 4, 3 };
 
-    	for (const auto& target : enemies)
+        for (const auto& target : enemies)
         {
             const auto entity = interfaces->entityList->getEntity(target.id);
 
@@ -321,18 +322,18 @@ void Aimbot::run(UserCmd* cmd) noexcept
                 auto angle = calculateRelativeAngle(localPlayerEyePosition, bonePosition, cmd->viewangles + aimPunch);
                 auto fov = std::hypotf(angle.x, angle.y);
 
-                   if (config->aimbot[weaponIndex].autoScope && activeWeapon->nextPrimaryAttack() <= memory->globalVars->serverTime() && activeWeapon->isSniperRifle() && !localPlayer->isScoped())
+                if (config->aimbot[weaponIndex].autoScope && activeWeapon->nextPrimaryAttack() <= memory->globalVars->serverTime() && activeWeapon->isSniperRifle() && !localPlayer->isScoped())
                     cmd->buttons |= UserCmd::IN_ATTACK2;
                 if (fov < bestFov) {
                     bestFov = fov;
                     bestTarget = bonePosition;
-                	 bestAngle = angle;
+                    bestAngle = angle;
                 }
                 if (config->aimbot[weaponIndex].bone)
                     break;
             }
 
-    		if (bestTarget.notNull())
+            if (bestTarget.notNull())
             {
                 if (!hitChance(localPlayer.get(), entity, activeWeapon, bestAngle, cmd, config->aimbot[weaponIndex].hitchance))
                 {
@@ -354,9 +355,9 @@ void Aimbot::run(UserCmd* cmd) noexcept
             bool clamped{ false };
 
             if (std::abs(angle.x) > config->misc.maxAngleDelta || std::abs(angle.y) > config->misc.maxAngleDelta) {
-                    angle.x = std::clamp(angle.x, -config->misc.maxAngleDelta, config->misc.maxAngleDelta);
-                    angle.y = std::clamp(angle.y, -config->misc.maxAngleDelta, config->misc.maxAngleDelta);
-                    clamped = true;
+                angle.x = std::clamp(angle.x, -config->misc.maxAngleDelta, config->misc.maxAngleDelta);
+                angle.y = std::clamp(angle.y, -config->misc.maxAngleDelta, config->misc.maxAngleDelta);
+                clamped = true;
             }
 
             angle /= config->aimbot[weaponIndex].smooth;
@@ -364,7 +365,7 @@ void Aimbot::run(UserCmd* cmd) noexcept
             if (!config->aimbot[weaponIndex].silent)
                 interfaces->engine->setViewAngles(cmd->viewangles);
 
-             if (config->aimbot[weaponIndex].autoShot && activeWeapon->nextPrimaryAttack() <= memory->globalVars->serverTime() && !clamped)
+            if (config->aimbot[weaponIndex].autoShot && activeWeapon->nextPrimaryAttack() <= memory->globalVars->serverTime() && !clamped)
                 cmd->buttons |= UserCmd::IN_ATTACK;
 
             if (clamped)

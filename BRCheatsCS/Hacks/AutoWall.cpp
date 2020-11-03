@@ -61,7 +61,7 @@ float GetHitgroupDamageMult(int iHitGroup)noexcept
 bool IsArmored(Entity* enemy, int ArmorValue, int Hitgroup)
 {
 	bool result = false;
- 
+
 	if (ArmorValue > 0)
 	{
 		switch (Hitgroup)
@@ -78,7 +78,7 @@ bool IsArmored(Entity* enemy, int ArmorValue, int Hitgroup)
 			break;
 		}
 	}
- 
+
 	return result;
 }
 
@@ -86,7 +86,7 @@ void ScaleDamage(int hitgroup, Entity* enemy, float weapon_armor_ratio, float& c
 {
 	current_damage *= GetHitgroupDamageMult(hitgroup);
 	int ArmorValue = enemy->armor();
-	
+
 	if (IsArmored(enemy, ArmorValue, hitgroup))
 	{
 		float Damage = current_damage;
@@ -95,7 +95,7 @@ void ScaleDamage(int hitgroup, Entity* enemy, float weapon_armor_ratio, float& c
 
 		if (((Damage - (Damage * ArmorRatio)) * (v47 * ArmorBonusRatio)) > ArmorValue)
 		{
-			NewDamage = Damage - (ArmorValue / ArmorBonusRatio);	
+			NewDamage = Damage - (ArmorValue / ArmorBonusRatio);
 		}
 
 		current_damage = Damage;
@@ -154,20 +154,20 @@ void UTIL_ClipTraceToPlayers(const Vector& vecAbsStart, const Vector& vecAbsEnd,
 
 bool SimulateFireBullet(Entity* local, Entity* weapon, FireBulletData& data, Vector& wallbangVector)noexcept
 {
-	if (!localPlayer  || !local || !weapon)
+	if (!localPlayer || !local || !weapon)
 	{
 		return false;
 	}
-	
+
 	data.penetrate_count = 4; // Max Amount Of Penetration
-	data.trace_length = 0.0f; 
+	data.trace_length = 0.0f;
 	auto wpn_data = weapon->getWeaponData(); // Get Weapon Info
 
 	if (!wpn_data)
 	{
-		return false;	
+		return false;
 	}
-	
+
 	data.current_damage = static_cast<float>(wpn_data->damage);
 	while ((data.penetrate_count > 0) && (data.current_damage >= 1.0f))
 	{
@@ -233,17 +233,17 @@ bool HandleBulletPenetration(WeaponInfo* wpn_data, FireBulletData& data, bool ex
 	int exit_material = exit_surface_data->material;
 	float exit_surf_penetration_mod = exit_surface_data->penetrationmodifier;
 	float final_damage_modifier = 0.16f;
-	float combined_penetration_modifier = ( enter_surface_data->penetrationmodifier + exit_surface_data->penetrationmodifier ) * 0.5f;
+	float combined_penetration_modifier = (enter_surface_data->penetrationmodifier + exit_surface_data->penetrationmodifier) * 0.5f;
 
 	bool a5 = data.enter_trace.contents >> 3 & CONTENTS_SOLID;
 	bool v19 = data.enter_trace.surface.flags >> 7 & SURF_LIGHT;
-	
+
 	if (((data.enter_trace.contents & contents_grate) != 0) || (enter_material == CHAR_TEX_GLASS) || (enter_material == CHAR_TEX_GRATE))
 	{
 		combined_penetration_modifier = 3.0f;
 		final_damage_modifier = 0.05f;
 	}
-	else if( a5 || v19 ) 
+	else if (a5 || v19)
 	{
 		final_damage_modifier = 0.16f;
 		combined_penetration_modifier = 1.0f;
@@ -256,7 +256,7 @@ bool HandleBulletPenetration(WeaponInfo* wpn_data, FireBulletData& data, bool ex
 		{
 			combined_penetration_modifier = 3.0f;
 		}
-		else if (exit_material == CHAR_TEX_PLASTIC) 
+		else if (exit_material == CHAR_TEX_PLASTIC)
 		{
 			combined_penetration_modifier = 2.0f;
 		}
@@ -264,7 +264,7 @@ bool HandleBulletPenetration(WeaponInfo* wpn_data, FireBulletData& data, bool ex
 	float v34 = fmaxf(0.f, 1.0f / combined_penetration_modifier);
 	float v35 = (data.current_damage * final_damage_modifier) + v34 * 3.0f * fmaxf(0.0f, (3.0f / wpn_data->penetration) * 1.25f);
 
-		
+
 	Vector tem{ trace_exit.endpos - data.enter_trace.endpos };
 	float thickness = tem.length();
 	if (extracheck)
@@ -286,9 +286,9 @@ bool HandleBulletPenetration(WeaponInfo* wpn_data, FireBulletData& data, bool ex
 	{
 		wallbangPos.x = trace_exit.endpos.x;
 		wallbangPos.y = trace_exit.endpos.y;
-		wallbangPos.z = trace_exit.endpos.z;	
+		wallbangPos.z = trace_exit.endpos.z;
 	}
-	
+
 	data.src = trace_exit.endpos;
 	data.penetrate_count--;
 
@@ -297,50 +297,50 @@ bool HandleBulletPenetration(WeaponInfo* wpn_data, FireBulletData& data, bool ex
 
 /* bool canScan(Entity* entity, const Vector& destination, WeaponInfo* weaponData, int minDamage, bool allowFriendlyFire, float& damageret) noexcept
 {
-    if (!localPlayer)
-        return false;
+	if (!localPlayer)
+		return false;
 
-    float damage{ static_cast<float>(weaponData->damage) };
+	float damage{ static_cast<float>(weaponData->damage) };
 
-    Vector start{ localPlayer->getEyePosition() };
-    Vector direction{ destination - start };
-    direction /= direction.length();
+	Vector start{ localPlayer->getEyePosition() };
+	Vector direction{ destination - start };
+	direction /= direction.length();
 
-    int hitsLeft = 4;
+	int hitsLeft = 4;
 
-    while (damage >= 1.0f && hitsLeft) {
-        Trace trace;
-        interfaces->engineTrace->traceRay({ start, destination }, 0x4600400B, localPlayer.get(), trace);
+	while (damage >= 1.0f && hitsLeft) {
+		Trace trace;
+		interfaces->engineTrace->traceRay({ start, destination }, 0x4600400B, localPlayer.get(), trace);
 
-        if (!allowFriendlyFire && trace.entity && trace.entity->isPlayer() && !localPlayer->isOtherEnemy(trace.entity))
-            return false;
+		if (!allowFriendlyFire && trace.entity && trace.entity->isPlayer() && !localPlayer->isOtherEnemy(trace.entity))
+			return false;
 
-        if (trace.fraction == 1.0f)
-            break;
+		if (trace.fraction == 1.0f)
+			break;
 
-        if (trace.entity == entity && trace.hitgroup > HitGroup::Generic && trace.hitgroup <= HitGroup::RightLeg) {
-            damage = HitGroup::getDamageMultiplier(trace.hitgroup) * damage * powf(weaponData->rangeModifier, trace.fraction * weaponData->range / 500.0f);
+		if (trace.entity == entity && trace.hitgroup > HitGroup::Generic && trace.hitgroup <= HitGroup::RightLeg) {
+			damage = HitGroup::getDamageMultiplier(trace.hitgroup) * damage * powf(weaponData->rangeModifier, trace.fraction * weaponData->range / 500.0f);
 
-            if (float armorRatio{ weaponData->armorRatio / 2.0f }; HitGroup::isArmored(trace.hitgroup, trace.entity->hasHelmet()))
-                damage -= (trace.entity->armor() < damage * armorRatio / 2.0f ? trace.entity->armor() * 4.0f : damage) * (1.0f - armorRatio);
+			if (float armorRatio{ weaponData->armorRatio / 2.0f }; HitGroup::isArmored(trace.hitgroup, trace.entity->hasHelmet()))
+				damage -= (trace.entity->armor() < damage * armorRatio / 2.0f ? trace.entity->armor() * 4.0f : damage) * (1.0f - armorRatio);
 
-            damageret = damage;
-            return (damage >= minDamage) || (damage >= entity->health());
+			damageret = damage;
+			return (damage >= minDamage) || (damage >= entity->health());
 
 
-        }
-        const auto surfaceData = interfaces->physicsSurfaceProps->getSurfaceData(trace.surface.surfaceProps);
+		}
+		const auto surfaceData = interfaces->physicsSurfaceProps->getSurfaceData(trace.surface.surfaceProps);
 
-        if (surfaceData->penetrationmodifier < 0.1f)
-            break;
+		if (surfaceData->penetrationmodifier < 0.1f)
+			break;
 
-        //damage = HandleBulletPenetration(weaponData, );
+		//damage = HandleBulletPenetration(weaponData, );
 
-        damageret = damage;
+		damageret = damage;
 
-        hitsLeft--;
-    }
-    return false;
+		hitsLeft--;
+	}
+	return false;
 }*/
 
 

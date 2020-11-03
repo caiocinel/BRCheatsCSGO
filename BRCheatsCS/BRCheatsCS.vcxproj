@@ -48,7 +48,7 @@
     <ClCompile Include="nSkinz\item_definitions.cpp" />
     <ClCompile Include="nSkinz\Utilities\Platform.cpp" />
     <ClCompile Include="Lang.cpp" />
-    <ClCompile Include="Osiris.cpp" />
+    <ClCompile Include="BRCheatsCS.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="Hacks\Misc.cpp" />
     <ClCompile Include="Hooks.cpp" />
