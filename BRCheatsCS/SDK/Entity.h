@@ -586,7 +586,7 @@ public:
     NETVAR(clip, "CBaseCombatWeapon", "m_iClip1", int)
     NETVAR(reserveAmmoCount, "CBaseCombatWeapon", "m_iPrimaryReserveAmmoCount", int)
     NETVAR(nextPrimaryAttack, "CBaseCombatWeapon", "m_flNextPrimaryAttack", float)
-	NETVAR(recoilIndex, "CBaseCombatWeapon", "m_flRecoilIndex", float)
+        NETVAR(recoilIndex, "CBaseCombatWeapon", "m_flRecoilIndex", float)
 
     NETVAR(nextAttack, "CBaseCombatCharacter", "m_flNextAttack", float)
 
