@@ -27,6 +27,10 @@ void UpdateLanguage()
 		phrases[XorString("global_bone")] = XorString("Bone");
 		phrases[XorString("global_bonelist")] = XorString("Nearest\0Best damage\0Head\0Neck\0Sternum\0Chest\0Stomach\0Pelvis\0");
 		phrases[XorString("global_all")] = XorString("All");
+		phrases[XorString("global_type")] = XorString("Type");
+		phrases[XorString("global_scale")] = XorString("Scale");
+		phrases[XorString("global_fill")] = XorString("Fill");
+		phrases[XorString("global_time")] = XorString("Time");
 		phrases[XorString("global_hitgroup")] = XorString("Hitgroup");
 		phrases[XorString("global_style")] = XorString("Style");
 		phrases[XorString("global_color")] = XorString("Color");
@@ -37,6 +41,7 @@ void UpdateLanguage()
 		phrases[XorString("window_backtrack")] = XorString("Backtrack | BRCheats");
 		phrases[XorString("window_glow")] = XorString("Glow | BRCheats");
 		phrases[XorString("window_chams")] = XorString("Chams | BRCheats");
+		phrases[XorString("window_esp")] = XorString("ESP BRCheats | Use Game Capture from OBS, this ESP and the Menu will not be visible in your stream");
 		phrases[XorString("aimhacks_friendlyfire")] = XorString("Friendly fire");
 		phrases[XorString("aimhacks_visibleonly")] = XorString("Visible only");
 		phrases[XorString("aimhacks_scopedonly")] = XorString("Scoped Only");
@@ -79,6 +84,25 @@ void UpdateLanguage()
 		phrases[XorString("glow_styles")] = XorString("Default\0Rim3d\0Edge\0Edge Pulse\0");
 		phrases[XorString("glow_category")] = XorString("Allies\0Enemies\0Planting\0Defusing\0Local player\0Weapons\0C4\0Planted C4\0Chickens\0Defuse kits\0Projectiles\0Hostages\0Ragdolls\0");
 		phrases[XorString("chams_category")] = XorString("Allies\0Enemies\0Planting\0Defusing\0Local player\0Weapons\0Hands\0Backtrack\0Sleeves\0Desync\0");
+		phrases[XorString("chams_blinking")] = XorString("Blinking");
+		phrases[XorString("chams_wireframe")] = XorString("Wireframe");
+		phrases[XorString("chams_material")] = XorString("Material");
+		phrases[XorString("chams_cover")] = XorString("Cover");
+		phrases[XorString("chams_ignorez")] = XorString("Ignore-Z");
+		phrases[XorString("esp_font")] = XorString("Font");
+		phrases[XorString("esp_snapline")] = XorString("Snapline");
+		phrases[XorString("esp_box")] = XorString("Box");
+		phrases[XorString("esp_name")] = XorString("Name");
+		phrases[XorString("esp_weapon")] = XorString("Weapon");
+		phrases[XorString("esp_flashduration")] = XorString("Flash Duration");
+		phrases[XorString("esp_skeleton")] = XorString("Skeleton");
+		phrases[XorString("esp_audibleonly")] = XorString("Audible Only");
+		phrases[XorString("esp_spottedonly")] = XorString("Spotted Only");
+		phrases[XorString("esp_headbox")] = XorString("Head Box");
+		phrases[XorString("esp_healthbar")] = XorString("Health Bar");
+		phrases[XorString("esp_ammo")] = XorString("Ammo");
+		phrases[XorString("esp_trails")] = XorString("Trails");
+		phrases[XorString("esp_textculldistance")] = XorString("Text Cull Distance");
 		
 		
 	}

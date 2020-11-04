@@ -135,7 +135,7 @@ void GUI::renderAimbotWindow(bool contentOnly) noexcept
     static int currentCategory{ 0 };
     ImGui::PushItemWidth(110.0f);
     ImGui::PushID(0);
-    ImGui::Combo("", &currentCategory, phrases[XorString("global_weapontype")].c_str());
+    ImGui::Combo("", &currentCategory, XorString("All\0Pistols\0Heavy\0SMG\0Rifles\0"));
     ImGui::PopID();
     ImGui::SameLine();
     static int currentWeapon{ 0 };
@@ -235,7 +235,7 @@ void GUI::renderAimbotWindow(bool contentOnly) noexcept
     ImGui::SameLine();
     ImGui::PushID(2);
     ImGui::PushItemWidth(70.0f);
-    ImGui::Combo("", &config->aimbot[currentWeapon].keyMode, phrases[XorString("global_keymode")].c_str());
+    ImGui::Combo("", &config->aimbot[currentWeapon].keyMode, XorString("Hold\0Toggle\0"));
     ImGui::PopItemWidth();
     ImGui::PopID();
 
@@ -254,7 +254,7 @@ void GUI::renderAimbotWindow(bool contentOnly) noexcept
     config->aimbot[currentWeapon].shotsFired = std::clamp(config->aimbot[currentWeapon].shotsFired, 0, 150);
     ImGui::Checkbox(phrases[XorString("aimhacks_betweenshots")].c_str(), &config->aimbot[currentWeapon].betweenShots);
     ImGui::NextColumn();
-    ImGui::Combo(phrases[XorString("global_bone")].c_str() , & config->aimbot[currentWeapon].bone, phrases[XorString("global_bonelist")].c_str());
+    ImGui::Combo(phrases[XorString("global_bone")].c_str() , & config->aimbot[currentWeapon].bone, XorString("Nearest\0Best damage\0Head\0Neck\0Sternum\0Chest\0Stomach\0Pelvis\0"));
     ImGui::PushItemWidth(200.0f);
     ImGui::SliderFloat(phrases[XorString("aimbot_fov")].c_str(), &config->aimbot[currentWeapon].fov, 0.0f, 255.0f, "%.2f", ImGuiSliderFlags_Logarithmic);
     ImGui::PushItemWidth(240.0f);
@@ -298,7 +298,7 @@ void GUI::renderRagebotWindow(bool contentOnly) noexcept
 	static int currentCategory{ 0 };
 	ImGui::PushItemWidth(110.0f);
 	ImGui::PushID(0);
-	ImGui::Combo("", &currentCategory, phrases[XorString("global_weapontype")].c_str());
+	ImGui::Combo("", &currentCategory, XorString("All\0Pistols\0Heavy\0SMG\0Rifles\0"));
 	ImGui::PopID();
 	ImGui::SameLine();
 	static int currentWeapon{ 0 };
@@ -398,7 +398,7 @@ void GUI::renderRagebotWindow(bool contentOnly) noexcept
     hotkey(config->ragebot[currentWeapon].key);
     ImGui::SameLine();
     ImGui::PushID(99);
-    ImGui::Combo("", &config->ragebot[currentWeapon].keyMode, phrases[XorString("global_keymode")].c_str());
+    ImGui::Combo("", &config->ragebot[currentWeapon].keyMode, XorString("Hold\0Toggle\0"));
     ImGui::PopID();
     ImGui::Separator();
     ImGui::Columns(2, nullptr, false);
@@ -425,11 +425,11 @@ void GUI::renderRagebotWindow(bool contentOnly) noexcept
     if (config->ragebotExtra.doubletap)
     {
         ImGui::SetNextItemWidth(110.0f);
-        ImGui::Combo(phrases[XorString("ragebot_doubletap_speed")].c_str(), &config->ragebotExtra.doubletapSpeed, "Instant\0Fast\0Accurate\0");
+        ImGui::Combo(phrases[XorString("ragebot_doubletap_speed")].c_str(), &config->ragebotExtra.doubletapSpeed, XorString("Instant\0Fast\0Accurate\0"));
         ImGui::SameLine();
         hotkey(config->ragebotExtra.doubleTapKey);
         ImGui::SetNextItemWidth(110.0f);
-        ImGui::Combo(phrases[XorString("ragebot_doubletap_keymode")].c_str(), &config->ragebotExtra.doubleTapKeyMode, phrases[XorString("global_keymode")].c_str());
+        ImGui::Combo(phrases[XorString("ragebot_doubletap_keymode")].c_str(), &config->ragebotExtra.doubleTapKeyMode, XorString("Hold\0Toggle\0"));
     }
     ImGui::Columns(1);
     if (!contentOnly)
@@ -455,7 +455,7 @@ void GUI::renderAntiAimWindow(bool contentOnly) noexcept
     ImGui::SameLine();
     ImGui::PushID(1);
     ImGui::SetNextItemWidth(75.0f);
-    ImGui::Combo("", &config->antiAim.general.yawInverseKeyMode, phrases[XorString("global_keymode")].c_str());
+    ImGui::Combo("", &config->antiAim.general.yawInverseKeyMode, XorString("Hold\0Toggle\0"));
     ImGui::PopID();
     ImGui::Checkbox(phrases[XorString("antiaim_fakewalk")].c_str(), &config->antiAim.general.fakeWalk.enabled);
     if (!config->antiAim.general.fakeWalk.enabled)DisableItems();
@@ -464,7 +464,7 @@ void GUI::renderAntiAimWindow(bool contentOnly) noexcept
     ImGui::PushID(2);
     ImGui::SameLine();
     ImGui::SetNextItemWidth(75.0f);
-    ImGui::Combo("", &config->antiAim.general.fakeWalk.keyMode, phrases[XorString("global_keymode")].c_str());
+    ImGui::Combo("", &config->antiAim.general.fakeWalk.keyMode, XorString("Hold\0Toggle\0"));
     ImGui::PopID();
     ImGui::SameLine();
     ImGui::SetNextItemWidth(140.0f);
@@ -719,7 +719,7 @@ void GUI::renderTriggerbotWindow(bool contentOnly) noexcept
     static int currentCategory{ 0 };
     ImGui::PushItemWidth(110.0f);
     ImGui::PushID(0);
-    ImGui::Combo("", &currentCategory, phrases[XorString("global_weapontype_zeus")].c_str());
+    ImGui::Combo("", &currentCategory, XorString("All\0Pistols\0Heavy\0SMG\0Rifles\0Zeus x27\0"));
     ImGui::PopID();
     ImGui::SameLine();
     static int currentWeapon{ 0 };
@@ -825,7 +825,7 @@ void GUI::renderTriggerbotWindow(bool contentOnly) noexcept
     ImGui::Checkbox(phrases[XorString("aimhacks_killshot")].c_str(), &config->triggerbot[currentWeapon].killshot);
     ImGui::NextColumn();
     ImGui::SetNextItemWidth(85.0f);
-    ImGui::Combo(phrases[XorString("global_hitgroup")].c_str(), &config->triggerbot[currentWeapon].hitgroup, phrases[XorString("triggerbot_hitgroup")].c_str());
+    ImGui::Combo(phrases[XorString("global_hitgroup")].c_str(), &config->triggerbot[currentWeapon].hitgroup, XorString("All\0Head\0Chest\0Stomach\0Left arm\0Right arm\0Left leg\0Right leg\0"));
     ImGui::SetNextItemWidth(85.0f);
     ImGui::InputInt(phrases[XorString("aimhacks_mindamage")].c_str(), &config->triggerbot[currentWeapon].minDamage);
     config->triggerbot[currentWeapon].minDamage = std::clamp(config->triggerbot[currentWeapon].minDamage, 0, 250);
@@ -874,14 +874,14 @@ void GUI::renderGlowWindow(bool contentOnly) noexcept
     static int currentCategory{ 0 };
     ImGui::PushItemWidth(110.0f);
     ImGui::PushID(0);
-    ImGui::Combo("", &currentCategory, phrases[XorString("glow_category")].c_str());
+    ImGui::Combo("", &currentCategory, XorString("Allies\0Enemies\0Planting\0Defusing\0Local player\0Weapons\0C4\0Planted C4\0Chickens\0Defuse kits\0Projectiles\0Hostages\0Ragdolls\0"));
     ImGui::PopID();
     static int currentItem{ 0 };
     if (currentCategory <= 3) {
         ImGui::SameLine();
         static int currentType{ 0 };
         ImGui::PushID(1);
-        ImGui::Combo("", &currentType, phrases[XorString("wallhacks_visibletype")].c_str());
+        ImGui::Combo("", &currentType, XorString("All\0Visible\0Occluded\0"));
         ImGui::PopID();
         currentItem = currentCategory * 3 + currentType;
     } else {
@@ -895,7 +895,7 @@ void GUI::renderGlowWindow(bool contentOnly) noexcept
     ImGui::Checkbox(phrases[XorString("wallhacks_healthbased")].c_str(), &config->glow[currentItem].healthBased);
     ImGui::NextColumn();
     ImGui::SetNextItemWidth(100.0f);
-    ImGui::Combo(phrases[XorString("global_style")].c_str(), &config->glow[currentItem].style, phrases[XorString("glow_styles")].c_str());
+    ImGui::Combo(phrases[XorString("global_style")].c_str(), &config->glow[currentItem].style, XorString("Default\0Rim3d\0Edge\0Edge Pulse\0"));
     ImGuiCustom::colorPopup(phrases[XorString("global_color")].c_str(), config->glow[currentItem].color, &config->glow[currentItem].rainbow, &config->glow[currentItem].rainbowSpeed);
     ImGui::Columns(1);
     if (!contentOnly)
@@ -916,7 +916,7 @@ void GUI::renderChamsWindow(bool contentOnly) noexcept
 
     static int material = 1;
 
-    if (ImGui::Combo("", &currentCategory, phrases[XorString("chams_category")].c_str()))
+    if (ImGui::Combo("", &currentCategory, XorString("Allies\0Enemies\0Planting\0Defusing\0Local player\0Weapons\0Hands\0Backtrack\0Sleeves\0Desync\0")))
         material = 1;
 
     ImGui::PopID();
@@ -948,14 +948,14 @@ void GUI::renderChamsWindow(bool contentOnly) noexcept
     ImGui::Separator();
     ImGui::Columns(2, nullptr, true);
     ImGui::Checkbox(phrases[XorString("wallhacks_healthbased")].c_str(), &chams.healthBased);
-    ImGui::Checkbox("Blinking", &chams.blinking);
-    ImGui::Checkbox("Wireframe", &chams.wireframe);
+    ImGui::Checkbox(phrases[XorString("chams_blinking")].c_str(), &chams.blinking);
+    ImGui::Checkbox(phrases[XorString("chams_wireframe")].c_str(), &chams.wireframe);
     ImGui::SetNextItemWidth(85.0f);
-    ImGui::Combo("Material", &chams.material, "Normal\0Flat\0Animated\0Platinum\0Glass\0Chrome\0Crystal\0Silver\0Gold\0Plastic\0Glow\0Pearlescent\0Metallic\0");
+    ImGui::Combo(phrases[XorString("chams_material")].c_str(), &chams.material, XorString("Normal\0Flat\0Animated\0Platinum\0Glass\0Chrome\0Crystal\0Silver\0Gold\0Plastic\0Glow\0Pearlescent\0Metallic\0"));
     ImGui::NextColumn();
-    ImGui::Checkbox("Cover", &chams.cover);
-    ImGui::Checkbox("Ignore-Z", &chams.ignorez);
-    ImGuiCustom::colorPopup("Color", chams.color, &chams.rainbow, &chams.rainbowSpeed);
+    ImGui::Checkbox(phrases[XorString("chams_cover")].c_str(), &chams.cover);
+    ImGui::Checkbox(phrases[XorString("chams_ignorez")].c_str(), &chams.ignorez);
+    ImGuiCustom::colorPopup(phrases[XorString("global_color")].c_str(), chams.color, &chams.rainbow, &chams.rainbowSpeed);
 
     if (!contentOnly) {
         ImGui::End();
@@ -968,7 +968,7 @@ void GUI::renderStreamProofESPWindow(bool contentOnly) noexcept
         if (!window.streamProofESP)
             return;
         ImGui::SetNextWindowSize({ 0.0f, 0.0f });
-        ImGui::Begin("ESP BRCheats | Use Game Capture from OBS, this ESP and the Menu will not be visible in your stream", &window.streamProofESP, windowFlags);
+        ImGui::Begin(phrases[XorString("window_esp")].c_str(), &window.streamProofESP, windowFlags);
     }
 
     static std::size_t currentCategory;
@@ -1220,7 +1220,7 @@ void GUI::renderStreamProofESPWindow(bool contentOnly) noexcept
         ImGui::Checkbox(phrases[XorString("global_enabled")].c_str(), &sharedConfig.enabled);
         ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - 260.0f);
         ImGui::SetNextItemWidth(220.0f);
-        if (ImGui::BeginCombo("Font", config->getSystemFonts()[sharedConfig.font.index].c_str())) {
+        if (ImGui::BeginCombo(phrases[XorString("esp_font")].c_str(), config->getSystemFonts()[sharedConfig.font.index].c_str())) {
             for (size_t i = 0; i < config->getSystemFonts().size(); i++) {
                 bool isSelected = config->getSystemFonts()[i] == sharedConfig.font.name;
                 if (ImGui::Selectable(config->getSystemFonts()[i].c_str(), isSelected, 0, { 250.0f, 0.0f })) {
@@ -1237,58 +1237,58 @@ void GUI::renderStreamProofESPWindow(bool contentOnly) noexcept
         ImGui::Separator();
 
         constexpr auto spacing = 250.0f;
-        ImGuiCustom::colorPicker("Snapline", sharedConfig.snapline);
+        ImGuiCustom::colorPicker(phrases[XorString("esp_snapline")].c_str(), sharedConfig.snapline);
         ImGui::SameLine();
         ImGui::SetNextItemWidth(90.0f);
-        ImGui::Combo("##1", &sharedConfig.snapline.type, "Bottom\0Top\0Crosshair\0");
+        ImGui::Combo("##1", &sharedConfig.snapline.type, XorString("Bottom\0Top\0Crosshair\0"));
         ImGui::SameLine(spacing);
-        ImGuiCustom::colorPicker("Box", sharedConfig.box);
+        ImGuiCustom::colorPicker(phrases[XorString("esp_box")].c_str(), sharedConfig.box);
         ImGui::SameLine();
 
-        ImGui::PushID("Box");
+        ImGui::PushID(phrases[XorString("esp_box")].c_str());
 
-        if (ImGui::Button("..."))
+        if (ImGui::Button(phrases[XorString("global_threedots")].c_str()))
             ImGui::OpenPopup("");
 
         if (ImGui::BeginPopup("")) {
             ImGui::SetNextItemWidth(95.0f);
-            ImGui::Combo("Type", &sharedConfig.box.type, "2D\0" "2D corners\0" "3D\0" "3D corners\0");
+            ImGui::Combo(phrases[XorString("global_type")].c_str(), &sharedConfig.box.type, XorString("2D\0" "2D corners\0" "3D\0" "3D corners\0"));
             ImGui::SetNextItemWidth(275.0f);
-            ImGui::SliderFloat3("Scale", sharedConfig.box.scale.data(), 0.0f, 0.50f, "%.2f");
-        	ImGuiCustom::colorPicker("Fill", sharedConfig.box.fill);
+            ImGui::SliderFloat3(phrases[XorString("global_scale")].c_str(), sharedConfig.box.scale.data(), 0.0f, 0.50f, "%.2f");
+        	ImGuiCustom::colorPicker(phrases[XorString("global_fill")].c_str(), sharedConfig.box.fill);
             ImGui::EndPopup();
         }
 
         ImGui::PopID();
 
-        ImGuiCustom::colorPicker("Name", sharedConfig.name);
+        ImGuiCustom::colorPicker(phrases[XorString("esp_name")].c_str(), sharedConfig.name);
         ImGui::SameLine(spacing);
 
         if (currentCategory < 2) {
             auto& playerConfig = getConfigPlayer(currentCategory, currentItem);
 
-            ImGuiCustom::colorPicker("Weapon", playerConfig.weapon);
-            ImGuiCustom::colorPicker("Flash Duration", playerConfig.flashDuration);
+            ImGuiCustom::colorPicker(phrases[XorString("esp_weapon")].c_str(), playerConfig.weapon);
+            ImGuiCustom::colorPicker(phrases[XorString("esp_flashduration")].c_str(), playerConfig.flashDuration);
             ImGui::SameLine(spacing);
-            ImGuiCustom::colorPicker("Skeleton", playerConfig.skeleton);
-            ImGui::Checkbox("Audible Only", &playerConfig.audibleOnly);
+            ImGuiCustom::colorPicker(phrases[XorString("esp_skeleton")].c_str(), playerConfig.skeleton);
+            ImGui::Checkbox(phrases[XorString("esp_audibleonly")].c_str(), &playerConfig.audibleOnly);
             ImGui::SameLine(spacing);
-            ImGui::Checkbox("Spotted Only", &playerConfig.spottedOnly);
+            ImGui::Checkbox(phrases[XorString("esp_spottedonly")].c_str(), &playerConfig.spottedOnly);
 
-            ImGuiCustom::colorPicker("Head Box", playerConfig.headBox);
+            ImGuiCustom::colorPicker(phrases[XorString("esp_headbox")].c_str(), playerConfig.headBox);
             ImGui::SameLine();
 
-            ImGui::PushID("Head Box");
+            ImGui::PushID(XorString("Head Box"));
 
-            if (ImGui::Button("..."))
+            if (ImGui::Button(phrases[XorString("global_threedots")].c_str()))
                 ImGui::OpenPopup("");
 
             if (ImGui::BeginPopup("")) {
                 ImGui::SetNextItemWidth(95.0f);
-                ImGui::Combo("Type", &playerConfig.headBox.type, "2D\0" "2D corners\0" "3D\0" "3D corners\0");
+                ImGui::Combo(phrases[XorString("global_type")].c_str(), &playerConfig.headBox.type, XorString("2D\0" "2D corners\0" "3D\0" "3D corners\0"));
                 ImGui::SetNextItemWidth(275.0f);
-                ImGui::SliderFloat3("Scale", playerConfig.headBox.scale.data(), 0.0f, 0.50f, "%.2f");
-            	ImGuiCustom::colorPicker("Fill", playerConfig.headBox.fill);
+                ImGui::SliderFloat3(phrases[XorString("global_scale")].c_str(), playerConfig.headBox.scale.data(), 0.0f, 0.50f, "%.2f");
+            	ImGuiCustom::colorPicker(phrases[XorString("global_fill")].c_str(), playerConfig.headBox.fill);
                 ImGui::EndPopup();
             }
 
@@ -1296,18 +1296,18 @@ void GUI::renderStreamProofESPWindow(bool contentOnly) noexcept
 
         	ImGui::SameLine(spacing);
 
-            ImGui::Checkbox("Health Bar", &playerConfig.healthBar);
+            ImGui::Checkbox(phrases[XorString("esp_healthbar")].c_str(), &playerConfig.healthBar);
         } else if (currentCategory == 2) {
             auto& weaponConfig = config->streamProofESP.weapons[currentItem];
-            ImGuiCustom::colorPicker("Ammo", weaponConfig.ammo);
+            ImGuiCustom::colorPicker(phrases[XorString("esp_ammo")].c_str(), weaponConfig.ammo);
         } else if (currentCategory == 3) {
             auto& trails = config->streamProofESP.projectiles[currentItem].trails;
 
-            ImGui::Checkbox("Trails", &trails.enabled);
+            ImGui::Checkbox(phrases[XorString("esp_trails")].c_str(), &trails.enabled);
             ImGui::SameLine(spacing + 77.0f);
-            ImGui::PushID("Trails");
+            ImGui::PushID(XorString("Trails"));
 
-            if (ImGui::Button("..."))
+            if (ImGui::Button(phrases[XorString("global_threedots")].c_str()))
                 ImGui::OpenPopup("");
 
             if (ImGui::BeginPopup("")) {
@@ -1316,17 +1316,17 @@ void GUI::renderStreamProofESPWindow(bool contentOnly) noexcept
                     ImGuiCustom::colorPicker(name, trail);
                     ImGui::SameLine(150.0f);
                     ImGui::SetNextItemWidth(95.0f);
-                    ImGui::Combo("", &trail.type, "Line\0Circles\0Filled Circles\0");
+                    ImGui::Combo("", &trail.type, XorString("Line\0Circles\0Filled Circles\0"));
                     ImGui::SameLine();
                     ImGui::SetNextItemWidth(95.0f);
-                    ImGui::InputFloat("Time", &trail.time, 0.1f, 0.5f, "%.1fs");
+                    ImGui::InputFloat(phrases[XorString("global_time")].c_str(), &trail.time, 0.1f, 0.5f, "%.1fs");
                     trail.time = std::clamp(trail.time, 1.0f, 60.0f);
                     ImGui::PopID();
                 };
 
-                trailPicker("Local Player", trails.localPlayer);
-                trailPicker("Allies", trails.allies);
-                trailPicker("Enemies", trails.enemies);
+                trailPicker(XorString("Local Player"), trails.localPlayer);
+                trailPicker(XorString("Allies"), trails.allies);
+                trailPicker(XorString("Enemies"), trails.enemies);
                 ImGui::EndPopup();
             }
 
@@ -1334,7 +1334,7 @@ void GUI::renderStreamProofESPWindow(bool contentOnly) noexcept
         }
 
         ImGui::SetNextItemWidth(95.0f);
-        ImGui::InputFloat("Text Cull Distance", &sharedConfig.textCullDistance, 0.4f, 0.8f, "%.1fm");
+        ImGui::InputFloat(phrases[XorString("esp_textculldistance")].c_str(), &sharedConfig.textCullDistance, 0.4f, 0.8f, "%.1fm");
         sharedConfig.textCullDistance = std::clamp(sharedConfig.textCullDistance, 0.0f, 999.9f);
 }
 
