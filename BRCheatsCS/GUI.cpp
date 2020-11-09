@@ -1355,7 +1355,7 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
     }
     ImGui::Columns(2, nullptr, false);
     ImGui::SetColumnOffset(1, 280.0f);
-    constexpr auto playerModels = XorString("Default\0Special Agent Ava | FBI\0Operator | FBI SWAT\0Markus Delrow | FBI HRT\0Michael Syfers | FBI Sniper\0B Squadron Officer | SAS\0Seal Team 6 Soldier | NSWC SEAL\0Buckshot | NSWC SEAL\0Lt. Commander Ricksaw | NSWC SEAL\0Third Commando Company | KSK\0'Two Times' McCoy | USAF TACP\0Dragomir | Sabre\0Rezan The Ready | Sabre\0'The Doctor' Romanov | Sabre\0Maximus | Sabre\0Blackwolf | Sabre\0The Elite Mr. Muhlik | Elite Crew\0Ground Rebel | Elite Crew\0Osiris | Elite Crew\0Prof. Shahmat | Elite Crew\0Enforcer | Phoenix\0Slingshot | Phoenix\0Soldier | Phoenix\0Pirate\0Pirate Variant A\0Pirate Variant B\0Pirate Variant C\0Pirate Variant D\0Anarchist\0Anarchist Variant A\0Anarchist Variant B\0Anarchist Variant C\0Anarchist Variant D\0Balkan Variant A\0Balkan Variant B\0Balkan Variant C\0Balkan Variant D\0Balkan Variant E\0Jumpsuit Variant A\0Jumpsuit Variant B\0Jumpsuit Variant C\0");
+    constexpr auto playerModels = "Default\0Special Agent Ava | FBI\0Operator | FBI SWAT\0Markus Delrow | FBI HRT\0Michael Syfers | FBI Sniper\0B Squadron Officer | SAS\0Seal Team 6 Soldier | NSWC SEAL\0Buckshot | NSWC SEAL\0Lt. Commander Ricksaw | NSWC SEAL\0Third Commando Company | KSK\0'Two Times' McCoy | USAF TACP\0Dragomir | Sabre\0Rezan The Ready | Sabre\0'The Doctor' Romanov | Sabre\0Maximus | Sabre\0Blackwolf | Sabre\0The Elite Mr. Muhlik | Elite Crew\0Ground Rebel | Elite Crew\0Osiris | Elite Crew\0Prof. Shahmat | Elite Crew\0Enforcer | Phoenix\0Slingshot | Phoenix\0Soldier | Phoenix\0Pirate\0Pirate Variant A\0Pirate Variant B\0Pirate Variant C\0Pirate Variant D\0Anarchist\0Anarchist Variant A\0Anarchist Variant B\0Anarchist Variant C\0Anarchist Variant D\0Balkan Variant A\0Balkan Variant B\0Balkan Variant C\0Balkan Variant D\0Balkan Variant E\0Jumpsuit Variant A\0Jumpsuit Variant B\0Jumpsuit Variant C\0";
     ImGui::Checkbox(phrases[XorString("visuals_noweapons")].c_str(), &config->visuals.noWeapons);
     ImGui::Checkbox(phrases[XorString("visuals_nosmoke")].c_str(), &config->visuals.noSmoke);
     ImGui::Checkbox(phrases[XorString("visuals_noblur")].c_str(), &config->visuals.noBlur);
@@ -1374,80 +1374,80 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
     ImGui::Checkbox(phrases[XorString("visuals_nohands")].c_str(), &config->visuals.noHands);
     ImGui::Checkbox(phrases[XorString("visuals_nosleeves")].c_str(), &config->visuals.noSleeves);
     ImGui::Checkbox(phrases[XorString("visuals_wireframesmoke")].c_str(), &config->visuals.wireframeSmoke);
-    ImGuiCustom::colorPicker(phrases[XorString("visuals_worldcolor")], config->visuals.world);
-    ImGuiCustom::colorPicker(phrases[XorString("visuals_skycolor")], config->visuals.sky);
+    ImGuiCustom::colorPicker(phrases[XorString("visuals_worldcolor")].c_str(), config->visuals.world);
+    ImGuiCustom::colorPicker(phrases[XorString("visuals_skycolor")].c_str(), config->visuals.sky);
     ImGui::Checkbox(phrases[XorString("visuals_deaglespinner")].c_str(), &config->visuals.deagleSpinner);
-    ImGuiCustom::colorPicker(phrases[XorString("visuals_bullettracers")], config->visuals.bulletTracers);
+    ImGuiCustom::colorPicker(phrases[XorString("visuals_bullettracers")].c_str(), config->visuals.bulletTracers);
     ImGui::Checkbox(phrases[XorString("visuals_zoom")].c_str(), &config->visuals.zoom);
     ImGui::SameLine();
     hotkey(config->visuals.zoomKey);
     ImGui::Combo(phrases[XorString("visuals_t_model")].c_str(), &config->visuals.playerModelT, playerModels);
     ImGui::Combo(phrases[XorString("visuals_ct_model")].c_str(), &config->visuals.playerModelCT, playerModels);
     ImGui::NextColumn();
-    ImGui::Checkbox("Thirdperson", &config->visuals.thirdperson);
+    ImGui::Checkbox(phrases[XorString("visuals_thirdperson")].c_str(), &config->visuals.thirdperson);
     ImGui::SameLine();
     hotkey(config->visuals.thirdpersonKey);
     ImGui::PushItemWidth(290.0f);
     ImGui::PushID(0);
-    ImGui::SliderInt("", &config->visuals.thirdpersonDistance, 0, 1000, "Thirdperson distance: %d");
+    ImGui::SliderInt("", &config->visuals.thirdpersonDistance, 0, 1000, phrases[XorString("visuals_thirdperson_distance")].c_str());
     ImGui::PopID();
     ImGui::PushID(1);
-    ImGui::SliderInt("", &config->visuals.viewmodelFov, -60, 60, "Viewmodel FOV: %d");
+    ImGui::SliderInt("", &config->visuals.viewmodelFov, -60, 60, phrases[XorString("visuals_viewmodelfov")].c_str());
     ImGui::PopID();
     ImGui::PushID(2);
-    ImGui::SliderInt("", &config->visuals.fov, -60, 60, "FOV: %d");
+    ImGui::SliderInt("", &config->visuals.fov, -60, 60, phrases[XorString("visuals_fov")].c_str());
     ImGui::PopID();
     ImGui::PushID(3);
-    ImGui::SliderInt("", &config->visuals.farZ, 0, 2000, "Far Z: %d");
+    ImGui::SliderInt("", &config->visuals.farZ, 0, 2000, phrases[XorString("visuals_farz")].c_str());
     ImGui::PopID();
     ImGui::PushID(4);
-    ImGui::SliderInt("", &config->visuals.flashReduction, 0, 100, "Flash reduction: %d%%");
+    ImGui::SliderInt("", &config->visuals.flashReduction, 0, 100, phrases[XorString("visuals_flashreduction")].c_str());
     ImGui::PopID();
     ImGui::PushID(5);
-    ImGui::SliderFloat("", &config->visuals.brightness, 0.0f, 1.0f, "Brightness: %.2f");
+    ImGui::SliderFloat("", &config->visuals.brightness, 0.0f, 1.0f, phrases[XorString("visuals_brightness")].c_str());
     ImGui::PopID();
     ImGui::PopItemWidth();
-    ImGui::Combo("Skybox", &config->visuals.skybox, Helpers::skyboxList.data(), Helpers::skyboxList.size());
-    ImGui::Combo("Screen effect", &config->visuals.screenEffect, "None\0Drone cam\0Drone cam with noise\0Underwater\0Healthboost\0Dangerzone\0");
-    ImGui::Combo("Hit effect", &config->visuals.hitEffect, "None\0Drone cam\0Drone cam with noise\0Underwater\0Healthboost\0Dangerzone\0");
-    ImGui::SliderFloat("Hit effect time", &config->visuals.hitEffectTime, 0.1f, 1.5f, "%.2fs");
-    ImGui::Combo("Hit marker", &config->visuals.hitMarker, "None\0Default (Cross)\0");
-    ImGui::SliderFloat("Hit marker time", &config->visuals.hitMarkerTime, 0.1f, 1.5f, "%.2fs");
-	ImGui::Checkbox("Indicators", &config->visuals.indicatorsEnabled);
+    ImGui::Combo(phrases[XorString("visuals_skybox")].c_str(), &config->visuals.skybox, Helpers::skyboxList.data(), Helpers::skyboxList.size());
+    ImGui::Combo(phrases[XorString("visuals_screeneffect")].c_str(), &config->visuals.screenEffect, XorString("None\0Drone cam\0Drone cam with noise\0Underwater\0Healthboost\0Dangerzone\0"));
+    ImGui::Combo(phrases[XorString("visuals_hiteffect")].c_str(), &config->visuals.hitEffect, XorString("None\0Drone cam\0Drone cam with noise\0Underwater\0Healthboost\0Dangerzone\0"));
+    ImGui::SliderFloat(phrases[XorString("visuals_hiteffect_time")].c_str(), &config->visuals.hitEffectTime, 0.1f, 1.5f, XorString("%.2fs"));
+    ImGui::Combo(phrases[XorString("visuals_hitmarker")].c_str(), &config->visuals.hitMarker, XorString("None\0Default (Cross)\0"));
+    ImGui::SliderFloat(phrases[XorString("visuals_hitmarker_time")].c_str(), &config->visuals.hitMarkerTime, 0.1f, 1.5f, XorString("%.2fs"));
+	ImGui::Checkbox(phrases[XorString("visuals_indicators")].c_str(), &config->visuals.indicatorsEnabled);
     ImGui::SameLine();
     ImGui::PushID(6);
     ImGuiCustom::MultiCombo("", config->visuals.indicators, config->visuals.selectedIndicators, 5);
     ImGui::PopID();
-    ImGui::Checkbox("Rainbow crosshair", &config->visuals.rainbowCrosshair);
+    ImGui::Checkbox(phrases[XorString("visuals_rainbowcrosshair")].c_str(), &config->visuals.rainbowCrosshair);
     ImGui::SameLine();
     ImGui::PushItemWidth(100.0f);
     config->visuals.rainbowCrosshairSpeed = std::clamp(config->visuals.rainbowCrosshairSpeed, 0.0f, 25.0f);
-    ImGui::InputFloat("Speed", &config->visuals.rainbowCrosshairSpeed, 0.1f, 0.15f, "%.2f");
+    ImGui::InputFloat(phrases[XorString("global_speed")].c_str(), &config->visuals.rainbowCrosshairSpeed, 0.1f, 0.15f, "%.2f");
     ImGui::PopItemWidth();
-    ImGuiCustom::colorPicker("Noscope crosshair", config->misc.noscopeCrosshair);
-    ImGuiCustom::colorPicker("Recoil crosshair", config->misc.recoilCrosshair);
-    ImGuiCustom::colorPicker("Watermark", config->misc.watermark);
-    ImGui::Checkbox("Color correction", &config->visuals.colorCorrection.enabled);
+    ImGuiCustom::colorPicker(phrases[XorString("visuals_noscopecrosshair")].c_str(), config->misc.noscopeCrosshair);
+    ImGuiCustom::colorPicker(phrases[XorString("visuals_recoilcrosshair")].c_str(), config->misc.recoilCrosshair);
+    ImGuiCustom::colorPicker(phrases[XorString("visuals_watermark")].c_str(), config->misc.watermark);
+    ImGui::Checkbox(phrases[XorString("visuals_colorcorrection")].c_str(), &config->visuals.colorCorrection.enabled);
 
     ImGui::SameLine();
     bool ccPopup = ImGui::Button(phrases[XorString("global_edit")].c_str());
-    ImGui::Checkbox("Ragdoll force", &config->misc.ragdollForce);
+    ImGui::Checkbox(phrases[XorString("visuals_ragdollforce")].c_str(), &config->misc.ragdollForce);
     if (config->misc.ragdollForce) {
         ImGui::SetNextItemWidth(90.0f);
-        ImGui::InputInt("Ragdoll force strength", &config->misc.ragdollForceStrength, 1, 3);
+        ImGui::InputInt(phrases[XorString("visuals_ragdollforce_strenght")].c_str(), &config->misc.ragdollForceStrength, 1, 3);
         config->misc.ragdollForceStrength = std::clamp(config->misc.ragdollForceStrength, 1, 100);
     };
     if (ccPopup)
-        ImGui::OpenPopup("##popup");
+        ImGui::OpenPopup(XorString("##popup"));
 
-    if (ImGui::BeginPopup("##popup")) {
-        ImGui::VSliderFloat("##1", { 40.0f, 160.0f }, &config->visuals.colorCorrection.blue, 0.0f, 1.0f, "Blue\n%.3f"); ImGui::SameLine();
-        ImGui::VSliderFloat("##2", { 40.0f, 160.0f }, &config->visuals.colorCorrection.red, 0.0f, 1.0f, "Red\n%.3f"); ImGui::SameLine();
-        ImGui::VSliderFloat("##3", { 40.0f, 160.0f }, &config->visuals.colorCorrection.mono, 0.0f, 1.0f, "Mono\n%.3f"); ImGui::SameLine();
-        ImGui::VSliderFloat("##4", { 40.0f, 160.0f }, &config->visuals.colorCorrection.saturation, 0.0f, 1.0f, "Sat\n%.3f"); ImGui::SameLine();
-        ImGui::VSliderFloat("##5", { 40.0f, 160.0f }, &config->visuals.colorCorrection.ghost, 0.0f, 1.0f, "Ghost\n%.3f"); ImGui::SameLine();
-        ImGui::VSliderFloat("##6", { 40.0f, 160.0f }, &config->visuals.colorCorrection.green, 0.0f, 1.0f, "Green\n%.3f"); ImGui::SameLine();
-        ImGui::VSliderFloat("##7", { 40.0f, 160.0f }, &config->visuals.colorCorrection.yellow, 0.0f, 1.0f, "Yellow\n%.3f"); ImGui::SameLine();
+    if (ImGui::BeginPopup(XorString("##popup"))) {
+        ImGui::VSliderFloat(XorString("##1"), { 40.0f, 160.0f }, &config->visuals.colorCorrection.blue, 0.0f, 1.0f, XorString("Blue\n%.3f")); ImGui::SameLine();
+        ImGui::VSliderFloat(XorString("##2"), { 40.0f, 160.0f }, &config->visuals.colorCorrection.red, 0.0f, 1.0f, XorString("Red\n%.3f")); ImGui::SameLine();
+        ImGui::VSliderFloat(XorString("##3"), { 40.0f, 160.0f }, &config->visuals.colorCorrection.mono, 0.0f, 1.0f, XorString("Mono\n%.3f")); ImGui::SameLine();
+        ImGui::VSliderFloat(XorString("##4"), { 40.0f, 160.0f }, &config->visuals.colorCorrection.saturation, 0.0f, 1.0f, XorString("Sat\n%.3f")); ImGui::SameLine();
+        ImGui::VSliderFloat(XorString("##5"), { 40.0f, 160.0f }, &config->visuals.colorCorrection.ghost, 0.0f, 1.0f, XorString("Ghost\n%.3f")); ImGui::SameLine();
+        ImGui::VSliderFloat(XorString("##6"), { 40.0f, 160.0f }, &config->visuals.colorCorrection.green, 0.0f, 1.0f, XorString("Green\n%.3f")); ImGui::SameLine();
+        ImGui::VSliderFloat(XorString("##7"), { 40.0f, 160.0f }, &config->visuals.colorCorrection.yellow, 0.0f, 1.0f, XorString("Yellow\n%.3f")); ImGui::SameLine();
         ImGui::EndPopup();
     }
 
@@ -1463,7 +1463,7 @@ void GUI::renderSkinChangerWindow(bool contentOnly) noexcept
         if (!window.skinChanger)
             return;
         ImGui::SetNextWindowSize({ 700.0f, 0.0f });
-        ImGui::Begin("Skin Changer | BRCheats", &window.skinChanger, windowFlags);
+        ImGui::Begin(phrases[XorString("window_skinchanger")].c_str(), &window.skinChanger, windowFlags);
     }
 
     static auto itemIndex = 0;
@@ -1485,11 +1485,11 @@ void GUI::renderSkinChangerWindow(bool contentOnly) noexcept
         ImGui::Columns(2, nullptr, false);
 
         static std::string filter;
-        ImGui::PushID("Search");
-        ImGui::InputTextWithHint("", "Search", &filter);
+        ImGui::PushID(XorString("Search"));
+        ImGui::InputTextWithHint("", phrases[XorString("global_search")].c_str(), &filter);
         ImGui::PopID();
 
-        if (ImGui::ListBoxHeader("Paint Kit")) {
+        if (ImGui::ListBoxHeader(phrases[XorString("skinchanger_paintkit")].c_str())) {
             const auto& kits = itemIndex == 1 ? SkinChanger::getGloveKits() : SkinChanger::getSkinKits();
 
             const std::locale original;
@@ -1515,37 +1515,37 @@ void GUI::renderSkinChangerWindow(bool contentOnly) noexcept
             ImGui::ListBoxFooter();
         }
 
-        ImGui::Combo("Quality", &selected_entry.entity_quality_vector_index, [](void* data, int idx, const char** out_text) {
+        ImGui::Combo(phrases[XorString("skinchanger_quality")].c_str(), &selected_entry.entity_quality_vector_index, [](void* data, int idx, const char** out_text) {
             *out_text = game_data::quality_names[idx].name;
             return true;
             }, nullptr, IM_ARRAYSIZE(game_data::quality_names), 5);
 
-        ImGui::InputInt("Seed", &selected_entry.seed);
+        ImGui::InputInt(phrases[XorString("skinchanger_seed")].c_str(), &selected_entry.seed);
 
-        ImGui::InputInt("StatTrak\u2122", &selected_entry.stat_trak);
+        ImGui::InputInt(phrases[XorString("skinchanger_stattrak")].c_str(), &selected_entry.stat_trak);
 
         selected_entry.stat_trak = (std::max)(selected_entry.stat_trak, -1);
 
-        ImGui::SliderFloat("Wear", &selected_entry.wear, FLT_MIN, 1.f, "%.10f", ImGuiSliderFlags_Logarithmic);
+        ImGui::SliderFloat(phrases[XorString("skinchanger_wear")].c_str(), &selected_entry.wear, FLT_MIN, 1.f, XorString("%.10f"), ImGuiSliderFlags_Logarithmic);
         if (itemIndex == 0) {
-            ImGui::Combo("Knife", &selected_entry.definition_override_vector_index, [](void* data, int idx, const char** out_text) {
+            ImGui::Combo(phrases[XorString("skinchanger_knife")].c_str(), &selected_entry.definition_override_vector_index, [](void* data, int idx, const char** out_text) {
                 *out_text = game_data::knife_names[idx].name;
                 return true;
                 }, nullptr, IM_ARRAYSIZE(game_data::knife_names), 5);
         } else if (itemIndex == 1) {
-            ImGui::Combo("Glove", &selected_entry.definition_override_vector_index, [](void* data, int idx, const char** out_text) {
+            ImGui::Combo(phrases[XorString("skinchanger_glove")].c_str(), &selected_entry.definition_override_vector_index, [](void* data, int idx, const char** out_text) {
                 *out_text = game_data::glove_names[idx].name;
                 return true;
                 }, nullptr, IM_ARRAYSIZE(game_data::glove_names), 5);
         }
 
-        ImGui::InputText("Name Tag", selected_entry.custom_name, 32);
+        ImGui::InputText(phrases[XorString("skinchanger_nametag")].c_str(), selected_entry.custom_name, 32);
     }
 
     ImGui::NextColumn();
 
     {
-        ImGui::PushID("sticker");
+        ImGui::PushID(XorString("sticker"));
 
         static auto selectedStickerSlot = 0;
 
@@ -1571,11 +1571,11 @@ void GUI::renderSkinChangerWindow(bool contentOnly) noexcept
         auto& selected_sticker = selected_entry.stickers[selectedStickerSlot];
 
         static std::string filter;
-        ImGui::PushID("Search");
-        ImGui::InputTextWithHint("", "Search", &filter);
+        ImGui::PushID(XorString("Search"));
+        ImGui::InputTextWithHint("", phrases[XorString("global_search")].c_str(), &filter);
         ImGui::PopID();
 
-        if (ImGui::ListBoxHeader("Sticker")) {
+        if (ImGui::ListBoxHeader(phrases[XorString("skinchanger_sticker")].c_str())) {
             const auto& kits = SkinChanger::getStickerKits();
 
             const std::locale original;
@@ -1601,9 +1601,9 @@ void GUI::renderSkinChangerWindow(bool contentOnly) noexcept
             ImGui::ListBoxFooter();
         }
 
-        ImGui::SliderFloat("Wear", &selected_sticker.wear, FLT_MIN, 1.0f, "%.10f", ImGuiSliderFlags_Logarithmic);
-        ImGui::SliderFloat("Scale", &selected_sticker.scale, 0.1f, 5.0f);
-        ImGui::SliderFloat("Rotation", &selected_sticker.rotation, 0.0f, 360.0f);
+        ImGui::SliderFloat(phrases[XorString("skinchanger_wear")].c_str(), &selected_sticker.wear, FLT_MIN, 1.0f, "%.10f", ImGuiSliderFlags_Logarithmic);
+        ImGui::SliderFloat(phrases[XorString("skinchanger_scale")].c_str(), &selected_sticker.scale, 0.1f, 5.0f);
+        ImGui::SliderFloat(phrases[XorString("skinchanger_rotation")].c_str(), &selected_sticker.rotation, 0.0f, 360.0f);
 
         ImGui::PopID();
     }
@@ -1613,7 +1613,7 @@ void GUI::renderSkinChangerWindow(bool contentOnly) noexcept
 
     ImGui::Separator();
 
-    if (ImGui::Button("Update", { 130.0f, 30.0f }))
+    if (ImGui::Button(phrases[XorString("global_update")].c_str(), { 130.0f, 30.0f }))
         SkinChanger::scheduleHudUpdate();
 
 
@@ -1627,69 +1627,62 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
         if (!window.misc)
             return;
         ImGui::SetNextWindowSize({ 580.0f, 0.0f });
-        ImGui::Begin("Misc | BRCheats", &window.misc, windowFlags);
+        ImGui::Begin(phrases[XorString("window_misc")].c_str(), &window.misc, windowFlags);
     }
     ImGui::Columns(2, nullptr, false);
     ImGui::SetColumnOffset(1, 230.0f);
 
     ImGui::SetNextItemWidth(120.0f);
-    ImGui::SliderInt("Lang", &config->misc.lang, 0, 1);
+    ImGui::SliderInt(phrases[XorString("global_language")].c_str(), &config->misc.lang, 0, 1);
 
-    ImGui::TextUnformatted("Menu key");
+    ImGui::TextUnformatted(phrases[XorString("global_menukey")].c_str());
     ImGui::SameLine();
     hotkey(config->misc.menuKey);
 
-    ImGui::Checkbox("Radar hack", &config->misc.radarHack);
-    ImGui::Checkbox("Spectator List", &config->misc.spectatorList.enabled);
-    ImGui::PushID("Spectator List");
+    ImGui::Checkbox(phrases[XorString("global_radarhack")].c_str(), &config->misc.radarHack);
+    ImGui::Checkbox(phrases[XorString("global_spectatorlist")].c_str(), &config->misc.spectatorList.enabled);
+    ImGui::PushID(XorString("Spectator List"));
     ImGui::SameLine();
-    if (ImGui::Button("..."))
+    if (ImGui::Button(phrases[XorString("global_threedots")].c_str()))
         ImGui::OpenPopup("C");
 
     if (ImGui::BeginPopup("C")) {
-        ImGui::Checkbox("No BackGround", &config->misc.spectatorList.noBackGround);
-        ImGui::Checkbox("No TittleBar", &config->misc.spectatorList.noTittleBar);
+        ImGui::Checkbox(phrases[XorString("global_nobackground")].c_str(), &config->misc.spectatorList.noBackGround);
+        ImGui::Checkbox(phrases[XorString("global_notitle")].c_str(), &config->misc.spectatorList.noTittleBar);
         ImGui::EndPopup();
     }
     ImGui::PopID();
 
-    ImGui::Checkbox("Reveal ranks", &config->misc.revealRanks);
-    ImGui::Checkbox("Reveal money", &config->misc.revealMoney);
-    ImGui::Checkbox("Reveal suspect", &config->misc.revealSuspect);
-    ImGui::Checkbox("Fix animation LOD", &config->misc.fixAnimationLOD);
-    ImGui::Checkbox("Fix bone matrix", &config->misc.fixBoneMatrix);
-    ImGui::Checkbox("Fix movement", &config->misc.fixMovement);
-    ImGui::Checkbox("Disable model occlusion", &config->misc.disableModelOcclusion);
-    ImGui::Checkbox("Anti AFK kick", &config->misc.antiAfkKick);
-    ImGui::Checkbox("Auto strafe", &config->misc.autoStrafe);
-    ImGui::Checkbox("Bunny hop", &config->misc.bunnyHop);
-    ImGui::Checkbox("Fast duck", &config->misc.fastDuck);
-    ImGui::Checkbox("Moonwalk", &config->misc.moonwalk);
-    ImGui::Checkbox("Edge Jump", &config->misc.edgejump);
-    ImGui::SameLine();
-    hotkey(config->misc.edgejumpkey);
-    ImGui::Checkbox("Slowwalk", &config->misc.slowwalk);
+    ImGui::Checkbox(phrases[XorString("misc_revealranks")].c_str(), &config->misc.revealRanks);
+    ImGui::Checkbox(phrases[XorString("misc_revealmoney")].c_str(), &config->misc.revealMoney);
+    ImGui::Checkbox(phrases[XorString("misc_revealsuspect")].c_str(), &config->misc.revealSuspect);
+    ImGui::Checkbox(phrases[XorString("misc_fixmovement")].c_str(), &config->misc.fixMovement);
+    ImGui::Checkbox(phrases[XorString("misc_disablemodelocclusion")].c_str(), &config->misc.disableModelOcclusion);
+    ImGui::Checkbox(phrases[XorString("misc_antiafkkick")].c_str(), &config->misc.antiAfkKick);
+    ImGui::Checkbox(phrases[XorString("misc_autostrafe")].c_str(), &config->misc.autoStrafe);
+    ImGui::Checkbox(phrases[XorString("misc_bunnyhop")].c_str(), &config->misc.bunnyHop);
+    ImGui::Checkbox(phrases[XorString("misc_fastduck")].c_str(), &config->misc.fastDuck);
+    ImGui::Checkbox(phrases[XorString("misc_slowwalk")].c_str(), &config->misc.slowwalk);
     ImGui::SameLine();
     hotkey(config->misc.slowwalkKey);
-    ImGui::Checkbox("Auto pistol", &config->misc.autoPistol);
-    ImGui::Checkbox("Auto reload", &config->misc.autoReload);
-    ImGui::Checkbox("Auto accept", &config->misc.autoAccept);
-    ImGui::Checkbox("Disable HUD blur", &config->misc.disablePanoramablur);
-    ImGui::Checkbox("Fast plant", &config->misc.fastPlant);
-    ImGui::Checkbox("Fast Stop", &config->misc.fastStop);
-    ImGuiCustom::colorPicker("Bomb timer", config->misc.bombTimer);
-    ImGui::Checkbox("Quick reload", &config->misc.quickReload);
-    ImGui::Checkbox("Prepare revolver", &config->misc.prepareRevolver);
+    ImGui::Checkbox(phrases[XorString("misc_autopistol")].c_str(), &config->misc.autoPistol);
+    ImGui::Checkbox(phrases[XorString("misc_autoreload")].c_str(), &config->misc.autoReload);
+    ImGui::Checkbox(phrases[XorString("misc_autoaccept")].c_str(), &config->misc.autoAccept);
+    ImGui::Checkbox(phrases[XorString("misc_disablehudblur")].c_str(), &config->misc.disablePanoramablur);
+    ImGui::Checkbox(phrases[XorString("misc_fastplant")].c_str(), &config->misc.fastPlant);
+    ImGui::Checkbox(phrases[XorString("misc_faststop")].c_str(), &config->misc.fastStop);
+    ImGuiCustom::colorPicker(phrases[XorString("misc_bombtimer")].c_str(), config->misc.bombTimer);
+    ImGui::Checkbox(phrases[XorString("misc_quickreload")].c_str(), &config->misc.quickReload);
+    ImGui::Checkbox(phrases[XorString("misc_quickreload")].c_str(), &config->misc.prepareRevolver);
     ImGui::SameLine();
     hotkey(config->misc.prepareRevolverKey);
 
 
-    ImGui::NextColumn(); ////////////////////////////////////////////////////
+    ImGui::NextColumn(); //////////////////////////////////////////////////////////////////////
 
-
-    ImGui::Checkbox("Animated clan tag", &config->misc.animatedClanTag);
-    ImGui::Checkbox("Clock tag", &config->misc.clocktag);
-    ImGui::Checkbox("Custom clantag", &config->misc.customClanTag);
+    ImGui::Checkbox(phrases[XorString("misc_animatedclantag")].c_str(), &config->misc.animatedClanTag);
+    ImGui::Checkbox(phrases[XorString("misc_clocktag")].c_str(), &config->misc.clocktag);
+    ImGui::Checkbox(phrases[XorString("misc_customclantag")].c_str(), &config->misc.customClanTag);
     ImGui::SameLine();
     ImGui::PushItemWidth(120.0f);
     ImGui::PushID(0);
@@ -1697,189 +1690,185 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     if (ImGui::InputText("", config->misc.clanTag, sizeof(config->misc.clanTag)))
         Misc::updateClanTag(true);
     ImGui::PopID();
-    ImGui::Checkbox("Kill message", &config->misc.killMessage);
+    ImGui::Checkbox(phrases[XorString("misc_killmessage")].c_str(), &config->misc.killMessage);
     ImGui::SameLine();
     ImGui::PushItemWidth(120.0f);
     ImGui::PushID(1);
     ImGui::InputText("", &config->misc.killMessageString);
     ImGui::PopID();
 
-    ImGui::Combo("Name Exploit", &config->misc.nameChangeSelection, "Off\0Fake Ban\0Fake Item\0Custom Name");
+    ImGui::Combo(phrases[XorString("misc_nameexploit")].c_str(), &config->misc.nameChangeSelection, XorString("Off\0Fake Ban\0Fake Item\0Custom Name"));
     if (config->misc.nameChangeSelection == 1)
     {
         ImGui::PushID(3);
         ImGui::SetNextItemWidth(100.0f);
-        ImGui::Combo("", &config->misc.banColor, "White\0Red\0Purple\0Green\0Light green\0Turquoise\0Light red\0Gray\0Yellow\0Gray 2\0Light blue\0Gray/Purple\0Blue\0Pink\0Dark orange\0Orange\0");
+        ImGui::Combo("", &config->misc.banColor, XorString("White\0Red\0Purple\0Green\0Light green\0Turquoise\0Light red\0Gray\0Yellow\0Gray 2\0Light blue\0Gray/Purple\0Blue\0Pink\0Dark orange\0Orange\0"));
         ImGui::PopID();
         ImGui::SameLine();
         ImGui::PushID(4);
         ImGui::InputText("", &config->misc.banText);
         ImGui::PopID();
         ImGui::SameLine();
-        if (ImGui::Button("Setup fake ban"))
+        if (ImGui::Button(phrases[XorString("misc_setupfakeban")].c_str()))
             Misc::fakeBan(true);
     }
     else if (config->misc.nameChangeSelection == 2)
     {
         ImGui::SetNextItemWidth(200.0f);
-        ImGuiCustom::MultiCombo("Fake Item Flags", config->misc.fakeItemFlags, config->misc.selectedFakeItemFlags, 4);
+        ImGuiCustom::MultiCombo(phrases[XorString("misc_fakeitemflags")].c_str(), config->misc.fakeItemFlags, config->misc.selectedFakeItemFlags, 4);
         ImGui::SetNextItemWidth(200.0f);
-        ImGui::Combo("Team", &config->misc.fakeItemTeam, "Counter-Terrorist\0Terrorist");
+        ImGui::Combo(phrases[XorString("global_team")].c_str(), &config->misc.fakeItemTeam, XorString("Counter-Terrorist\0Terrorist"));
         ImGui::SetNextItemWidth(200.0f);
-        ImGui::Combo("Message Type", &config->misc.fakeItemMessageType, "Unbox\0Trade\0");
+        ImGui::Combo(phrases[XorString("misc_messagetype")].c_str(), &config->misc.fakeItemMessageType, XorString("Unbox\0Trade\0"));
         ImGui::SetNextItemWidth(200.0f);
-        ImGui::Combo("Item Type", &config->misc.fakeItemType, "AK-47\0AUG\0AWP\0Bayonet\0Bowie Knife\0Butterfly Knife\0CZ75-Auto\0Classic Knife\0Desert Eagle\0Dual Berettas\0FAMAS\0Falchion Knife\0Five-SeveN\0Flip Knife\0G3SG1\0Galil AR\0Glock-18\0Gut Knife\0Huntsman Knife\0Karambit\0M249\0M4A1-S\0M4A4\0M9 Bayonet\0MAC-10\0MAG-7\0MP5-SD\0MP7\0MP9\0Navaja Knife\0Negev\0Nomad Knife\0Nova\0P2000\0P250\0P90\0PP-Bizon\0Paracord Knife\0R8 Revolver\0SCAR-20\0SG 553\0SSG 08\0Sawed-Off\0Shadow Daggers\0Skeleton Knife\0Spectral Shiv\0Stiletto Knife\0Survival Knife\0Talon Knife\0Tec-9\0UMP-45\0USP-S\0Ursus Knife\0XM1014\0Hand Wraps\0Moto Gloves\0Specialist Gloves\0Sport Gloves\0Bloodhound Gloves\0Hydra Gloves\0Driver Gloves\0");
+        ImGui::Combo(phrases[XorString("misc_itemtype")].c_str(), &config->misc.fakeItemType, XorString("AK-47\0AUG\0AWP\0Bayonet\0Bowie Knife\0Butterfly Knife\0CZ75-Auto\0Classic Knife\0Desert Eagle\0Dual Berettas\0FAMAS\0Falchion Knife\0Five-SeveN\0Flip Knife\0G3SG1\0Galil AR\0Glock-18\0Gut Knife\0Huntsman Knife\0Karambit\0M249\0M4A1-S\0M4A4\0M9 Bayonet\0MAC-10\0MAG-7\0MP5-SD\0MP7\0MP9\0Navaja Knife\0Negev\0Nomad Knife\0Nova\0P2000\0P250\0P90\0PP-Bizon\0Paracord Knife\0R8 Revolver\0SCAR-20\0SG 553\0SSG 08\0Sawed-Off\0Shadow Daggers\0Skeleton Knife\0Spectral Shiv\0Stiletto Knife\0Survival Knife\0Talon Knife\0Tec-9\0UMP-45\0USP-S\0Ursus Knife\0XM1014\0Hand Wraps\0Moto Gloves\0Specialist Gloves\0Sport Gloves\0Bloodhound Gloves\0Hydra Gloves\0Driver Gloves\0"));
         ImGui::SetNextItemWidth(200.0f);
-        ImGui::Combo("Item Color/Rarity", &config->misc.fakeItemRarity, "Consumer Grade (White)\0Industrial Grade (Light blue)\0Mil-Spec (Blue)\0Restricted (Purple)\0Classified (Pink)\0Covert (Red)\0Contrabanned(Orange/Gold)\0");
-        ImGui::Combo("Player Color", &config->misc.fakeItemPlayerColor, "Yellow\0Green\0Blue\0Purple\0Orange");
-        ImGui::InputText("Player Name", &config->misc.fakeItemPlayerName);
-        ImGui::InputText("Skin Name", &config->misc.fakeItemName);
-        if (ImGui::Button("Change Name"))
+        ImGui::Combo(phrases[XorString("misc_itemrarity")].c_str(), &config->misc.fakeItemRarity, XorString("Consumer Grade (White)\0Industrial Grade (Light blue)\0Mil-Spec (Blue)\0Restricted (Purple)\0Classified (Pink)\0Covert (Red)\0Contrabanned(Orange/Gold)\0"));
+        ImGui::Combo(phrases[XorString("misc_playercolor")].c_str(), &config->misc.fakeItemPlayerColor, XorString("Yellow\0Green\0Blue\0Purple\0Orange"));
+        ImGui::InputText(phrases[XorString("misc_playername")].c_str(), &config->misc.fakeItemPlayerName);
+        ImGui::InputText(phrases[XorString("misc_skinname")].c_str(), &config->misc.fakeItemName);
+        if (ImGui::Button(phrases[XorString("misc_changename")].c_str()))
             Misc::fakeItem(true);
     }
     else if (config->misc.nameChangeSelection == 3)
     {
-        ImGui::Checkbox("Name stealer", &config->misc.nameStealer);
-        ImGui::InputText("Custom Name", &config->misc.customName);
-        if (ImGui::Button("Change Name"))
+        ImGui::Checkbox(phrases[XorString("misc_namestealer")].c_str(), &config->misc.nameStealer);
+        ImGui::InputText(phrases[XorString("misc_customname")].c_str(), &config->misc.customName);
+        if (ImGui::Button(phrases[XorString("misc_changename")].c_str()))
             Misc::setName(true);
     }
     
-    ImGui::Combo("Hit Sound", &config->misc.hitSound, "None\0Metal\0Gamesense\0Bell\0Glass\0Custom\0");
+    ImGui::Combo(phrases[XorString("misc_hitsound")].c_str(), &config->misc.hitSound, XorString("None\0Metal\0Gamesense\0Bell\0Glass\0Custom\0"));
     if (config->misc.hitSound == 5) {
-        ImGui::InputText("Hit Sound filename", &config->misc.customHitSound);
+        ImGui::InputText(phrases[XorString("misc_hitsound_filename")].c_str(), &config->misc.customHitSound);
         if (ImGui::IsItemHovered())
-            ImGui::SetTooltip("audio file must be put in csgo/sound/ directory");
+            ImGui::SetTooltip(XorString("audio file must be put in csgo/sound/ directory"));
     }
     ImGui::PushID(5);
-    ImGui::Combo("Kill Sound", &config->misc.killSound, "None\0Metal\0Gamesense\0Bell\0Glass\0Custom\0");
+    ImGui::Combo(phrases[XorString("misc_killsound")].c_str(), &config->misc.killSound, XorString("None\0Metal\0Gamesense\0Bell\0Glass\0Custom\0"));
     if (config->misc.killSound == 5) {
-        ImGui::InputText("Kill Sound filename", &config->misc.customKillSound);
+        ImGui::InputText(phrases[XorString("misc_killsound_filename")].c_str(), &config->misc.customKillSound);
         if (ImGui::IsItemHovered())
-            ImGui::SetTooltip("audio file must be put in csgo/sound/ directory");
+            ImGui::SetTooltip(XorString("audio file must be put in csgo/sound/ directory"));
     }
     ImGui::PopID();
 
-    ImGui::Combo("Fake Lag", &config->misc.fakeLagMode, "Off\0Normal\0Adaptive\0Random\0Switch");
+    ImGui::Combo(phrases[XorString("misc_fakelag")].c_str(), &config->misc.fakeLagMode, XorString("Off\0Normal\0Adaptive\0Random\0Switch"));
     ImGui::SameLine();
 	 hotkey(config->misc.fakeLagKey);
     if (!(config->misc.fakeLagMode == 0))
     {
-        ImGuiCustom::MultiCombo("Flags", config->misc.fakeLagFlags, config->misc.fakeLagSelectedFlags, 4);
+        ImGuiCustom::MultiCombo(phrases[XorString("global_flags")].c_str(), config->misc.fakeLagFlags, config->misc.fakeLagSelectedFlags, 4);
         if (config->misc.fakeLagMode == 3)
         {
             ImGui::SetNextItemWidth(120.0f);
-            ImGui::SliderInt("Min Fakelag Amount", &config->misc.fakeLagTicks, 1, 16);
+            ImGui::SliderInt(phrases[XorString("misc_min_fakelag_amount")].c_str(), &config->misc.fakeLagTicks, 1, 16);
         }
         else if (!(config->misc.fakeLagMode == 4))
         {
             ImGui::SetNextItemWidth(120.0f);
-            ImGui::SliderInt("Fakelag Amount", &config->misc.fakeLagTicks, 1, 16);
+            ImGui::SliderInt(phrases[XorString("misc_fakelag_amount")].c_str(), &config->misc.fakeLagTicks, 1, 16);
         }
     }
 
-    ImGui::Text("Quick healthshot");
-    ImGui::SameLine();
-    hotkey(config->misc.quickHealthshotKey);
-    ImGui::Checkbox("Grenade Prediction", &config->misc.nadePredict);
-    ImGui::Checkbox("Fix tablet signal", &config->misc.fixTabletSignal);
+    ImGui::Checkbox(phrases[XorString("misc_grenadeprediction")].c_str(), &config->misc.nadePredict);
     ImGui::SetNextItemWidth(120.0f);
-    ImGui::SliderFloat("Max angle delta", &config->misc.maxAngleDelta, 0.0f, 255.0f, "%.2f");
-    ImGui::SliderFloat("Aspect Ratio", &config->misc.aspectratio, 0.0f, 5.0f, "%.2f");
-    ImGui::Checkbox("Fake prime", &config->misc.fakePrime);
+    ImGui::SliderFloat(phrases[XorString("misc_maxangledelta")].c_str(), &config->misc.maxAngleDelta, 0.0f, 255.0f, "%.2f");
+    ImGui::SliderFloat(phrases[XorString("misc_aspectratio")].c_str(), &config->misc.aspectratio, 0.0f, 5.0f, "%.2f");
+    ImGui::Checkbox(phrases[XorString("misc_fakeprime")].c_str(), &config->misc.fakePrime);
 
-    ImGui::Checkbox("Fakeduck", &config->misc.fakeDuck);
+    ImGui::Checkbox(phrases[XorString("misc_fakeduck")].c_str(), &config->misc.fakeDuck);
     ImGui::SameLine();
     hotkey(config->misc.fakeDuckKey);
 
-    ImGui::Checkbox("Door spam", &config->misc.doorSpam);
-    ImGui::Checkbox("Preserve Killfeed", &config->misc.preserveKillfeed.enabled);
+    ImGui::Checkbox(phrases[XorString("misc_doorspam")].c_str(), &config->misc.doorSpam);
+    ImGui::Checkbox(phrases[XorString("misc_preservekillfeed")].c_str(), &config->misc.preserveKillfeed.enabled);
     ImGui::SameLine();
 
-    ImGui::PushID("Preserve Killfeed");
-    if (ImGui::Button("..."))
+    ImGui::PushID(XorString("Preserve Killfeed"));
+    if (ImGui::Button(phrases[XorString("global_threedots")].c_str()))
         ImGui::OpenPopup("");
 
     if (ImGui::BeginPopup("")) {
-        ImGui::Checkbox("Only Headshots", &config->misc.preserveKillfeed.onlyHeadshots);
+        ImGui::Checkbox(phrases[XorString("misc_onlyheadshots")].c_str(), &config->misc.preserveKillfeed.onlyHeadshots);
         ImGui::EndPopup();
     }
     ImGui::PopID();
 
-    ImGui::Checkbox("Purchase List", &config->misc.purchaseList.enabled);
+    ImGui::Checkbox(phrases[XorString("misc_purchaselist")].c_str(), &config->misc.purchaseList.enabled);
     ImGui::SameLine();
 
-    ImGui::PushID("Purchase List");
-    if (ImGui::Button("..."))
+    ImGui::PushID(XorString("Purchase List"));
+    if (ImGui::Button(phrases[XorString("global_threedots")].c_str()))
         ImGui::OpenPopup("");
 
     if (ImGui::BeginPopup("")) {
         ImGui::SetNextItemWidth(75.0f);
-        ImGui::Combo("Mode", &config->misc.purchaseList.mode, "Details\0Summary\0");
-        ImGui::Checkbox("Only During Freeze Time", &config->misc.purchaseList.onlyDuringFreezeTime);
-        ImGui::Checkbox("Show Prices", &config->misc.purchaseList.showPrices);
-        ImGui::Checkbox("No Title Bar", &config->misc.purchaseList.noTitleBar);
+        ImGui::Combo(phrases[XorString("global_mode")].c_str(), &config->misc.purchaseList.mode, XorString("Details\0Summary\0"));
+        ImGui::Checkbox(phrases[XorString("misc_onlyduringfreezetime")].c_str(), &config->misc.purchaseList.onlyDuringFreezeTime);
+        ImGui::Checkbox(phrases[XorString("misc_showprices")].c_str(), &config->misc.purchaseList.showPrices);
+        ImGui::Checkbox(phrases[XorString("global_notitle")].c_str(), &config->misc.purchaseList.noTitleBar);
         ImGui::EndPopup();
     }
     ImGui::PopID();
 
-	ImGui::Checkbox("Shots Cout", &config->misc.ShotsCout.enabled);
-    ImGui::PushID("Shots Cout");
+	ImGui::Checkbox(phrases[XorString("misc_shotscount")].c_str(), &config->misc.ShotsCout.enabled);
+    ImGui::PushID(XorString("Shots Cout"));
     ImGui::SameLine();
-    if (ImGui::Button("..."))
-        ImGui::OpenPopup("A");
+    if (ImGui::Button(phrases[XorString("global_threedots")].c_str()))
+        ImGui::OpenPopup(XorString("A"));
 
-    if (ImGui::BeginPopup("A")){
-        ImGui::Checkbox("No BackGround", &config->misc.ShotsCout.noBackGround);
-        ImGui::Checkbox("No TittleBar", &config->misc.ShotsCout.noTittleBar);
+    if (ImGui::BeginPopup(XorString("A"))){
+        ImGui::Checkbox(phrases[XorString("global_nobackground")].c_str(), &config->misc.ShotsCout.noBackGround);
+        ImGui::Checkbox(phrases[XorString("global_notitle")].c_str(), &config->misc.ShotsCout.noTittleBar);
         ImGui::EndPopup();
     }
     ImGui::PopID();
 
 
-	ImGui::Checkbox("Status Bar", &config->misc.Sbar.enabled);
+	ImGui::Checkbox(phrases[XorString("misc_statusbar")].c_str(), &config->misc.Sbar.enabled);
 	ImGui::SameLine();
 
-	ImGui::PushID("StatusBar");
-	if (ImGui::Button("..."))
-		ImGui::OpenPopup("S");
+	ImGui::PushID(XorString("StatusBar"));
+	if (ImGui::Button(phrases[XorString("global_threedots")].c_str()))
+		ImGui::OpenPopup(XorString("S"));
 
-	if (ImGui::BeginPopup("S")) {
-		ImGui::Checkbox("NoBackGround", &config->misc.Sbar.noBackGround);
-		ImGui::Checkbox("NoTittleBar", &config->misc.Sbar.noTittleBar);
-		ImGui::Checkbox("ShowViewAngles", &config->misc.Sbar.ShowPlayerRealViewAngles);
-		ImGui::Checkbox("ShowPlayerStatus", &config->misc.Sbar.ShowPlayerStatus);
-		ImGui::Checkbox("ShowGameGlobalVars", &config->misc.Sbar.ShowGameGlobalVars);
+	if (ImGui::BeginPopup(XorString("S"))) {
+		ImGui::Checkbox(phrases[XorString("global_nobackground")].c_str(), &config->misc.Sbar.noBackGround);
+		ImGui::Checkbox(phrases[XorString("global_notitle")].c_str(), &config->misc.Sbar.noTittleBar);
+		ImGui::Checkbox(phrases[XorString("misc_showviewangles")].c_str(), &config->misc.Sbar.ShowPlayerRealViewAngles);
+		ImGui::Checkbox(phrases[XorString("misc_showplayerstatus")].c_str(), &config->misc.Sbar.ShowPlayerStatus);
+		ImGui::Checkbox(phrases[XorString("misc_showgameglobalvars")].c_str(), &config->misc.Sbar.ShowGameGlobalVars);
 		ImGui::EndPopup();
 	}
 	ImGui::PopID();
 
-    ImGui::Checkbox("Reportbot", &config->misc.reportbot.enabled);
+    ImGui::Checkbox(phrases[XorString("misc_reportbot")].c_str(), &config->misc.reportbot.enabled);
     ImGui::SameLine();
-    ImGui::PushID("Reportbot");
+    ImGui::PushID(XorString("Reportbot"));
 
-    if (ImGui::Button("..."))
+    if (ImGui::Button(phrases[XorString("global_threedots")].c_str()))
         ImGui::OpenPopup("");
 
     if (ImGui::BeginPopup("")) {
         ImGui::PushItemWidth(80.0f);
-        ImGui::Combo("Target", &config->misc.reportbot.target, "Enemies\0Allies\0All\0");
-        ImGui::InputInt("Delay (s)", &config->misc.reportbot.delay);
+        ImGui::Combo(phrases[XorString("misc_reportbot_target")].c_str(), &config->misc.reportbot.target, XorString("Enemies\0Allies\0All\0"));
+        ImGui::InputInt(phrases[XorString("misc_reportbot_delay")].c_str(), &config->misc.reportbot.delay);
         config->misc.reportbot.delay = (std::max)(config->misc.reportbot.delay, 1);
-        ImGui::InputInt("Rounds", &config->misc.reportbot.rounds);
+        ImGui::InputInt(phrases[XorString("misc_reportbot_rounds")].c_str(), &config->misc.reportbot.rounds);
         config->misc.reportbot.rounds = (std::max)(config->misc.reportbot.rounds, 1);
         ImGui::PopItemWidth();
-        ImGui::Checkbox("Abusive Communications", &config->misc.reportbot.textAbuse);
-        ImGui::Checkbox("Griefing", &config->misc.reportbot.griefing);
-        ImGui::Checkbox("Wall Hacking", &config->misc.reportbot.wallhack);
-        ImGui::Checkbox("Aim Hacking", &config->misc.reportbot.aimbot);
-        ImGui::Checkbox("Other Hacking", &config->misc.reportbot.other);
-        if (ImGui::Button("Reset"))
+        ImGui::Checkbox(phrases[XorString("misc_reportbot_abusivecomms")].c_str(), &config->misc.reportbot.textAbuse);
+        ImGui::Checkbox(phrases[XorString("misc_reportbot_griefing")].c_str(), &config->misc.reportbot.griefing);
+        ImGui::Checkbox(phrases[XorString("misc_reportbot_wallhacking")].c_str(), &config->misc.reportbot.wallhack);
+        ImGui::Checkbox(phrases[XorString("misc_reportbot_aimhacking")].c_str(), &config->misc.reportbot.aimbot);
+        ImGui::Checkbox(phrases[XorString("misc_reportbot_otherhacking")].c_str(), &config->misc.reportbot.other);
+        if (ImGui::Button(phrases[XorString("misc_reportbot_reset")].c_str()))
             Misc::resetReportbot();
         ImGui::EndPopup();
     }
     ImGui::PopID();
-    ImGui::Checkbox("Cheat Spam", &config->misc.cheatSpam);
+    ImGui::Checkbox(phrases[XorString("misc_cheatspam")].c_str(), &config->misc.cheatSpam);
 
     ImGui::Columns(1);
     if (!contentOnly)

@@ -36,6 +36,12 @@ void UpdateLanguage()
 		phrases[XorString("global_color")] = XorString("Color");
 		phrases[XorString("global_speed")] = XorString("Speed");
 		phrases[XorString("global_edit")] = XorString("Edit");
+		phrases[XorString("global_search")] = XorString("Search");
+		phrases[XorString("global_update")] = XorString("Update");
+		phrases[XorString("global_language")] = XorString("Language");
+		phrases[XorString("global_team")] = XorString("Team");
+		phrases[XorString("global_flags")] = XorString("Flags");
+		phrases[XorString("global_mode")] = XorString("Mode");
 
 		phrases[XorString("window_aimbot")] = XorString("Aimbot | BRCheats");
 		phrases[XorString("window_ragebot")] = XorString("Ragebot | BRCheats");
@@ -46,6 +52,8 @@ void UpdateLanguage()
 		phrases[XorString("window_chams")] = XorString("Chams | BRCheats");
 		phrases[XorString("window_esp")] = XorString("ESP BRCheats | Use Game Capture from OBS, this ESP and the Menu will not be visible in your stream");
 		phrases[XorString("window_visuals")] = XorString("Visuals | BRCheats");
+		phrases[XorString("window_skinchanger")] = XorString("Skin Changer | BRCheats");
+		phrases[XorString("window_misc")] = XorString("Misc | BRCheats");
 
 		phrases[XorString("aimhacks_friendlyfire")] = XorString("Friendly fire");
 		phrases[XorString("aimhacks_visibleonly")] = XorString("Visible only");
@@ -143,7 +151,6 @@ void UpdateLanguage()
 		phrases[XorString("visuals_zoom")] = XorString("Zoom");
 		phrases[XorString("visuals_t_model")] = XorString("T Player Model");
 		phrases[XorString("visuals_ct_model")] = XorString("CT Player Model");
-
 		phrases[XorString("visuals_thirdperson")] = XorString("Thirdperson");
 		phrases[XorString("visuals_thirdperson_distance")] = XorString("Thirdperson distance: %d");
 		phrases[XorString("visuals_viewmodelfov")] = XorString("Viewmodel FOV: %d");
@@ -165,6 +172,96 @@ void UpdateLanguage()
 		phrases[XorString("visuals_colorcorrection")] = XorString("Color Correction");
 		phrases[XorString("visuals_ragdollforce")] = XorString("Ragdoll Force");
 		phrases[XorString("visuals_ragdollforce_strenght")] = XorString("Ragdoll Force Strenght");
+
+		phrases[XorString("skinchanger_paintkit")] = XorString("Paint Kit");
+		phrases[XorString("skinchanger_quality")] = XorString("Quality");
+		phrases[XorString("skinchanger_seed")] = XorString("Seed");
+		phrases[XorString("skinchanger_stattrak")] = XorString("StatTrak\u2122");
+		phrases[XorString("skinchanger_wear")] = XorString("Wear");
+		phrases[XorString("skinchanger_knife")] = XorString("Knife");
+		phrases[XorString("skinchanger_glove")] = XorString("Glove");
+		phrases[XorString("skinchanger_nametag")] = XorString("Name Tag");
+		phrases[XorString("skinchanger_sticker")] = XorString("Sticker");
+		phrases[XorString("skinchanger_scale")] = XorString("Scale");
+		phrases[XorString("skinchanger_rotation")] = XorString("Rotation");
+
+		phrases[XorString("misc_menukey")] = XorString("Menu Key");
+		phrases[XorString("misc_radarhack")] = XorString("Radar Hack");
+		phrases[XorString("misc_spectatorlist")] = XorString("Spectator List");
+		phrases[XorString("misc_revealranks")] = XorString("Reveal Ranks");
+		phrases[XorString("misc_revealmoney")] = XorString("Reveal Money");
+		phrases[XorString("misc_revealsuspect")] = XorString("Reveal Suspect");
+		phrases[XorString("misc_fixmovement")] = XorString("Fix Movement");
+		phrases[XorString("misc_disablemodelocclusion")] = XorString("Disable Model Occlusion");
+		phrases[XorString("misc_antiafkkick")] = XorString("Anti AFK Kick");
+		phrases[XorString("misc_autostrafe")] = XorString("Auto Strafe");
+		phrases[XorString("misc_bunnyhop")] = XorString("Bunny Hop");
+		phrases[XorString("misc_fastduck")] = XorString("Fast Duck");
+		phrases[XorString("misc_slowwalk")] = XorString("Slowwalk");
+		phrases[XorString("misc_autopistol")] = XorString("Auto Pistol");
+		phrases[XorString("misc_autoreload")] = XorString("Auto Reload");
+		phrases[XorString("misc_autoaccept")] = XorString("Auto Accept");
+		phrases[XorString("misc_disablehudblur")] = XorString("Disable HUD Blur");
+		phrases[XorString("misc_fastplant")] = XorString("Fast Plant");
+		phrases[XorString("misc_faststop")] = XorString("Fast Stop");
+		phrases[XorString("misc_bombtimer")] = XorString("Bomb Timer");
+		phrases[XorString("misc_quickreload")] = XorString("Quick Reload");
+		phrases[XorString("misc_quickreload")] = XorString("Prepare Revolver");
+
+
+		phrases[XorString("misc_animatedclantag")] = XorString("Animated Clan Tag");
+		phrases[XorString("misc_clocktag")] = XorString("Clock Tag");
+		phrases[XorString("misc_customclantag")] = XorString("Custom Clantag");
+		phrases[XorString("misc_killmessage")] = XorString("Kill Message");
+		phrases[XorString("misc_nameexploit")] = XorString("Name Exploit");
+		phrases[XorString("misc_setupfakeban")] = XorString("Setup Fake Ban");
+		phrases[XorString("misc_fakeitemflags")] = XorString("Fake Item Flags");
+		phrases[XorString("misc_messagetype")] = XorString("Message Type");
+		phrases[XorString("misc_itemtype")] = XorString("Item Type");
+		phrases[XorString("misc_itemrarity")] = XorString("Item Rarity");
+		phrases[XorString("misc_playercolor")] = XorString("Player Color");
+		phrases[XorString("misc_playername")] = XorString("Player Name");
+		phrases[XorString("misc_skinname")] = XorString("Skin Name");
+		phrases[XorString("misc_changename")] = XorString("Change Name");
+		phrases[XorString("misc_namestealer")] = XorString("Name Stealer");
+		phrases[XorString("misc_customname")] = XorString("Message Type");
+		phrases[XorString("misc_hitsound")] = XorString("Hit Sound");
+		phrases[XorString("misc_hitsound_filename")] = XorString("Hit Sound Filename");
+		phrases[XorString("misc_killsound")] = XorString("Kill Sound");
+		phrases[XorString("misc_killsound_filename")] = XorString("Kill Sound Filename");
+		phrases[XorString("misc_fakelag")] = XorString("Fake Lag");
+		phrases[XorString("misc_killsound")] = XorString("Kill Sound");
+		phrases[XorString("misc_min_fakelag_amount")] = XorString("Min. Fakelag Amount");
+		phrases[XorString("misc_fakelag_amount")] = XorString("Fakelag Amount");
+		phrases[XorString("misc_grenadeprediction")] = XorString("Grenade Prediction");
+		phrases[XorString("misc_maxangledelta")] = XorString("Max Angle Delta");
+		phrases[XorString("misc_aspectratio")] = XorString("Aspect Ratio");
+		phrases[XorString("misc_fakeprime")] = XorString("Fake Prime");
+		phrases[XorString("misc_fakeduck")] = XorString("Fake Duck");
+		phrases[XorString("misc_doorspam")] = XorString("Door Spam");
+		phrases[XorString("misc_preservekillfeed")] = XorString("Preserve Killfeed");
+		phrases[XorString("misc_onlyheadshots")] = XorString("Only Headshots");
+		phrases[XorString("misc_purchaselist")] = XorString("Purchase List");
+		phrases[XorString("misc_onlyduringfreezetime")] = XorString("Only During Freeze Time");
+		phrases[XorString("misc_showprices")] = XorString("Show Prices");
+		phrases[XorString("misc_shotscount")] = XorString("Shots Count");
+		phrases[XorString("misc_statusbar")] = XorString("Status Bar");
+		phrases[XorString("misc_showviewangles")] = XorString("ShowViewAngles");
+		phrases[XorString("misc_showplayerstatus")] = XorString("ShowPlayerStatus");
+		phrases[XorString("misc_showgameglobalvars")] = XorString("ShowGameGlobalVars");
+		phrases[XorString("misc_reportbot")] = XorString("Reportbot");
+		phrases[XorString("misc_reportbot_target")] = XorString("Target");
+		phrases[XorString("misc_reportbot_delay")] = XorString("Delay (s)");
+		phrases[XorString("misc_reportbot_rounds")] = XorString("Rounds");
+		phrases[XorString("misc_reportbot_abusivecomms")] = XorString("Abusive Communications");
+		phrases[XorString("misc_reportbot_griefing")] = XorString("Griefing");
+		phrases[XorString("misc_reportbot_wallhacking")] = XorString("Wall Hacking");
+		phrases[XorString("misc_reportbot_aimhacking")] = XorString("Aim Hacking");
+		phrases[XorString("misc_reportbot_otherhacking")] = XorString("Other Hacking");
+		phrases[XorString("misc_reportbot_reset")] = XorString("Reset");
+		phrases[XorString("misc_cheatspam")] = XorString("Cheat Spam");
+
+
 
 
 		
