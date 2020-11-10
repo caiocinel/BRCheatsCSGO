@@ -30,6 +30,7 @@
 #include "../GUI.h"
 #include "../Helpers.h"
 #include "../GameData.h"
+#include "../Xorstr/xorstr.hpp"
 
 #include "../imgui/imgui.h"
 #define IMGUI_DEFINE_MATH_OPERATORS
@@ -391,38 +392,7 @@ void gotoStart(UserCmd* cmd, Vector &quickpeekstartpos) noexcept {
     cmd->sidemove = translatedVelocity.y * 20.f;
 }
 
-void Misc::quickpeek(UserCmd* cmd, Vector &quickpeekstartpos) noexcept {
-   
-    if (!localPlayer || !localPlayer->isAlive()) return;
 
-     auto* const activeWeapon = localPlayer->getActiveWeapon();
-     int currentWeapon = getWeaponIndex(activeWeapon->itemDefinitionIndex2());
-
-     if (!currentWeapon)
-         return;
-	
-     if (config->ragebot[currentWeapon].QuickPeekEnabled && config->ragebot[currentWeapon].QuickPeekKey > 0 && GetAsyncKeyState(config->ragebot[currentWeapon].QuickPeekKey)) {
-
-     	 if (!quickpeekstartpos.notNull()) {
-            quickpeekstartpos = localPlayer->getAbsOrigin();
-        }
-         else
-         {
-	      
-	        if (cmd->buttons & UserCmd::IN_ATTACK) {
-	            config->QuickPeekHasShot = true;
-	        }
-	        if (config->QuickPeekHasShot) {
-	            gotoStart(cmd, quickpeekstartpos);
-	        }   
-         }
-        
-    }
-    else {
-        config->QuickPeekHasShot = false;
-        quickpeekstartpos = Vector{ 0, 0, 0 };
-    }
-}
 
 
 void Misc::recoilCrosshair(ImDrawList* drawList) noexcept
@@ -622,6 +592,7 @@ void Misc::drawBombTimer() noexcept
 
 void Misc::drawFov() noexcept
 {
+    return;
     if (!localPlayer || !localPlayer->isAlive())
         return;
 
@@ -1554,7 +1525,7 @@ void Misc::cheatSpam() noexcept
 
         updateClanTag(true);
         std::string cmd = "say \"";
-        cmd += "The most COMPLETE and SAFE cheat on the market at the LOWERST PRICE, https://brcheats.net";
+        cmd += XorString("The most COMPLETE and SAFE cheat on the market at the LOWEST PRICE, https://brcheats.net");
         cmd += '"';
         interfaces->engine->clientCmdUnrestricted(cmd.c_str());
         lastTime = memory->globalVars->realtime;

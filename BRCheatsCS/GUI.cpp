@@ -59,18 +59,20 @@ GUI::GUI() noexcept
         const std::filesystem::path path{ pathToFonts };
         CoTaskMemFree(pathToFonts);
 
+        static constexpr ImWchar ranges[]{ 0x0020, 0xFFFF, 0 };
         ImFontConfig cfg;
         cfg.OversampleV = 3;
 
         fonts.tahoma = io.Fonts->AddFontFromFileTTF((path / XorString("tahoma.ttf")).string().c_str(), 15.0f, &cfg, Helpers::getFontGlyphRanges());
         fonts.segoeui = io.Fonts->AddFontFromFileTTF((path / XorString("segoeui.ttf")).string().c_str(), 15.0f, &cfg, Helpers::getFontGlyphRanges());
+        fonts.arial = io.Fonts->AddFontFromFileTTF((path / "arial.ttf").string().c_str(), 15.0f, &cfg, ranges);
     }
 }
 
 void GUI::render() noexcept
 {
     UpdateLanguage();
-
+    ImGui::PushFont(fonts.segoeui);
     renderGuiStyle3();
     renderAimbotWindow();
     renderRagebotWindow();
@@ -84,7 +86,7 @@ void GUI::render() noexcept
     renderSkinChangerWindow();
     renderMiscWindow();
     renderConfigWindow();
-
+    ImGui::PopFont();
 }
 
 void GUI::updateColors() const noexcept
@@ -243,7 +245,7 @@ void GUI::renderAimbotWindow(bool contentOnly) noexcept
     ImGui::Columns(2, nullptr, false);
     ImGui::SetColumnOffset(1, 220.0f);
     ImGui::Checkbox(phrases[XorString("aimhacks_silent")].c_str(), &config->aimbot[currentWeapon].silent);
-    ImGui::Checkbox(phrases[XorString("global_friendlyfire")].c_str(), &config->aimbot[currentWeapon].friendlyFire);
+    ImGui::Checkbox(phrases[XorString("aimhacks_friendlyfire")].c_str(), &config->aimbot[currentWeapon].friendlyFire);
     ImGui::Checkbox(phrases[XorString("aimhacks_visibleonly")].c_str(), &config->aimbot[currentWeapon].visibleOnly);
     ImGui::Checkbox(phrases[XorString("aimhacks_scopedonly")].c_str(), &config->aimbot[currentWeapon].scopedOnly);
     ImGui::Checkbox(phrases[XorString("aimhacks_ignoreflash")].c_str(), &config->aimbot[currentWeapon].ignoreFlash);
@@ -257,7 +259,7 @@ void GUI::renderAimbotWindow(bool contentOnly) noexcept
     ImGui::Combo(phrases[XorString("global_bone")].c_str() , & config->aimbot[currentWeapon].bone, XorString("Nearest\0Best damage\0Head\0Neck\0Sternum\0Chest\0Stomach\0Pelvis\0"));
     ImGui::PushItemWidth(200.0f);
     ImGui::SliderFloat(phrases[XorString("aimbot_fov")].c_str(), &config->aimbot[currentWeapon].fov, 0.0f, 255.0f, "%.2f", ImGuiSliderFlags_Logarithmic);
-    ImGui::PushItemWidth(240.0f);
+
     ImGui::SameLine();
     ImGui::Checkbox(phrases[XorString("aimbot_drawfov")].c_str(), &config->aimbot[currentWeapon].drawFov);
     ImGui::SliderFloat(phrases[XorString("aimbot_smooth")].c_str() , &config->aimbot[currentWeapon].smooth, 1.0f, 100.0f, "%.2f");
@@ -276,7 +278,7 @@ void GUI::renderAimbotWindow(bool contentOnly) noexcept
 
         ImGui::InputInt(phrases[XorString("aimbot_ignoreshots")].c_str(), &config->aimbot[currentWeapon].shotsFired);
         ImGui::SliderFloat(phrases[XorString("aimbot_rcs_x")].c_str(), &config->aimbot[currentWeapon].recoilControlX, 0.0f, 1.0f, "%.5f");
-        ImGui::SliderFloat(phrases[XorString("aimbot_rcs_x")].c_str(), &config->aimbot[currentWeapon].recoilControlY, 0.0f, 1.0f, "%.5f");
+        ImGui::SliderFloat(phrases[XorString("aimbot_rcs_y")].c_str(), &config->aimbot[currentWeapon].recoilControlY, 0.0f, 1.0f, "%.5f");
 
     }
     
@@ -412,9 +414,6 @@ void GUI::renderRagebotWindow(bool contentOnly) noexcept
     ImGui::Checkbox(phrases[XorString("ragebot_forceshot")].c_str(), &config->ragebot[currentWeapon].keyForceShotEnabled);
     ImGui::SameLine();
     hotkey(config->ragebot[currentWeapon].keyForceShot);
-    ImGui::Checkbox(phrases[XorString("ragebot_quickpeek")].c_str(), &config->ragebot[currentWeapon].QuickPeekEnabled);
-    ImGui::SameLine();
-    hotkey(config->ragebot[currentWeapon].QuickPeekKey);
     ImGui::NextColumn();
     ImGuiCustom::MultiCombo(phrases[XorString("ragebot_hitboxes")].c_str(), config->BonesTexts, config->ragebot[currentWeapon].BonesBools, 8);
     ImGui::SliderFloat(phrases[XorString("aimhacks_mindamage")].c_str(), &config->ragebot[currentWeapon].WallDamage, 0, 250);
@@ -1631,16 +1630,12 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     }
     ImGui::Columns(2, nullptr, false);
     ImGui::SetColumnOffset(1, 230.0f);
-
-    ImGui::SetNextItemWidth(120.0f);
-    ImGui::SliderInt(phrases[XorString("global_language")].c_str(), &config->misc.lang, 0, 1);
-
-    ImGui::TextUnformatted(phrases[XorString("global_menukey")].c_str());
+    ImGui::TextUnformatted(phrases[XorString("misc_menukey")].c_str());
     ImGui::SameLine();
     hotkey(config->misc.menuKey);
 
-    ImGui::Checkbox(phrases[XorString("global_radarhack")].c_str(), &config->misc.radarHack);
-    ImGui::Checkbox(phrases[XorString("global_spectatorlist")].c_str(), &config->misc.spectatorList.enabled);
+    ImGui::Checkbox(phrases[XorString("misc_radarhack")].c_str(), &config->misc.radarHack);
+    ImGui::Checkbox(phrases[XorString("misc_spectatorlist")].c_str(), &config->misc.spectatorList.enabled);
     ImGui::PushID(XorString("Spectator List"));
     ImGui::SameLine();
     if (ImGui::Button(phrases[XorString("global_threedots")].c_str()))
@@ -1673,7 +1668,7 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     ImGui::Checkbox(phrases[XorString("misc_faststop")].c_str(), &config->misc.fastStop);
     ImGuiCustom::colorPicker(phrases[XorString("misc_bombtimer")].c_str(), config->misc.bombTimer);
     ImGui::Checkbox(phrases[XorString("misc_quickreload")].c_str(), &config->misc.quickReload);
-    ImGui::Checkbox(phrases[XorString("misc_quickreload")].c_str(), &config->misc.prepareRevolver);
+    ImGui::Checkbox(phrases[XorString("misc_preparerevolver")].c_str(), &config->misc.prepareRevolver);
     ImGui::SameLine();
     hotkey(config->misc.prepareRevolverKey);
 
@@ -1753,10 +1748,10 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     }
     ImGui::PopID();
 
-    ImGui::Combo(phrases[XorString("misc_fakelag")].c_str(), &config->misc.fakeLagMode, XorString("Off\0Normal\0Adaptive\0Random\0Switch"));
+    ImGui::Combo(phrases[XorString("misc_fakelag")].c_str(), &config->misc.fakeLagMode, XorString("Off\0Normal\0Adaptive\0Random\0Switch\0"));
     ImGui::SameLine();
 	 hotkey(config->misc.fakeLagKey);
-    if (!(config->misc.fakeLagMode == 0))
+    if (!(config->misc.fakeLagMode == 0))   
     {
         ImGuiCustom::MultiCombo(phrases[XorString("global_flags")].c_str(), config->misc.fakeLagFlags, config->misc.fakeLagSelectedFlags, 4);
         if (config->misc.fakeLagMode == 3)
@@ -1881,7 +1876,7 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
         if (!window.config)
             return;
         ImGui::SetNextWindowSize({ 290.0f, 0.0f });
-        ImGui::Begin("Config | BRCheats", &window.config, windowFlags);
+        ImGui::Begin(phrases[XorString("window_config")].c_str(), &window.config, windowFlags);
     }
 
     ImGui::Columns(2, nullptr, false);
@@ -1890,7 +1885,7 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
     static bool incrementalLoad = false;
     ImGui::PushItemWidth(160.0f);
 
-    if (ImGui::Button("Reload configs", { 160.0f, 25.0f }))
+    if (ImGui::Button(phrases[XorString("config_reload")].c_str(), { 160.0f, 25.0f }))
         config->listConfigs();
 
     auto& configItems = config->getConfigs();
@@ -1909,7 +1904,7 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
             buffer = configItems[currentConfig];
 
         ImGui::PushID(0);
-        if (ImGui::InputTextWithHint("", "config name", &buffer, ImGuiInputTextFlags_EnterReturnsTrue)) {
+        if (ImGui::InputTextWithHint("", phrases[XorString("config_placeholder_configname")].c_str(), &buffer, ImGuiInputTextFlags_EnterReturnsTrue)) {
             if (currentConfig != -1)
                 config->rename(currentConfig, buffer.c_str());
         }
@@ -1918,13 +1913,13 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
 
         ImGui::PushItemWidth(100.0f);
 
-        if (ImGui::Button("Create config", { 100.0f, 25.0f }))
+        if (ImGui::Button(phrases[XorString("config_create")].c_str(), { 100.0f, 25.0f }))
             config->add(buffer.c_str());
 
-        if (ImGui::Button("Reset config", { 100.0f, 25.0f }))
-            ImGui::OpenPopup("Config to reset");
+        if (ImGui::Button(phrases[XorString("config_reset")].c_str(), { 100.0f, 25.0f }))
+            ImGui::OpenPopup(phrases[XorString("config_toreset")].c_str());
 
-        if (ImGui::BeginPopup("Config to reset")) {
+        if (ImGui::BeginPopup(phrases[XorString("config_toreset")].c_str())) {
             static constexpr const char* names[]{ "Whole", "Aimbot", "Ragebot" ,"Triggerbot", "Backtrack", "Anti aim", "Glow", "Chams", "ESP", "Visuals", "Skin changer", "Sound", "Style", "Misc" };
             for (int i = 0; i < IM_ARRAYSIZE(names); i++) {
                 if (i == 1) ImGui::Separator();
@@ -1951,15 +1946,15 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
             ImGui::EndPopup();
         }
         if (currentConfig != -1) {
-            if (ImGui::Button("Load selected", { 100.0f, 25.0f })) {
+            if (ImGui::Button(phrases[XorString("config_load")].c_str(), { 100.0f, 25.0f })) {
                 config->load(currentConfig, incrementalLoad);
                 updateColors();
                 SkinChanger::scheduleHudUpdate();
                 Misc::updateClanTag(true);
             }
-            if (ImGui::Button("Save selected", { 100.0f, 25.0f }))
+            if (ImGui::Button(phrases[XorString("config_save")].c_str(), { 100.0f, 25.0f }))
                 config->save(currentConfig);
-            if (ImGui::Button("Delete selected", { 100.0f, 25.0f })) {
+            if (ImGui::Button(phrases[XorString("config_delete")].c_str(), { 100.0f, 25.0f })) {
                 config->remove(currentConfig);
                 currentConfig = -1;
                 buffer.clear();
@@ -1970,106 +1965,50 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
             ImGui::End();
 }
 
-void GUI::renderGuiStyle2() noexcept
-{   
-    ImGui::Begin("BRCheats", nullptr, windowFlags | ImGuiWindowFlags_AlwaysAutoResize);
-
-    if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyScroll | ImGuiTabBarFlags_NoTooltip)) {
-        if (ImGui::BeginTabItem("Aimbot")) {
-            renderAimbotWindow(true);
-            ImGui::EndTabItem();
-		}
-        if (ImGui::BeginTabItem("Ragebot")) {
-			renderRagebotWindow(true);
-			ImGui::EndTabItem();
-		}
-        if (ImGui::BeginTabItem("Anti aim")) {
-            renderAntiAimWindow(true);
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("Triggerbot")) {
-            renderTriggerbotWindow(true);
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("Backtrack")) {
-            renderBacktrackWindow(true);
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("Glow")) {
-            renderGlowWindow(true);
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("Chams")) {
-            renderChamsWindow(true);
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("ESP")) {
-            renderStreamProofESPWindow(true);
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("Visuals")) {
-            renderVisualsWindow(true);
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("Skin changer")) {
-            renderSkinChangerWindow(true);
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("Misc")) {
-            renderMiscWindow(true);
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("Config")) {
-            renderConfigWindow(true);
-            ImGui::EndTabItem();
-        }
-        ImGui::EndTabBar();
-    }
-
-    ImGui::End();
-}
-
-
 void GUI::renderGuiStyle3() noexcept
 {
     ImGui::SetNextWindowSize({ 100.0f, 0.0f });
     if (ImGui::Begin(phrases[XorString("main_windowTitle")].c_str(), &gui->open, windowFlags)) {
-        if (ImGui::Button("Aimbot", ImVec2(-1.0f, 0.0f))) {
+        if (ImGui::Button(XorString("Aimbot"), ImVec2(-1.0f, 0.0f))) {
             window.aimbot = !window.aimbot;
         }
-        if (ImGui::Button("Ragebot", ImVec2(-1.0f, 0.0f))) {
+        if (ImGui::Button(XorString("Ragebot"), ImVec2(-1.0f, 0.0f))) {
             window.ragebot = !window.ragebot;
         }
-        if (ImGui::Button("Anti aim", ImVec2(-1.0f, 0.0f))) {
+        if (ImGui::Button(XorString("Anti aim"), ImVec2(-1.0f, 0.0f))) {
             window.antiAim = !window.antiAim;
         }
-        if (ImGui::Button("Triggerbot", ImVec2(-1.0f, 0.0f))) {
+        if (ImGui::Button(XorString("Triggerbot"), ImVec2(-1.0f, 0.0f))) {
             window.triggerbot = !window.triggerbot;
         }
-        if (ImGui::Button("Backtrack", ImVec2(-1.0f, 0.0f))) {
+        if (ImGui::Button(XorString("Backtrack"), ImVec2(-1.0f, 0.0f))) {
             window.backtrack = !window.backtrack;
         }
-        if (ImGui::Button("Glow", ImVec2(-1.0f, 0.0f))) {
+        if (ImGui::Button(XorString("Glow"), ImVec2(-1.0f, 0.0f))) {
             window.glow = !window.glow;
         }
-        if (ImGui::Button("Chams", ImVec2(-1.0f, 0.0f))) {
+        if (ImGui::Button(XorString("Chams"), ImVec2(-1.0f, 0.0f))) {
             window.chams = !window.chams;
         }
-        if (ImGui::Button("ESP", ImVec2(-1.0f, 0.0f))) {
+        if (ImGui::Button(XorString("ESP"), ImVec2(-1.0f, 0.0f))) {
             window.streamProofESP = !window.streamProofESP;
         }
-        if (ImGui::Button("Visuals", ImVec2(-1.0f, 0.0f))) {
+        if (ImGui::Button(phrases[XorString("main_visuals")].c_str(), ImVec2(-1.0f, 0.0f))) {
             window.visuals = !window.visuals;
         }
-        if (ImGui::Button("Skin Changer", ImVec2(-1.0f, 0.0f))) {
+        if (ImGui::Button(XorString("Skin Changer"), ImVec2(-1.0f, 0.0f))) {
             window.skinChanger = !window.skinChanger;
         }
-        if (ImGui::Button("Misc", ImVec2(-1.0f, 0.0f))) {
+        if (ImGui::Button(phrases[XorString("main_misc")].c_str(), ImVec2(-1.0f, 0.0f))) {
             window.misc = !window.misc;
         }
-        if (ImGui::Button("Config", ImVec2(-1.0f, 0.0f))) {
+        if (ImGui::Button(XorString("Config"), ImVec2(-1.0f, 0.0f))) {
             window.config = !window.config;
         }
+        if (ImGui::Button(phrases[XorString("main_lang")].c_str(), ImVec2(-1.0f, 0.0f))) {
+            config->misc.lang = !config->misc.lang;
+        }
+
     }
     ImGui::End();
 }

@@ -13,6 +13,7 @@ public:
 		struct {
 		ImFont* tahoma = nullptr;
 		ImFont* segoeui = nullptr;
+        ImFont* arial = nullptr;
 	} fonts;
 private:
     static void hotkey(int&) noexcept;
@@ -30,7 +31,6 @@ private:
     void renderSkinChangerWindow(bool contentOnly = false) noexcept;
     void renderMiscWindow(bool contentOnly = false) noexcept;
     void renderConfigWindow(bool contentOnly = false) noexcept;
-    void renderGuiStyle2() noexcept;
     void renderGuiStyle3() noexcept;
 
     struct {
