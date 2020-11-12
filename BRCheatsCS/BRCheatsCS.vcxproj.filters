@@ -547,6 +547,9 @@
     <ClInclude Include="xorstr\xorstr.hpp">
       <Filter>Xorstr</Filter>
     </ClInclude>
+    <ClInclude Include="BRC_UserActivity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="BRC_UserActivity.lib" />

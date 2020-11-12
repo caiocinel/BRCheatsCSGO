@@ -10,6 +10,7 @@
 #include "imgui/imgui_impl_win32.h"
 
 #include "MinHook/MinHook.h"
+#include "BRC_UserActivity.h"
 
 #include "Config.h"
 #include "EventListener.h"
@@ -601,8 +602,6 @@ static int __fastcall dispatchSound(SoundInfo& soundInfo) noexcept
 
 static int __stdcall render2dEffectsPreHud(int param) noexcept
 {
-    Visuals::applyScreenEffects();
-    Visuals::hitEffect();
     return hooks->viewRender.callOriginal<int, 39>(param);
 }
 
@@ -762,7 +761,7 @@ static bool __fastcall WriteUsercmdDeltaToBuffer(void* ecx, void* edx, int slot,
     return true;
 }
 
-void BRC_StartUserActivity(int, LPSTR = NULL);
+
 
 void Hooks::install() noexcept
 {
@@ -821,7 +820,7 @@ void Hooks::install() noexcept
     if constexpr (std::is_same_v<HookType, MinHook>)
         MH_EnableHook(MH_ALL_HOOKS);
 
-  // BRC_StartUserActivity(4, &config->globals.UsernameBRC);
+  //BRC_StartUserActivity(4, &config->globals.UsernameBRC);
 }
 
 extern "C" BOOL WINAPI _CRT_INIT(HMODULE module, DWORD reason, LPVOID reserved);

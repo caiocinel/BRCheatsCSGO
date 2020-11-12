@@ -59,7 +59,6 @@ void EventListener::fireGameEvent(GameEvent* event)
         break;
     case fnv::hash("player_hurt"):
         Misc::playHitSound(*event);
-        Visuals::hitEffect(event);
         Visuals::hitMarker(event);
     	 case fnv::hash("weapon_fire"): { Misc::ShotsCout(event); break; }
         break;

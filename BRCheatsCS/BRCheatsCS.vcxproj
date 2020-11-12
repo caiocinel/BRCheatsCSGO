@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Beams.h" />
+    <ClInclude Include="BRC_UserActivity.h" />
     <ClInclude Include="Lang.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="ConfigStructs.h" />
