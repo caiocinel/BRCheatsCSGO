@@ -69,11 +69,13 @@ void GameData::update() noexcept
                 playerData.emplace_back(entity);
             else if (const auto obs = entity->getObserverTarget())
                 observerData.emplace_back(entity, obs, obs == localPlayer.get());
-        } else {
+        }
+        else {
             if (entity->isWeapon()) {
                 if (entity->ownerEntity() == -1)
                     weaponData.emplace_back(entity);
-            } else {
+            }
+            else {
                 switch (entity->getClientClass()->classId) {
                 case ClassId::BaseCSGrenadeProjectile:
                     if (entity->grenadeExploded()) {
@@ -212,7 +214,8 @@ BaseData::BaseData(Entity* entity) noexcept
         const auto collideable = entity->getCollideable();
         obbMins = collideable->obbMins();
         obbMaxs = collideable->obbMaxs();
-    } else if (const auto model = entity->getModel()) {
+    }
+    else if (const auto model = entity->getModel()) {
         obbMins = model->mins;
         obbMaxs = model->maxs;
     }
@@ -238,7 +241,7 @@ EntityData::EntityData(Entity* entity) noexcept : BaseData{ entity }
     }(entity->getClientClass()->classId);
 }
 
-ProjectileData::ProjectileData(Entity* projectile) noexcept : BaseData { projectile }
+ProjectileData::ProjectileData(Entity* projectile) noexcept : BaseData{ projectile }
 {
     name = [](Entity* projectile) {
         switch (projectile->getClientClass()->classId) {
@@ -272,7 +275,7 @@ void ProjectileData::update(Entity* projectile) noexcept
 {
     static_cast<BaseData&>(*this) = { projectile };
 
-    if (const auto& pos = projectile->getAbsOrigin(); trajectory.size() < 1 || trajectory[trajectory.size() - 1].second != pos)
+    if (const auto pos = projectile->getAbsOrigin(); trajectory.size() < 1 || trajectory[trajectory.size() - 1].second != pos)
         trajectory.emplace_back(memory->globalVars->realtime, pos);
 }
 
@@ -280,7 +283,7 @@ PlayerData::PlayerData(Entity* entity) noexcept : BaseData{ entity }
 {
     if (localPlayer) {
         enemy = memory->isOtherEnemy(entity, localPlayer.get());
-        visible = !interfaces->engine->cullBox(obbMins + entity->getAbsOrigin(), obbMaxs + entity->getAbsOrigin()) && entity->visibleTo(localPlayer.get());
+        visible = entity->visibleTo(localPlayer.get());
     }
 
     constexpr auto isEntityAudible = [](int entityIndex) noexcept {
@@ -292,7 +295,7 @@ PlayerData::PlayerData(Entity* entity) noexcept : BaseData{ entity }
 
     audible = isEntityAudible(entity->index());
     spotted = entity->spotted();
-	health = entity->health();
+    health = entity->health();
     flashDuration = entity->flashDuration();
     entity->getPlayerName(name);
 

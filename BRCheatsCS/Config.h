@@ -403,9 +403,6 @@ public:
         ColorToggle world;
         ColorToggle sky;
         bool deagleSpinner{ false };
-        int screenEffect{ 0 };
-        int hitEffect{ 0 };
-        float hitEffectTime{ 0.6f };
         int hitMarker{ 0 };
         float hitMarkerTime{ 0.6f };
         int playerModelT{ 0 };
@@ -497,7 +494,7 @@ public:
         bool revealRanks{ false };
         bool revealMoney{ false };
         bool revealSuspect{ false };
-        ImGuiStruct spectatorList{ false };
+        ColorToggle spectatorList;
         ColorToggle watermark;
         bool fixAnimationLOD{ false };
         bool fixBoneMatrix{ false };

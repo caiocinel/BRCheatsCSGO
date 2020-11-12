@@ -24,33 +24,33 @@ enum class WeaponType {
 
 struct WeaponInfo {
     PAD(20)
-    int maxClip;
+        int maxClip;
     PAD(112)
-    char* name;
+        char* name;
     PAD(60)
-    WeaponType type;
+        WeaponType type;
     PAD(4)
-    int price;
+        int price;
     PAD(0x8)
-    float cycletime;
+        float cycletime;
     PAD(12)
-    bool fullAuto;
+        bool fullAuto;
     PAD(3)
-    int damage;
+        int damage;
     float armorRatio;
     int bullets;
     float penetration;
     PAD(8)
-    float range;
+        float range;
     float rangeModifier;
     PAD(0x10)
-    bool silencer;
+        bool silencer;
     PAD(15)
-    float maxSpeed;
+        float maxSpeed;
     float maxSpeedAlt;
     PAD(100)
-    float recoilMagnitude;
+        float recoilMagnitude;
     float recoilMagnitudeAlt;
     PAD(0x14)
-    float recoveryTimeStand;
+        float recoveryTimeStand;
 };

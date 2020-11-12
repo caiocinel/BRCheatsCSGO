@@ -521,9 +521,6 @@ static void from_json(const json& j, Config::Visuals& v)
     read(j, "Brightness", v.brightness);
     read(j, "Skybox", v.skybox);
     read(j, "Deagle spinner", v.deagleSpinner);
-    read(j, "Screen effect", v.screenEffect);
-    read(j, "Hit effect", v.hitEffect);
-    read(j, "Hit effect time", v.hitEffectTime);
     read(j, "Hit marker", v.hitMarker);
     read(j, "Hit marker time", v.hitMarkerTime);
     read(j, "Playermodel T", v.playerModelT);
@@ -1219,9 +1216,6 @@ static void to_json(json& j, const Config::Visuals& o)
     WRITE("World", world);
     WRITE("Sky", sky);
     WRITE("Deagle spinner", deagleSpinner);
-    WRITE("Screen effect", screenEffect);
-    WRITE("Hit effect", hitEffect);
-    WRITE("Hit effect time", hitEffectTime);
     WRITE("Hit marker", hitMarker);
     WRITE("Hit marker time", hitMarkerTime);
     WRITE("Playermodel T", playerModelT);

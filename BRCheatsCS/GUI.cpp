@@ -259,9 +259,10 @@ void GUI::renderAimbotWindow(bool contentOnly) noexcept
     ImGui::Combo(phrases[XorString("global_bone")].c_str() , & config->aimbot[currentWeapon].bone, XorString("Nearest\0Best damage\0Head\0Neck\0Sternum\0Chest\0Stomach\0Pelvis\0"));
     ImGui::PushItemWidth(200.0f);
     ImGui::SliderFloat(phrases[XorString("aimbot_fov")].c_str(), &config->aimbot[currentWeapon].fov, 0.0f, 255.0f, "%.2f", ImGuiSliderFlags_Logarithmic);
-
     ImGui::SameLine();
+    ImGui::PushID(0);
     ImGui::Checkbox(phrases[XorString("aimbot_drawfov")].c_str(), &config->aimbot[currentWeapon].drawFov);
+    ImGui::PopID();
     ImGui::SliderFloat(phrases[XorString("aimbot_smooth")].c_str() , &config->aimbot[currentWeapon].smooth, 1.0f, 100.0f, "%.2f");
     ImGui::SliderInt(phrases[XorString("aimhacks_hitchance")].c_str(), &config->aimbot[currentWeapon].hitchance, 0, 100, "%d");
     ImGui::InputInt(phrases[XorString("aimhacks_mindamage")].c_str(), &config->aimbot[currentWeapon].minDamage);
@@ -1407,9 +1408,6 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
     ImGui::PopID();
     ImGui::PopItemWidth();
     ImGui::Combo(phrases[XorString("visuals_skybox")].c_str(), &config->visuals.skybox, Helpers::skyboxList.data(), Helpers::skyboxList.size());
-    ImGui::Combo(phrases[XorString("visuals_screeneffect")].c_str(), &config->visuals.screenEffect, XorString("None\0Drone cam\0Drone cam with noise\0Underwater\0Healthboost\0Dangerzone\0"));
-    ImGui::Combo(phrases[XorString("visuals_hiteffect")].c_str(), &config->visuals.hitEffect, XorString("None\0Drone cam\0Drone cam with noise\0Underwater\0Healthboost\0Dangerzone\0"));
-    ImGui::SliderFloat(phrases[XorString("visuals_hiteffect_time")].c_str(), &config->visuals.hitEffectTime, 0.1f, 1.5f, XorString("%.2fs"));
     ImGui::Combo(phrases[XorString("visuals_hitmarker")].c_str(), &config->visuals.hitMarker, XorString("None\0Default (Cross)\0"));
     ImGui::SliderFloat(phrases[XorString("visuals_hitmarker_time")].c_str(), &config->visuals.hitMarkerTime, 0.1f, 1.5f, XorString("%.2fs"));
 	ImGui::Checkbox(phrases[XorString("visuals_indicators")].c_str(), &config->visuals.indicatorsEnabled);
@@ -1635,18 +1633,7 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     hotkey(config->misc.menuKey);
 
     ImGui::Checkbox(phrases[XorString("misc_radarhack")].c_str(), &config->misc.radarHack);
-    ImGui::Checkbox(phrases[XorString("misc_spectatorlist")].c_str(), &config->misc.spectatorList.enabled);
-    ImGui::PushID(XorString("Spectator List"));
-    ImGui::SameLine();
-    if (ImGui::Button(phrases[XorString("global_threedots")].c_str()))
-        ImGui::OpenPopup("C");
-
-    if (ImGui::BeginPopup("C")) {
-        ImGui::Checkbox(phrases[XorString("global_nobackground")].c_str(), &config->misc.spectatorList.noBackGround);
-        ImGui::Checkbox(phrases[XorString("global_notitle")].c_str(), &config->misc.spectatorList.noTittleBar);
-        ImGui::EndPopup();
-    }
-    ImGui::PopID();
+    ImGuiCustom::colorPicker(phrases[XorString("misc_spectatorlist")].c_str(), config->misc.spectatorList);
 
     ImGui::Checkbox(phrases[XorString("misc_revealranks")].c_str(), &config->misc.revealRanks);
     ImGui::Checkbox(phrases[XorString("misc_revealmoney")].c_str(), &config->misc.revealMoney);
@@ -1692,7 +1679,7 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     ImGui::InputText("", &config->misc.killMessageString);
     ImGui::PopID();
 
-    ImGui::Combo(phrases[XorString("misc_nameexploit")].c_str(), &config->misc.nameChangeSelection, XorString("Off\0Fake Ban\0Fake Item\0Custom Name"));
+    ImGui::Combo(phrases[XorString("misc_nameexploit")].c_str(), &config->misc.nameChangeSelection, XorString("Off\0Fake Ban\0Fake Item\0Custom Name\0"));
     if (config->misc.nameChangeSelection == 1)
     {
         ImGui::PushID(3);

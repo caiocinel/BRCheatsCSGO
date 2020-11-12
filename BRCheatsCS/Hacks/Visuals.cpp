@@ -269,101 +269,42 @@ void Visuals::applyZoom(FrameStage stage) noexcept
     }
 }
 
-#define DRAW_SCREEN_EFFECT(material) \
-{ \
-    const auto drawFunction = memory->drawScreenEffectMaterial; \
-    int w, h; \
-    interfaces->surface->getScreenSize(w, h); \
-    __asm { \
-        __asm push h \
-        __asm push w \
-        __asm push 0 \
-        __asm xor edx, edx \
-        __asm mov ecx, material \
-        __asm call drawFunction \
-        __asm add esp, 12 \
-    } \
-}
-
-void Visuals::applyScreenEffects() noexcept
-{
-    if (!config->visuals.screenEffect)
-        return;
-
-    const auto material = interfaces->materialSystem->findMaterial([] {
-        constexpr std::array effects{
-            "effects/dronecam",
-            "effects/underwater_overlay",
-            "effects/healthboost",
-            "effects/dangerzone_screen"
-        };
-
-        if (config->visuals.screenEffect <= 2 || static_cast<std::size_t>(config->visuals.screenEffect - 2) >= effects.size())
-            return effects[0];
-        return effects[config->visuals.screenEffect - 2];
-    }());
-
-    if (config->visuals.screenEffect == 1)
-        material->findVar("$c0_x")->setValue(0.0f);
-    else if (config->visuals.screenEffect == 2)
-        material->findVar("$c0_x")->setValue(0.1f);
-    else if (config->visuals.screenEffect >= 4)
-        material->findVar("$c0_x")->setValue(1.0f);
-
-    DRAW_SCREEN_EFFECT(material)
-}
-
-void Visuals::hitEffect(GameEvent* event) noexcept
-{
-    if (config->visuals.hitEffect && localPlayer) {
-        static float lastHitTime = 0.0f;
-
-        if (event && interfaces->engine->getPlayerForUserID(event->getInt("attacker")) == localPlayer->index()) {
-            lastHitTime = memory->globalVars->realtime;
-            return;
-        }
-
-        if (lastHitTime + config->visuals.hitEffectTime >= memory->globalVars->realtime) {
-            constexpr auto getEffectMaterial = [] {
-                static constexpr const char* effects[]{
-                "effects/dronecam",
-                "effects/underwater_overlay",
-                "effects/healthboost",
-                "effects/dangerzone_screen"
-                };
-
-                if (config->visuals.hitEffect <= 2)
-                    return effects[0];
-                return effects[config->visuals.hitEffect - 2];
-            };
-
-           
-            auto material = interfaces->materialSystem->findMaterial(getEffectMaterial());
-            if (config->visuals.hitEffect == 1)
-                material->findVar("$c0_x")->setValue(0.0f);
-            else if (config->visuals.hitEffect == 2)
-                material->findVar("$c0_x")->setValue(0.1f);
-            else if (config->visuals.hitEffect >= 4)
-                material->findVar("$c0_x")->setValue(1.0f);
-
-            DRAW_SCREEN_EFFECT(material)
-        }
-    }
-}
-
-
 void Visuals::transparentWorld() noexcept
 {
-	if (!config->visuals.asusWalls)
-	return;
 
+
+    if (!config->visuals.asusWalls)
+    {
+       
+        for (short h = interfaces->materialSystem->firstMaterial(); h != interfaces->materialSystem->invalidMaterial(); h = interfaces->materialSystem->nextMaterial(h)) {
+            const auto mat = interfaces->materialSystem->getMaterial(h);
+
+            const std::string_view textureGroup = mat->getTextureGroupName();
+
+            if (textureGroup.starts_with("World")) {
+                mat->alphaModulate(1.0);
+            }
+            if ((textureGroup.starts_with("StaticProp"))) {
+
+                ConVar* static_Prop = interfaces->cvar->findVar("r_DrawSpecificStaticProp");
+                static_Prop->setValue(1);
+                mat->alphaModulate(1.0);
+            }
+
+        }
+        return;
+    }
+	
+
+
+   
 	for (short h = interfaces->materialSystem->firstMaterial(); h != interfaces->materialSystem->invalidMaterial(); h = interfaces->materialSystem->nextMaterial(h)) {
 	    const auto mat = interfaces->materialSystem->getMaterial(h);
 
 	    const std::string_view textureGroup = mat->getTextureGroupName();
 
 	    if (textureGroup.starts_with("World")) {
-	            mat->alphaModulate(0.5);
+	            mat->alphaModulate(0.8);
 	    }
 	    if ((textureGroup.starts_with("StaticProp"))) {
 	        
