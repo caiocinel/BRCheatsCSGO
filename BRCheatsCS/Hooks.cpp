@@ -34,6 +34,7 @@
 #include "Hacks/Visuals.h"
 #include "Hacks/Resolver.h"
 #include "Hacks/Tickbase.h"
+#include "Changer/Protobuffs.h"
 
 #include "SDK/Engine.h"
 #include "SDK/Entity.h"
@@ -63,6 +64,7 @@
 #include "SDK/InputSystem.h"
 #include "SDK/StudioRender.h"
 #include "SDK/GameEvent.h"
+#include "SDK/SteamAPI.h"
 
 const char* steamID = "steamid";
 int rageBestDmg = 0;
@@ -710,6 +712,35 @@ void WriteUsercmd(void* buf, UserCmd* in, UserCmd* out)
     }
 }
 
+EGCResult __fastcall hkGCRetrieveMessage(void* ecx, void*, uint32_t* punMsgType, void* pubDest, uint32_t cubDest, uint32_t* pcubMsgSize)
+{
+    static auto oGCRetrieveMessage = hooks->gc_hook.get_original<GCRetrieveMessage>(indexhooks::retrieve_message);
+    auto status = oGCRetrieveMessage(ecx, punMsgType, pubDest, cubDest, pcubMsgSize);
+
+    if (status == k_EGCResultOK)
+    {
+
+        void* thisPtr = nullptr;
+        __asm mov thisPtr, ebx;
+        auto oldEBP = *reinterpret_cast<void**>((uint32_t)_AddressOfReturnAddress() - 4);
+
+        uint32_t messageType = *punMsgType & 0x7FFFFFFF;
+        write.ReceiveMessage(thisPtr, oldEBP, messageType, pubDest, cubDest, pcubMsgSize);
+    }
+    return status;
+}
+//--------------------------------------------------------------------------------
+/*EGCResult __fastcall hkGCSendMessage(void* ecx, void*, uint32_t unMsgType, const void* pubData, uint32_t cubData)
+{
+    static auto oGCSendMessage = hooks->gc_hook.get_original<GCSendMessage>(indexhooks::send_message);
+    bool sendMessage = write.PreSendMessage(unMsgType, const_cast<void*>(pubData), cubData);
+
+    if (!sendMessage)
+        return k_EGCResultOK;
+
+    return oGCSendMessage(ecx, unMsgType, const_cast<void*>(pubData), cubData);
+}
+*/
 static bool __fastcall WriteUsercmdDeltaToBuffer(void* ecx, void* edx, int slot, void* buffer, int from, int to, bool isnewcommand) noexcept
 {
     auto original = hooks->client.getOriginal<bool, 24>(slot, buffer, from, to, isnewcommand);
@@ -810,6 +841,8 @@ void Hooks::install() noexcept
     svCheats.hookAt(13, svCheatsGetBool);
     viewRender.hookAt(39, render2dEffectsPreHud);
     viewRender.hookAt(41, renderSmokeOverlay);
+    //gc_hook.hook_index(indexhooks::send_message, hkGCSendMessage);
+    gc_hook.hook_index(indexhooks::retrieve_message, hkGCRetrieveMessage);
 
     if (DWORD oldProtection; VirtualProtect(memory->dispatchSound, 4, PAGE_EXECUTE_READWRITE, &oldProtection)) {
         originalDispatchSound = decltype(originalDispatchSound)(uintptr_t(memory->dispatchSound + 1) + *memory->dispatchSound);

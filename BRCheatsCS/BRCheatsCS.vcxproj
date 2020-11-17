@@ -11,6 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Changer.cpp" />
+    <ClCompile Include="Changer\Protobuffs.cpp" />
+    <ClCompile Include="Changer\valve_parser.cpp" />
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="EventListener.cpp" />
     <ClCompile Include="extraHooks.cpp" />
@@ -34,6 +37,7 @@
     <ClCompile Include="Hacks\Visuals.cpp" />
     <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="Hooks\MinHook.cpp" />
+    <ClCompile Include="Hooks\vfunc_hook.cpp" />
     <ClCompile Include="Hooks\VmtHook.cpp" />
     <ClCompile Include="Hooks\VmtSwap.cpp" />
     <ClCompile Include="imguiCustom.cpp" />
@@ -69,6 +73,13 @@
   <ItemGroup>
     <ClInclude Include="Beams.h" />
     <ClInclude Include="BRC_UserActivity.h" />
+    <ClInclude Include="Changer.h" />
+    <ClInclude Include="Changer\Messages.h" />
+    <ClInclude Include="Changer\Protobuffs.h" />
+    <ClInclude Include="Changer\ProtoField.h" />
+    <ClInclude Include="Changer\ProtoWriter.h" />
+    <ClInclude Include="Changer\valve_parser.h" />
+    <ClInclude Include="Hooks\vfunc_hook.hpp" />
     <ClInclude Include="Lang.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="ConfigStructs.h" />
@@ -172,6 +183,7 @@
     <ClInclude Include="SDK\Sound.h" />
     <ClInclude Include="SDK\SoundEmitter.h" />
     <ClInclude Include="SDK\SoundInfo.h" />
+    <ClInclude Include="SDK\SteamAPI.h" />
     <ClInclude Include="SDK\StudioRender.h" />
     <ClInclude Include="SDK\Surface.h" />
     <ClInclude Include="SDK\UserCmd.h" />

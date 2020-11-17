@@ -9,6 +9,7 @@
 #include "Hacks/Tickbase.h"
 
 #include "SDK/ModelInfo.h"
+#include "SDK/SteamAPI.h"
 
 class ClientMode;
 class Entity;
@@ -26,6 +27,7 @@ class WeaponSystem;
 class IViewRenderBeams;
 class MemAlloc;
 class ClientState;
+class ISteamClient;
 
 struct ActiveChannels;
 struct Channel;
@@ -80,6 +82,7 @@ public:
     uintptr_t CreateState;
     uintptr_t InvalidateBoneCache;
     MemAlloc* memalloc;
+    ISteamGameCoordinator* SteamGameCoordinator;
 	
     std::add_pointer_t<void __cdecl(const char* msg, ...)> debugMsg;
     std::add_pointer_t<void __cdecl(const std::array<std::uint8_t, 4>& color, const char* msg, ...)> conColorMsg;

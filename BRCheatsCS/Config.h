@@ -467,6 +467,19 @@ public:
         int menuColors{ 0 };
     } style;
 
+    struct profileChanger {
+        bool enabled{ 0 };
+        int friendly = 0;
+        int teach = 0;
+        int leader = 0;
+        int rank = 0;
+        int wins = 0;
+        int level = 0;
+        int exp = 0;
+        int ban_type = 0;
+        int ban_time = 0;
+    } profileChanger;
+
     struct Misc {
         int lang{ 0 };
         int menuKey{ 0x2D }; // VK_INSERT
