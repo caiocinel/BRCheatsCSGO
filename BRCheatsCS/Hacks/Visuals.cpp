@@ -170,10 +170,35 @@ void Visuals::thirdperson() noexcept
         lastTime = memory->globalVars->realtime;
     }
 
-    if (config->visuals.thirdperson)
+    if (config->visuals.thirdperson) {
         if (memory->input->isCameraInThirdPerson = (!config->visuals.thirdpersonKey || isInThirdperson)
             && localPlayer && localPlayer->isAlive())
             memory->input->cameraOffset.z = static_cast<float>(config->visuals.thirdpersonDistance);
+            static ConVar* idealpitch = interfaces->cvar->findVar("cam_idealpitch");
+            idealpitch->setValue(0);
+            static ConVar* idealyaw = interfaces->cvar->findVar("cam_idealyaw");
+            idealyaw->setValue(0);
+            static ConVar* idealdist = interfaces->cvar->findVar("cam_idealdist");
+            idealdist->setValue(77);
+            static ConVar* idealdelta = interfaces->cvar->findVar("cam_idealdelta");
+            idealdelta->setValue(4);
+            static ConVar* idealdistup = interfaces->cvar->findVar("cam_idealdistup");
+            idealdistup->setValue(10);
+            static ConVar* ideallag = interfaces->cvar->findVar("cam_ideallag");
+            ideallag->setValue(0);
+            static ConVar* minpitch = interfaces->cvar->findVar("c_minpitch");
+            minpitch->setValue(0);
+            static ConVar* maxpitch = interfaces->cvar->findVar("c_maxpitch");
+            maxpitch->setValue(0);
+            static ConVar* thirdpersonshoulder = interfaces->cvar->findVar("c_thirdpersonshoulder");
+            thirdpersonshoulder->setValue(1);
+            static ConVar* thirdpersonshoulderheight = interfaces->cvar->findVar("c_thirdpersonshoulderheight");
+            thirdpersonshoulderheight->setValue(0);
+            static ConVar* thirdpersonshoulderaimdist = interfaces->cvar->findVar("c_thirdpersonshoulderaimdist");
+            thirdpersonshoulderaimdist->setValue(700);
+            static ConVar* thirdpersonshoulderoffset = interfaces->cvar->findVar("c_thirdpersonshoulderoffset");
+            thirdpersonshoulderoffset->setValue(20);
+    }
 }
 
 void Visuals::removeVisualRecoil(FrameStage stage) noexcept

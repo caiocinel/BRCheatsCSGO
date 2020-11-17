@@ -820,7 +820,9 @@ void Hooks::install() noexcept
     if constexpr (std::is_same_v<HookType, MinHook>)
         MH_EnableHook(MH_ALL_HOOKS);
 
-  //BRC_StartUserActivity(4, &config->globals.UsernameBRC);
+  //BRC_StartUserActivity(ActivityId_CSGO);
+
+
 }
 
 extern "C" BOOL WINAPI _CRT_INIT(HMODULE module, DWORD reason, LPVOID reserved);

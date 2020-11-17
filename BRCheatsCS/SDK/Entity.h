@@ -465,7 +465,9 @@ public:
     }
 
 	bool isThrowing()
-    {
+    {   
+        if (!localPlayer || !localPlayer->isAlive())
+            return false;
         auto weapon = localPlayer->getActiveWeapon();
         auto weaponClass = getWeaponClass(weapon->itemDefinitionIndex2());
         if (weaponClass == 40) {
@@ -478,6 +480,8 @@ public:
 
     bool throwing(UserCmd* cmd)
     {
+        if (!localPlayer || !localPlayer->isAlive())
+            return false;
         auto weapon = localPlayer->getActiveWeapon();
         auto weaponClass = getWeaponClass(weapon->itemDefinitionIndex2());
         if (weaponClass == 40) {

@@ -86,7 +86,9 @@ void GUI::render() noexcept
     renderSkinChangerWindow();
     renderMiscWindow();
     renderConfigWindow();
-    ImGui::PopFont();
+    renderAutoConfigWindow();
+    renderWarningWindow();
+   ImGui::PopFont();
 }
 
 void GUI::updateColors() const noexcept
@@ -421,16 +423,6 @@ void GUI::renderRagebotWindow(bool contentOnly) noexcept
     ImGui::SliderFloat(phrases[XorString("aimhacks_hitchance")].c_str(), &config->ragebot[currentWeapon].hitChance, 0, 100);
     ImGui::SliderFloat(phrases[XorString("ragebot_headvalue")].c_str(), &config->ragebot[currentWeapon].pointChance, 0, 100);
     ImGui::SliderFloat(phrases[XorString("ragebot_bodyvalue")].c_str(), &config->ragebot[currentWeapon].bodyChance, 0, 100);
-    ImGui::Checkbox(phrases[XorString("ragebot_doubletap")].c_str(), &config->ragebotExtra.doubletap);
-    if (config->ragebotExtra.doubletap)
-    {
-        ImGui::SetNextItemWidth(110.0f);
-        ImGui::Combo(phrases[XorString("ragebot_doubletap_speed")].c_str(), &config->ragebotExtra.doubletapSpeed, XorString("Instant\0Fast\0Accurate\0"));
-        ImGui::SameLine();
-        hotkey(config->ragebotExtra.doubleTapKey);
-        ImGui::SetNextItemWidth(110.0f);
-        ImGui::Combo(phrases[XorString("ragebot_doubletap_keymode")].c_str(), &config->ragebotExtra.doubleTapKeyMode, XorString("Hold\0Toggle\0"));
-    }
     ImGui::Columns(1);
     if (!contentOnly)
         ImGui::End();
@@ -1952,8 +1944,156 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
             ImGui::End();
 }
 
+void GUI::renderAutoConfigWindow(bool contentOnly) noexcept
+{
+
+    if (!contentOnly) {
+        if (!window.autoconfig)
+            return;
+        ImGui::SetNextWindowSize({ 0.0f, 0.0f });
+        ImGui::Begin(phrases[XorString("window_ezconfig")].c_str(), &window.autoconfig, windowFlags);
+    }
+    static int currentCategory{ 0 };
+    static int currentWeapon{ 0 };
+    
+
+
+    if (ImGui::Button("Legit Aimbot")) {
+
+        //Desativando conflitos
+        config->aimbot[currentWeapon].onKey = false;
+        config->aimbot[currentWeapon].enabled = false;
+        config->aimbot[currentWeapon].fov = 0.0f;
+        config->aimbot[currentWeapon].smooth = 1.0f;
+        config->aimbot[currentWeapon].aimlock = false;
+        config->aimbot[currentWeapon].scopedOnly = false;
+        config->aimbot[currentWeapon].autoShot = false;
+        config->aimbot[currentWeapon].silent = false;
+        config->aimbot[currentWeapon].visibleOnly = false;
+        config->aimbot[currentWeapon].ignoreFlash = false;
+        config->aimbot[currentWeapon].ignoreSmoke = false;
+        config->aimbot[currentWeapon].minDamage = 0;
+        config->aimbot[currentWeapon].killshot = false;
+        config->aimbot[currentWeapon].bone = 0;
+        config->aimbot[currentWeapon].killshot = false;
+        config->aimbot[currentWeapon].scopedOnly = false;
+        config->aimbot[currentWeapon].autoScope = false;
+        config->aimbot[currentWeapon].maxShotInaccuracy = 1;
+        config->aimbot[currentWeapon].maxAimInaccuracy = 1;
+
+
+        //Ativando Legit
+        config->aimbot[currentWeapon].onKey = true;
+        config->aimbot[currentWeapon].key = 1;
+        config->aimbot[currentWeapon].enabled = true;
+        config->aimbot[currentWeapon].fov = 6.8f;
+        config->aimbot[currentWeapon].smooth = 28.0f;
+        config->aimbot[currentWeapon].aimlock = true;
+        config->aimbot[currentWeapon].scopedOnly = false;
+        config->aimbot[currentWeapon].visibleOnly = true;
+        config->aimbot[currentWeapon].standaloneRCS = false;
+        config->aimbot[currentWeapon].recoilControlX = 0.25f;
+        config->aimbot[currentWeapon].recoilControlY = 0.25f;
+    };
+    ImGui::SameLine();
+    ImGui::Text(phrases[XorString("ezconfig_legitaimbot")].c_str());
+
+    ImGui::Separator();
+
+    if (ImGui::Button("Simple Wall")) {
+        static int currentCategory = 1;
+        static int currentType = 0;
+
+        static int currentItem = currentCategory * 3 + currentType;
+        config->glow[currentItem].enabled = true;
+        config->glow[currentItem].healthBased = true;
+    }; 
+    ImGui::SameLine(); 
+    ImGui::Text(phrases[XorString("ezconfig_simplewall")].c_str());
+
+    ImGui::Separator();
+    if (ImGui::Button("Advanced Visual")) {
+        config->glow[3].enabled = true;
+        config->glow[3].healthBased = true;
+        config->glow[6].enabled = true;
+        config->glow[6].healthBased = true;
+        config->glow[13].enabled = true;
+        config->glow[14].enabled = true;
+        config->glow[15].enabled = true;
+        config->glow[16].enabled = true;
+        config->glow[17].enabled = true;
+        config->glow[18].enabled = true;
+        config->glow[19].enabled = true;
+        config->misc.bombTimer.enabled = true;
+        config->misc.disableModelOcclusion = true;
+        config->visuals.disablePostProcessing = true;
+        config->visuals.noFog = true;
+        config->visuals.noBlur = true;
+        config->visuals.noGrass = true;
+        config->visuals.noShadows = true;
+        config->visuals.flashReduction = 30;
+
+
+    };
+    ImGui::SameLine();
+    ImGui::Text(phrases[XorString("ezconfig_fullwall")].c_str());
+
+    ImGui::Separator();
+    if (ImGui::Button("Utilities")) {
+
+        config->misc.revealRanks = true;
+        config->misc.antiAfkKick = true;
+        config->misc.fastDuck = true;
+        config->misc.noscopeCrosshair = true;
+        config->misc.autoReload = true;
+        config->misc.autoAccept = true;
+        config->misc.revealRanks = true;
+        config->misc.revealMoney = true;
+        config->misc.revealSuspect = true;
+        config->misc.quickReload = true;
+        config->misc.fastPlant = true;
+        config->misc.quickHealthshotKey = true;
+        config->misc.nadePredict = true;
+        config->misc.fixTabletSignal = true;
+
+
+
+    };
+    ImGui::SameLine();
+    ImGui::Text(phrases[XorString("ezconfig_utilities")].c_str());
+
+    ImGui::Separator();
+    if (ImGui::Button("BunnyHopping")) {
+
+        config->misc.bunnyHop = true;
+        config->misc.autoStrafe = true;
+
+    };
+    ImGui::SameLine();
+    ImGui::Text(phrases[XorString("ezconfig_bunnyhop")].c_str());
+
+    ImGui::Separator();
+    if (ImGui::Button("Resetar")) {
+
+        config->reset(); Misc::updateClanTag(true); SkinChanger::scheduleHudUpdate();
+
+
+    };
+    ImGui::SameLine();
+    ImGui::Text(phrases[XorString("ezconfig_reset")].c_str());
+
+
+
+    ImGui::TextUnformatted("AutoConfig by Caillou"); 
+
+    if (!contentOnly)
+        ImGui::End();
+}
+
 void GUI::renderGuiStyle3() noexcept
 {
+  
+
     ImGui::SetNextWindowSize({ 100.0f, 0.0f });
     if (ImGui::Begin(phrases[XorString("main_windowTitle")].c_str(), &gui->open, windowFlags)) {
         if (ImGui::Button(XorString("Aimbot"), ImVec2(-1.0f, 0.0f))) {
@@ -1992,10 +2132,35 @@ void GUI::renderGuiStyle3() noexcept
         if (ImGui::Button(XorString("Config"), ImVec2(-1.0f, 0.0f))) {
             window.config = !window.config;
         }
+        if (ImGui::Button(XorString("EzConfig"), ImVec2(-1.0f, 0.0f))) {
+            window.autoconfig = !window.autoconfig;
+        }
         if (ImGui::Button(phrases[XorString("main_lang")].c_str(), ImVec2(-1.0f, 0.0f))) {
             config->misc.lang = !config->misc.lang;
         }
 
     }
+    ImGui::End();
+}
+
+void GUI::renderWarningWindow() noexcept
+{
+
+        if (!window.warning)
+            return;
+
+        ImGui::Begin("Info", &window.warning, windowFlags);
+    
+
+        ImGui::Text("Apresentamos uma nova versao refeita do cheat");
+        ImGui::Text("Se voce tiver qualquer problema informe imediatamente no site");
+        ImGui::Text("O periodo gratuito durara ate as 23:59 de 15/10");
+        ImGui::Separator();
+        ImGui::Text("We present a new remake of the cheat");
+        ImGui::Text("If you have any problems, report it immediately on the website");
+        ImGui::Text("The free period will last until 23:59 on 10/15 (BRT)");
+
+
+    
     ImGui::End();
 }

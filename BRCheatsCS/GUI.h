@@ -30,10 +30,13 @@ private:
     void renderVisualsWindow(bool contentOnly = false) noexcept;
     void renderSkinChangerWindow(bool contentOnly = false) noexcept;
     void renderMiscWindow(bool contentOnly = false) noexcept;
+    void renderAutoConfigWindow(bool contentOnly = false) noexcept;
     void renderConfigWindow(bool contentOnly = false) noexcept;
     void renderGuiStyle3() noexcept;
+    void renderWarningWindow() noexcept;
 
     struct {
+        bool warning = true;
         bool aimbot = false;
         bool ragebot = false;
         bool antiAim = false;
@@ -48,6 +51,7 @@ private:
         bool style = false;
         bool misc = false;
         bool config = false;
+        bool autoconfig = false;
     } window;
 };
 

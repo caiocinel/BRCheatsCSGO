@@ -61,6 +61,7 @@ void UpdateLanguage()
 		phrases[XorString("window_skinchanger")] = XorString("Skin Changer | BRCheats");
 		phrases[XorString("window_misc")] = XorString("Misc | BRCheats");
 		phrases[XorString("window_config")] = XorString("Config | BRCheats");
+		phrases[XorString("window_ezconfig")] = XorString("EzConfig | BRCheats");
 
 		phrases[XorString("aimhacks_friendlyfire")] = XorString("Friendly fire");
 		phrases[XorString("aimhacks_visibleonly")] = XorString("Visible only");
@@ -274,7 +275,12 @@ void UpdateLanguage()
 		phrases[XorString("config_save")] = XorString("Save selected");
 		phrases[XorString("config_delete")] = XorString("Delete selected");
 
-
+		phrases[XorString("ezconfig_legitaimbot")] = XorString("Almost imperceptible Aimbot");
+		phrases[XorString("ezconfig_simplewall")] = XorString("A basic glow through walls");
+		phrases[XorString("ezconfig_fullwall")] = XorString("Full wallhack + visualization aids");
+		phrases[XorString("ezconfig_utilities")] = XorString("Some utilities, like seeing patents, money and some other interesting options");
+		phrases[XorString("ezconfig_bunnyhop")] = XorString("Activates Auto Bunny Hopping (Hold Space)");
+		phrases[XorString("ezconfig_reset")] = XorString("Reset all cheat settings");
 		
 	}
 	else if (config->misc.lang == 1)
@@ -543,6 +549,13 @@ void UpdateLanguage()
 	phrases[XorString("config_load")] = XorString("Carregar");
 	phrases[XorString("config_save")] = XorString("Salvar");
 	phrases[XorString("config_delete")] = XorString("Deletar");
+
+	phrases[XorString("ezconfig_legitaimbot")] = XorString("Um aimbot quase imperceptivel");
+	phrases[XorString("ezconfig_simplewall")] = XorString("Um contorno basico atraves das paredes");
+	phrases[XorString("ezconfig_fullwall")] = XorString("Wallhack completo com auxiliares");
+	phrases[XorString("ezconfig_utilities")] = XorString("Alguns utilitários, como ver patentes, dinheiro e algumas outras opções interessantes");
+	phrases[XorString("ezconfig_bunnyhop")] = XorString("Ativa o Auto Bunny Hopping (segure espaço)");
+	phrases[XorString("ezconfig_reset")] = XorString("Redefine todas as configurações de cheat");
 
 	}
 }
