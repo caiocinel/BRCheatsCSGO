@@ -22,6 +22,7 @@
 #include "Interfaces.h"
 #include "SDK/InputSystem.h"
 #include "Changer/Protobuffs.h"
+#include "memory.h"
 
 constexpr auto windowFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 extern std::map<std::string, std::string> phrases;
@@ -1949,10 +1950,10 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
 void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
 {
     if (!contentOnly) {
-        if (!window.config)
+        if (!window.profileChanger)
             return;
         ImGui::SetNextWindowSize({ 290.0f, 0.0f });
-        ImGui::Begin("Profile Changer | BRCheats", &window.config, windowFlags);
+        ImGui::Begin("Profile Changer | BRCheats", &window.profileChanger, windowFlags);
     }
 
     static const char* bans_gui[] =
@@ -2216,6 +2217,7 @@ void GUI::renderGuiStyle3() noexcept
         }
         if (ImGui::Button(XorString("Profile Changer"), ImVec2(-1.0f, 0.0f))) {
             window.profileChanger = !window.profileChanger;
+            memory->debugMsg("Profile Changer Open");
         }
         if (ImGui::Button(phrases[XorString("main_misc")].c_str(), ImVec2(-1.0f, 0.0f))) {
             window.misc = !window.misc;

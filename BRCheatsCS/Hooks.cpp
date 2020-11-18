@@ -726,6 +726,7 @@ EGCResults __fastcall hkGCRetrieveMessage(void* ecx, uint32_t* punMsgType, void*
         auto oldEBP = *reinterpret_cast<void**>((uint32_t)_AddressOfReturnAddress() - 4);
 
         uint32_t messageType = *punMsgType & 0x7FFFFFFF;
+        memory->debugMsg("[->] Message received from GC [%d]!\n", messageType);
         write.ReceiveMessage(thisPtr, oldEBP, messageType, pubDest, cubDest, pcubMsgSize);
     }
     return status;
