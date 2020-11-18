@@ -9,7 +9,7 @@ __forceinline static FuncType zxdCallVFunction(void* ppClass, int index)
 	return (FuncType)(dwAddress);
 }
 
-enum EGCResult
+enum class EGCResults
 {
 	k_EGCResultOK = 0,
 	k_EGCResultNoMessage = 1,           // There is no message in the queue
@@ -21,9 +21,9 @@ enum EGCResult
 class ISteamGameCoordinator
 {
 public:
-	virtual EGCResult GCSendMessage(int unMsgType, const void* pubData, int cubData) = 0;
+	virtual EGCResults GCSendMessage(int unMsgType, const void* pubData, int cubData) = 0;
 	virtual bool IsMessageAvailable(int* pcubMsgSize) = 0;
-	virtual EGCResult GCRetrieveMessage(int* punMsgType, void* pubDest, int cubDest, int* pcubMsgSize) = 0;
+	virtual EGCResults GCRetrieveMessage(int* punMsgType, void* pubDest, int cubDest, int* pcubMsgSize) = 0;
 
 };
 

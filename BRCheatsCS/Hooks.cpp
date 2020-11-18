@@ -712,14 +712,15 @@ void WriteUsercmd(void* buf, UserCmd* in, UserCmd* out)
     }
 }
 
-EGCResult __fastcall hkGCRetrieveMessage(void* ecx, void*, uint32_t* punMsgType, void* pubDest, uint32_t cubDest, uint32_t* pcubMsgSize)
+EGCResults __fastcall hkGCRetrieveMessage(void* ecx, uint32_t* punMsgType, void* pubDest, uint32_t cubDest, uint32_t* pcubMsgSize)
 {
-    static auto oGCRetrieveMessage = hooks->gc_hook.get_original<GCRetrieveMessage>(indexhooks::retrieve_message);
+
+    static auto oGCRetrieveMessage = hooks->gc_hook.getOriginal<EGCResults, 2>(punMsgType, pubDest, cubDest, pcubMsgSize);
     auto status = oGCRetrieveMessage(ecx, punMsgType, pubDest, cubDest, pcubMsgSize);
 
-    if (status == k_EGCResultOK)
+    if (status == EGCResults::k_EGCResultOK)
     {
-
+    
         void* thisPtr = nullptr;
         __asm mov thisPtr, ebx;
         auto oldEBP = *reinterpret_cast<void**>((uint32_t)_AddressOfReturnAddress() - 4);
@@ -729,18 +730,18 @@ EGCResult __fastcall hkGCRetrieveMessage(void* ecx, void*, uint32_t* punMsgType,
     }
     return status;
 }
-//--------------------------------------------------------------------------------
-/*EGCResult __fastcall hkGCSendMessage(void* ecx, void*, uint32_t unMsgType, const void* pubData, uint32_t cubData)
+
+EGCResults __fastcall hkGCSendMessage(void* ecx, void*, uint32_t unMsgType, const void* pubData, uint32_t cubData)
 {
-    static auto oGCSendMessage = hooks->gc_hook.get_original<GCSendMessage>(indexhooks::send_message);
+    static auto oGCSendMessage = hooks->gc_hook.getOriginal<EGCResults, 2>(unMsgType, const_cast<void*>(pubData), cubData);
     bool sendMessage = write.PreSendMessage(unMsgType, const_cast<void*>(pubData), cubData);
 
     if (!sendMessage)
-        return k_EGCResultOK;
+        return EGCResults::k_EGCResultOK;
 
     return oGCSendMessage(ecx, unMsgType, const_cast<void*>(pubData), cubData);
 }
-*/
+
 static bool __fastcall WriteUsercmdDeltaToBuffer(void* ecx, void* edx, int slot, void* buffer, int from, int to, bool isnewcommand) noexcept
 {
     auto original = hooks->client.getOriginal<bool, 24>(slot, buffer, from, to, isnewcommand);
@@ -817,7 +818,7 @@ void Hooks::install() noexcept
     svCheats.init(interfaces->cvar->findVar("sv_cheats"));
     viewRender.init(memory->viewRender);
 	gameEventManager.init(interfaces->gameEventManager);
-
+    gc_hook.init(memory->SteamGameCoordinator);
     bspQuery.hookAt(6, listLeavesInBox);
     client.hookAt(24, WriteUsercmdDeltaToBuffer);
     client.hookAt(37, frameStageNotify);
@@ -842,7 +843,7 @@ void Hooks::install() noexcept
     viewRender.hookAt(39, render2dEffectsPreHud);
     viewRender.hookAt(41, renderSmokeOverlay);
     //gc_hook.hook_index(indexhooks::send_message, hkGCSendMessage);
-    gc_hook.hook_index(indexhooks::retrieve_message, hkGCRetrieveMessage);
+    gc_hook.hookAt(indexhooks::retrieve_message, hkGCRetrieveMessage);
 
     if (DWORD oldProtection; VirtualProtect(memory->dispatchSound, 4, PAGE_EXECUTE_READWRITE, &oldProtection)) {
         originalDispatchSound = decltype(originalDispatchSound)(uintptr_t(memory->dispatchSound + 1) + *memory->dispatchSound);

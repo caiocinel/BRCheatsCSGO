@@ -17,8 +17,6 @@ struct SoundInfo;
 // Easily switch hooking method for all hooks, choose between MinHook/VmtHook/VmtSwap
 using HookType = MinHook;
 
-using GCRetrieveMessage = EGCResult(__thiscall*)(void*, uint32_t* punMsgType, void* pubDest, uint32_t cubDest, uint32_t* pcubMsgSize);
-using GCSendMessage = EGCResult(__thiscall*)(void*, uint32_t unMsgType, const void* pubData, uint32_t cubData);
 
 class Hooks {
 public:
@@ -32,6 +30,7 @@ public:
     std::add_pointer_t<HRESULT __stdcall(IDirect3DDevice9*, D3DPRESENT_PARAMETERS*)> originalReset;
     std::add_pointer_t<int __fastcall(SoundInfo&)> originalDispatchSound;
     
+    
 
     HookType bspQuery;
     HookType client;
@@ -42,7 +41,7 @@ public:
     HookType sound;
     HookType surface;
     HookType viewRender;
-    vfunc_hook gc_hook;
+    HookType gc_hook;
 	HookType gameEventManager;
 	VmtSwap networkChannel;
     HookType svCheats;
