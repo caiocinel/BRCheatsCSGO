@@ -104,7 +104,7 @@ bool Protobuffs::SendClientHello()
 	((uint32_t*)ptr)[1] = 0;
 
 	memcpy((void*)((DWORD)ptr + 8), (void*)packet.data(), packet.size());
-	bool result = memory->SteamGameCoordinator->GCSendMessage(k_EMsgGCClientHello | ((DWORD)1 << 31), ptr, packet.size() + 8) == EGCResults::k_EGCResultOK;
+	bool result = memory->SteamGameCoordinator->GCSendMessage(k_EMsgGCClientHello | ((DWORD)1 << 31), ptr, packet.size() + 8) == EGCResult::k_EGCResultOK;
 	free(ptr);
 
 	return result;
@@ -124,7 +124,7 @@ bool Protobuffs::SendMatchmakingClient2GCHello()
 	((uint32_t*)ptr)[1] = 0;
 
 	memcpy((void*)((DWORD)ptr + 8), (void*)packet.data(), packet.size());
-	bool result = memory->SteamGameCoordinator->GCSendMessage(k_EMsgGCCStrike15_v2_MatchmakingClient2GCHello | ((DWORD)1 << 31), ptr, packet.size() + 8) == EGCResults::k_EGCResultOK;
+	bool result = memory->SteamGameCoordinator->GCSendMessage(k_EMsgGCCStrike15_v2_MatchmakingClient2GCHello | ((DWORD)1 << 31), ptr, packet.size() + 8) == EGCResult::k_EGCResultOK;
 	free(ptr);
 
 	return result;

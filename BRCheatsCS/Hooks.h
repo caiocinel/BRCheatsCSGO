@@ -41,7 +41,7 @@ public:
     HookType sound;
     HookType surface;
     HookType viewRender;
-    HookType gc_hook;
+    vfunc_hook gc_hook;
 	HookType gameEventManager;
 	VmtSwap networkChannel;
     HookType svCheats;

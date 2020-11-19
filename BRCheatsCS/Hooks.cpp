@@ -711,14 +711,15 @@ void WriteUsercmd(void* buf, UserCmd* in, UserCmd* out)
         add esp, 4
     }
 }
-
-EGCResults __fastcall hkGCRetrieveMessage(void* ecx, uint32_t* punMsgType, void* pubDest, uint32_t cubDest, uint32_t* pcubMsgSize)
+using GCRetrieveMessage = EGCResult(__thiscall*)(void*, uint32_t* punMsgType, void* pubDest, uint32_t cubDest, uint32_t* pcubMsgSize);
+using GCSendMessage = EGCResult(__thiscall*)(void*, uint32_t unMsgType, const void* pubData, uint32_t cubData);
+EGCResult __fastcall hkGCRetrieveMessage(void* ecx, uint32_t* punMsgType, void* pubDest, uint32_t cubDest, uint32_t* pcubMsgSize)
 {
 
-    static auto oGCRetrieveMessage = hooks->gc_hook.getOriginal<EGCResults, 2>(punMsgType, pubDest, cubDest, pcubMsgSize);
-    auto status = oGCRetrieveMessage(ecx, punMsgType, pubDest, cubDest, pcubMsgSize);
+    static auto oGCRetrieveMessage = hooks->gc_hook.get_original<GCRetrieveMessage>(2);
+    EGCResult status = oGCRetrieveMessage(ecx, punMsgType, pubDest, cubDest, pcubMsgSize);
 
-    if (status == EGCResults::k_EGCResultOK)
+    if (status == k_EGCResultOK)
     {
     
         void* thisPtr = nullptr;
@@ -727,14 +728,17 @@ EGCResults __fastcall hkGCRetrieveMessage(void* ecx, uint32_t* punMsgType, void*
 
         uint32_t messageType = *punMsgType & 0x7FFFFFFF;
         memory->debugMsg("[->] Message received from GC [%d]!\n", messageType);
-        write.ReceiveMessage(thisPtr, oldEBP, messageType, pubDest, cubDest, pcubMsgSize);
+        
     }
+    memory->debugMsg("[->] Status returned [%d]!\n", status);
     return status;
 }
 
+
+/*
 EGCResults __fastcall hkGCSendMessage(void* ecx, void*, uint32_t unMsgType, const void* pubData, uint32_t cubData)
 {
-    static auto oGCSendMessage = hooks->gc_hook.getOriginal<EGCResults, 2>(unMsgType, const_cast<void*>(pubData), cubData);
+    static auto oGCSendMessage = hooks->gc_hook.get_original<GCSendMessage>(0);
     bool sendMessage = write.PreSendMessage(unMsgType, const_cast<void*>(pubData), cubData);
 
     if (!sendMessage)
@@ -742,7 +746,7 @@ EGCResults __fastcall hkGCSendMessage(void* ecx, void*, uint32_t unMsgType, cons
 
     return oGCSendMessage(ecx, unMsgType, const_cast<void*>(pubData), cubData);
 }
-
+*/
 static bool __fastcall WriteUsercmdDeltaToBuffer(void* ecx, void* edx, int slot, void* buffer, int from, int to, bool isnewcommand) noexcept
 {
     auto original = hooks->client.getOriginal<bool, 24>(slot, buffer, from, to, isnewcommand);
@@ -819,7 +823,7 @@ void Hooks::install() noexcept
     svCheats.init(interfaces->cvar->findVar("sv_cheats"));
     viewRender.init(memory->viewRender);
 	gameEventManager.init(interfaces->gameEventManager);
-    gc_hook.init(memory->SteamGameCoordinator);
+    gc_hook.setup(memory->SteamGameCoordinator);
     bspQuery.hookAt(6, listLeavesInBox);
     client.hookAt(24, WriteUsercmdDeltaToBuffer);
     client.hookAt(37, frameStageNotify);
@@ -844,7 +848,7 @@ void Hooks::install() noexcept
     viewRender.hookAt(39, render2dEffectsPreHud);
     viewRender.hookAt(41, renderSmokeOverlay);
     //gc_hook.hook_index(indexhooks::send_message, hkGCSendMessage);
-    gc_hook.hookAt(indexhooks::retrieve_message, hkGCRetrieveMessage);
+    gc_hook.hook_index(2, hkGCRetrieveMessage);
 
     if (DWORD oldProtection; VirtualProtect(memory->dispatchSound, 4, PAGE_EXECUTE_READWRITE, &oldProtection)) {
         originalDispatchSound = decltype(originalDispatchSound)(uintptr_t(memory->dispatchSound + 1) + *memory->dispatchSound);
@@ -898,6 +902,8 @@ void Hooks::uninstall() noexcept
     viewRender.restore();
     networkChannel.restore();
     extraHook.restore();
+
+    gc_hook.unhook_all();
 
     netvars->restore();
 

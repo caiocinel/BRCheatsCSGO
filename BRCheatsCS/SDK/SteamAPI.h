@@ -2,14 +2,14 @@
 #include <iostream>
 
 template<typename FuncType>
-__forceinline static FuncType zxdCallVFunction(void* ppClass, int index)
+__forceinline static FuncType CallVFunction(void* ppClass, int index)
 {
 	int* pVTable = *(int**)ppClass;
 	int dwAddress = pVTable[index];
 	return (FuncType)(dwAddress);
 }
 
-enum class EGCResults
+enum EGCResult
 {
 	k_EGCResultOK = 0,
 	k_EGCResultNoMessage = 1,           // There is no message in the queue
@@ -21,9 +21,9 @@ enum class EGCResults
 class ISteamGameCoordinator
 {
 public:
-	virtual EGCResults GCSendMessage(int unMsgType, const void* pubData, int cubData) = 0;
+	virtual EGCResult GCSendMessage(int unMsgType, const void* pubData, int cubData) = 0;
 	virtual bool IsMessageAvailable(int* pcubMsgSize) = 0;
-	virtual EGCResults GCRetrieveMessage(int* punMsgType, void* pubDest, int cubDest, int* pcubMsgSize) = 0;
+	virtual EGCResult GCRetrieveMessage(int* punMsgType, void* pubDest, int cubDest, int* pcubMsgSize) = 0;
 
 };
 
@@ -68,12 +68,12 @@ public:
 	ISteamUser* GetISteamUser(void* hSteamUser, void* hSteamPipe, const char* pchVersion)
 	{
 		typedef ISteamUser* (__stdcall* func)(void*, void*, const char*);
-		return zxdCallVFunction<func>(this, 5)(hSteamUser, hSteamPipe, pchVersion);
+		return CallVFunction<func>(this, 5)(hSteamUser, hSteamPipe, pchVersion);
 	}
 
 	ISteamGameCoordinator* GetISteamGenericInterface(void* hSteamUser, void* hSteamPipe, const char* pchVersion)
 	{
 		typedef ISteamGameCoordinator* (__stdcall* func)(void*, void*, const char*);
-		return zxdCallVFunction<func>(this, 12)(hSteamUser, hSteamPipe, pchVersion);
+		return CallVFunction<func>(this, 12)(hSteamUser, hSteamPipe, pchVersion);
 	}
 };
