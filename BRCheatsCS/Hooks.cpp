@@ -713,22 +713,22 @@ void WriteUsercmd(void* buf, UserCmd* in, UserCmd* out)
 }
 using GCRetrieveMessage = EGCResult(__thiscall*)(void*, uint32_t* punMsgType, void* pubDest, uint32_t cubDest, uint32_t* pcubMsgSize);
 using GCSendMessage = EGCResult(__thiscall*)(void*, uint32_t unMsgType, const void* pubData, uint32_t cubData);
-EGCResult __fastcall hkGCRetrieveMessage(void* ecx, uint32_t* punMsgType, void* pubDest, uint32_t cubDest, uint32_t* pcubMsgSize)
+EGCResult __fastcall hkGCRetrieveMessage(void* ecx, void*, uint32_t* punMsgType, void* pubDest, uint32_t cubDest, uint32_t* pcubMsgSize)
 {
 
     static auto oGCRetrieveMessage = hooks->gc_hook.get_original<GCRetrieveMessage>(2);
-    EGCResult status = oGCRetrieveMessage(ecx, punMsgType, pubDest, cubDest, pcubMsgSize);
+    auto status = oGCRetrieveMessage(ecx, punMsgType, pubDest, cubDest, pcubMsgSize);
 
     if (status == k_EGCResultOK)
     {
-    
+
         void* thisPtr = nullptr;
         __asm mov thisPtr, ebx;
         auto oldEBP = *reinterpret_cast<void**>((uint32_t)_AddressOfReturnAddress() - 4);
 
         uint32_t messageType = *punMsgType & 0x7FFFFFFF;
         memory->debugMsg("[->] Message received from GC [%d]!\n", messageType);
-        
+        write.ReceiveMessage(thisPtr, oldEBP, messageType, pubDest, cubDest, pcubMsgSize);
     }
     memory->debugMsg("[->] Status returned [%d]!\n", status);
     return status;
