@@ -87,7 +87,7 @@ void GUI::render() noexcept
     renderMiscWindow();
     renderConfigWindow();
     renderAutoConfigWindow();
-    renderWarningWindow();
+  //  renderWarningWindow();
    ImGui::PopFont();
 }
 
