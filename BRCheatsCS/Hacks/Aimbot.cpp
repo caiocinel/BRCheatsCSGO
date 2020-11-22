@@ -267,6 +267,21 @@ void Aimbot::run(UserCmd* cmd) noexcept
         auto aimPunch = activeWeapon->requiresRecoilControl() ? localPlayer->getAimPunch() : Vector{ };
         std::vector<Enemies> enemies;
         if (config->aimbot[weaponIndex].standaloneRCS && !config->aimbot[weaponIndex].silent) {
+
+            if (config->aimbot[weaponIndex].onKeyRCS) {
+                if (!config->aimbot[weaponIndex].RCSkeyMode) {
+                    if (!GetAsyncKeyState(config->aimbot[weaponIndex].RCSkey))
+                        return;
+                }
+                else {
+                    static bool toggle = true;
+                    if (GetAsyncKeyState(config->aimbot[weaponIndex].RCSkey) & 1)
+                        toggle = !toggle;
+                    if (!toggle)
+                        return;
+                }
+            }
+
             static Vector lastAimPunch{ };
             if (localPlayer->getShotsFired() > config->aimbot[weaponIndex].shotsFired) {
                 setRandomSeed(*memory->predictionRandomSeed);

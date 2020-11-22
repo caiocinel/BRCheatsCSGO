@@ -317,6 +317,9 @@ static void from_json(const json& j, Config::Aimbot& a)
     read(j, "Between shots", a.betweenShots);
     read(j, "Standalone RCS", a.standaloneRCS);
     read(j, "Standalone RCS Ignore Shots", a.shotsFired);
+    read(j, "onKey RCS", a.onKeyRCS);
+    read(j, "RCS Key", a.RCSkey);
+    read(j, "RCS Keymode", a.RCSkeyMode);
     read(j, "Recoil control X", a.recoilControlX);
     read(j, "Recoil control Y", a.recoilControlY);
 }
@@ -900,6 +903,10 @@ static void to_json(json& j, const Config::Aimbot& o, const Config::Aimbot& dumm
     WRITE("Between shots", betweenShots);
     WRITE("Standalone RCS", standaloneRCS);
     WRITE("Standalone RCS Ignore Shots", shotsFired);
+    WRITE("onKey RCS", onKeyRCS);
+    WRITE("RCS Key", RCSkey);
+    WRITE("RCS Keymode", RCSkeyMode);
+
 }
 static void to_json(json& j, const Config::Ragebot& o, const Config::Ragebot& dummy = {})
 {

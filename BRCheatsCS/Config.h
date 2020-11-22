@@ -70,6 +70,9 @@ public:
         bool killshot{ false };
         bool betweenShots{ true };
         bool standaloneRCS{ false };
+        bool onKeyRCS{ false };
+        int RCSkeyMode{ 0 };
+        int RCSkey{ 0 };
     };
     std::array<Aimbot, 40> aimbot;
 

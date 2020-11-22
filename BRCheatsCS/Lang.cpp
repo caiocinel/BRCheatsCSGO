@@ -29,6 +29,7 @@ void UpdateLanguage()
 		phrases[XorString("global_weapontype")] = XorString("All\0Pistols\0Heavy\0SMG\0Rifles\0");
 		phrases[XorString("global_weapontype_zeus")] = XorString("All\0Pistols\0Heavy\0SMG\0Rifles\0Zeus x27\0");
 		phrases[XorString("global_onkey")] = XorString("On key");
+		phrases[XorString("global_onkey2")] = XorString("On key ");
 		phrases[XorString("global_keymode")] = XorString("Hold\0Toggle\0");
 		phrases[XorString("global_bone")] = XorString("Bone");
 		phrases[XorString("global_bonelist")] = XorString("Nearest\0Best damage\0Head\0Neck\0Sternum\0Chest\0Stomach\0Pelvis\0");
@@ -306,6 +307,7 @@ void UpdateLanguage()
 	phrases[XorString("global_weapontype")] = XorString("All\0Pistols\0Heavy\0SMG\0Rifles\0");
 	phrases[XorString("global_weapontype_zeus")] = XorString("All\0Pistols\0Heavy\0SMG\0Rifles\0Zeus x27\0");
 	phrases[XorString("global_onkey")] = XorString("Na tecla");
+	phrases[XorString("global_onkey2")] = XorString("Na tecla ");
 	phrases[XorString("global_keymode")] = XorString("Hold\0Toggle\0");
 	phrases[XorString("global_bone")] = XorString("Local");
 	phrases[XorString("global_bonelist")] = XorString("Nearest\0Best damage\0Head\0Neck\0Sternum\0Chest\0Stomach\0Pelvis\0");

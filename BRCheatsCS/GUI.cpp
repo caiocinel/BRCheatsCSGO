@@ -276,9 +276,18 @@ void GUI::renderAimbotWindow(bool contentOnly) noexcept
     if (config->aimbot[currentWeapon].silent)
         PopDisableItems();
 
+    
     if (config->aimbot[currentWeapon].standaloneRCS && !config->aimbot[currentWeapon].silent)
     {
-
+        ImGui::Checkbox(phrases[XorString("global_onkey2")].c_str(), &config->aimbot[currentWeapon].onKeyRCS);
+        ImGui::SameLine();
+        hotkey(config->aimbot[currentWeapon].RCSkey);
+        ImGui::SameLine();
+        ImGui::PushID(5);
+        ImGui::PushItemWidth(70.0f);
+        ImGui::Combo(" ", &config->aimbot[currentWeapon].RCSkeyMode, XorString("Hold\0Toggle\0"));
+        ImGui::PopItemWidth();
+        ImGui::PopID();
         ImGui::InputInt(phrases[XorString("aimbot_ignoreshots")].c_str(), &config->aimbot[currentWeapon].shotsFired);
         ImGui::SliderFloat(phrases[XorString("aimbot_rcs_x")].c_str(), &config->aimbot[currentWeapon].recoilControlX, 0.0f, 1.0f, "%.5f");
         ImGui::SliderFloat(phrases[XorString("aimbot_rcs_y")].c_str(), &config->aimbot[currentWeapon].recoilControlY, 0.0f, 1.0f, "%.5f");
