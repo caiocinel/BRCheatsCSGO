@@ -213,6 +213,7 @@ void UpdateLanguage()
 		phrases[XorString("misc_fastplant")] = XorString("Fast Plant");
 		phrases[XorString("misc_faststop")] = XorString("Fast Stop");
 		phrases[XorString("misc_bombtimer")] = XorString("Bomb Timer");
+		phrases[XorString("misc_bombdamage")] = XorString("Bomb Damage");
 		phrases[XorString("misc_quickreload")] = XorString("Quick Reload");
 		phrases[XorString("misc_preparerevolver")] = XorString("Prepare Revolver");
 		phrases[XorString("misc_animatedclantag")] = XorString("Animated Clan Tag");
@@ -487,6 +488,7 @@ void UpdateLanguage()
 	phrases[XorString("misc_fastplant")] = XorString("Fast Plant");
 	phrases[XorString("misc_faststop")] = XorString("Fast Stop");
 	phrases[XorString("misc_bombtimer")] = XorString("Tempo de C4");
+	phrases[XorString("misc_bombdamage")] = XorString("Dano da C4");
 	phrases[XorString("misc_quickreload")] = XorString("Quick Reload");
 	phrases[XorString("misc_quickreload")] = XorString("Prepare Revolver");
 	phrases[XorString("misc_animatedclantag")] = XorString("Tag Clan Animada");

@@ -507,6 +507,7 @@ public:
         bool nadePredict{ false };
         bool fixTabletSignal{ false };
         bool fakePrime{ false };
+        bool bombDamage{ false };
         int nameChangeSelection{ 0 };
         std::string customName;
         std::string banText{ "Cheater banned from CS:GO." };

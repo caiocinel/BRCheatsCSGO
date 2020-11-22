@@ -1646,6 +1646,7 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     ImGui::Checkbox(phrases[XorString("misc_fastplant")].c_str(), &config->misc.fastPlant);
     ImGui::Checkbox(phrases[XorString("misc_faststop")].c_str(), &config->misc.fastStop);
     ImGuiCustom::colorPicker(phrases[XorString("misc_bombtimer")].c_str(), config->misc.bombTimer);
+    ImGui::Checkbox(phrases[XorString("misc_bombdamage")].c_str(), &config->misc.bombDamage);
     ImGui::Checkbox(phrases[XorString("misc_quickreload")].c_str(), &config->misc.quickReload);
     ImGui::Checkbox(phrases[XorString("misc_preparerevolver")].c_str(), &config->misc.prepareRevolver);
     ImGui::SameLine();
