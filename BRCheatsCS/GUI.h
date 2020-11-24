@@ -28,6 +28,7 @@ private:
     void renderChamsWindow(bool contentOnly = false) noexcept;
     void renderStreamProofESPWindow(bool contentOnly = false) noexcept;
     void renderVisualsWindow(bool contentOnly = false) noexcept;
+    void renderWorldWindow(bool contentOnly = false) noexcept;
     void renderSkinChangerWindow(bool contentOnly = false) noexcept;
     void renderMiscWindow(bool contentOnly = false) noexcept;
     void renderAutoConfigWindow(bool contentOnly = false) noexcept;
@@ -46,6 +47,7 @@ private:
         bool chams = false;
         bool streamProofESP = false;
         bool visuals = false;
+        bool world = false;
         bool skinChanger = false;
         bool sound = false;
         bool style = false;

@@ -19,6 +19,7 @@ void UpdateLanguage()
 		phrases[XorString("main_visuals")] = XorString("Visuals");
 		phrases[XorString("main_misc")] = XorString("Misc");
 		phrases[XorString("main_lang")] = XorString("Idioma");
+		phrases[XorString("main_world")] = XorString("World");
 		phrases[XorString("main_langAlert")] = XorString("Your language has been changed to English");
 		phrases[XorString("global_enabled")] = XorString("Enabled");
 		phrases[XorString("global_threedots")] = XorString("...");
@@ -63,6 +64,7 @@ void UpdateLanguage()
 		phrases[XorString("window_misc")] = XorString("Misc | BRCheats");
 		phrases[XorString("window_config")] = XorString("Config | BRCheats");
 		phrases[XorString("window_ezconfig")] = XorString("EzConfig | BRCheats");
+		phrases[XorString("window_world")] = XorString("World | BRCheats");
 
 		phrases[XorString("aimhacks_friendlyfire")] = XorString("Friendly fire");
 		phrases[XorString("aimhacks_visibleonly")] = XorString("Visible only");
@@ -296,8 +298,10 @@ void UpdateLanguage()
 	phrases[XorString("main_visuals")] = XorString("Visuais");
 	phrases[XorString("main_misc")] = XorString("Outros");
 	phrases[XorString("main_lang")] = XorString("Language");
+	phrases[XorString("main_world")] = XorString("Mundo");
 	phrases[XorString("main_langAlert")] = XorString("O menu foi definido em Portugues");
 	phrases[XorString("main_windowTitle")] = XorString("BRCheats PT");
+
 	phrases[XorString("global_enabled")] = XorString("Ativado");
 	phrases[XorString("global_threedots")] = XorString("...");
 	phrases[XorString("global_nobackground")] = XorString("Sem Background");

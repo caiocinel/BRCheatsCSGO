@@ -83,6 +83,7 @@ void GUI::render() noexcept
     renderChamsWindow();
     renderStreamProofESPWindow();
     renderVisualsWindow();
+    renderWorldWindow();
     renderSkinChangerWindow();
     renderMiscWindow();
     renderConfigWindow();
@@ -1361,22 +1362,14 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
     ImGui::Checkbox(phrases[XorString("visuals_nosmoke")].c_str(), &config->visuals.noSmoke);
     ImGui::Checkbox(phrases[XorString("visuals_noblur")].c_str(), &config->visuals.noBlur);
     ImGui::Checkbox(phrases[XorString("visuals_noscopeoverlay")].c_str(), &config->visuals.noScopeOverlay);
-    ImGui::Checkbox(phrases[XorString("visuals_nograss")].c_str(), &config->visuals.noGrass);
-    ImGui::Checkbox(phrases[XorString("visuals_noshadows")].c_str(), &config->visuals.noShadows);
-    ImGui::Checkbox(phrases[XorString("visuals_nightmode")].c_str(), &config->visuals.nightMode);
-    ImGui::Checkbox(phrases[XorString("visuals_asuswalls")].c_str(), &config->visuals.asusWalls);
-    ImGui::Checkbox(phrases[XorString("visuals_nobloom")].c_str(), &config->visuals.noBloom);
     ImGui::Checkbox(phrases[XorString("visuals_disablepostprocessing")].c_str(), &config->visuals.disablePostProcessing);
     ImGui::Checkbox(phrases[XorString("visuals_inverseragdoll")].c_str(), &config->visuals.inverseRagdollGravity);
-    ImGui::Checkbox(phrases[XorString("visuals_nofog")].c_str(), &config->visuals.noFog);
-    ImGui::Checkbox(phrases[XorString("visuals_no3dsky")].c_str(), &config->visuals.no3dSky);
+
     ImGui::Checkbox(phrases[XorString("visuals_noaimpunch")].c_str(), &config->visuals.noAimPunch);
     ImGui::Checkbox(phrases[XorString("visuals_noviewpunch")].c_str(), &config->visuals.noViewPunch);
     ImGui::Checkbox(phrases[XorString("visuals_nohands")].c_str(), &config->visuals.noHands);
     ImGui::Checkbox(phrases[XorString("visuals_nosleeves")].c_str(), &config->visuals.noSleeves);
     ImGui::Checkbox(phrases[XorString("visuals_wireframesmoke")].c_str(), &config->visuals.wireframeSmoke);
-    ImGuiCustom::colorPicker(phrases[XorString("visuals_worldcolor")].c_str(), config->visuals.world);
-    ImGuiCustom::colorPicker(phrases[XorString("visuals_skycolor")].c_str(), config->visuals.sky);
     ImGui::Checkbox(phrases[XorString("visuals_deaglespinner")].c_str(), &config->visuals.deagleSpinner);
     ImGuiCustom::colorPicker(phrases[XorString("visuals_bullettracers")].c_str(), config->visuals.bulletTracers);
     ImGui::Checkbox(phrases[XorString("visuals_zoom")].c_str(), &config->visuals.zoom);
@@ -1408,7 +1401,6 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
     ImGui::SliderFloat("", &config->visuals.brightness, 0.0f, 1.0f, phrases[XorString("visuals_brightness")].c_str());
     ImGui::PopID();
     ImGui::PopItemWidth();
-    ImGui::Combo(phrases[XorString("visuals_skybox")].c_str(), &config->visuals.skybox, Helpers::skyboxList.data(), Helpers::skyboxList.size());
     ImGui::Combo(phrases[XorString("visuals_hitmarker")].c_str(), &config->visuals.hitMarker, XorString("None\0Default (Cross)\0"));
     ImGui::SliderFloat(phrases[XorString("visuals_hitmarker_time")].c_str(), &config->visuals.hitMarkerTime, 0.1f, 1.5f, XorString("%.2fs"));
 	ImGui::Checkbox(phrases[XorString("visuals_indicators")].c_str(), &config->visuals.indicatorsEnabled);
@@ -1425,16 +1417,44 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
     ImGuiCustom::colorPicker(phrases[XorString("visuals_noscopecrosshair")].c_str(), config->misc.noscopeCrosshair);
     ImGuiCustom::colorPicker(phrases[XorString("visuals_recoilcrosshair")].c_str(), config->misc.recoilCrosshair);
     ImGuiCustom::colorPicker(phrases[XorString("visuals_watermark")].c_str(), config->misc.watermark);
-    ImGui::Checkbox(phrases[XorString("visuals_colorcorrection")].c_str(), &config->visuals.colorCorrection.enabled);
 
-    ImGui::SameLine();
-    bool ccPopup = ImGui::Button(phrases[XorString("global_edit")].c_str());
     ImGui::Checkbox(phrases[XorString("visuals_ragdollforce")].c_str(), &config->misc.ragdollForce);
     if (config->misc.ragdollForce) {
         ImGui::SetNextItemWidth(90.0f);
         ImGui::InputInt(phrases[XorString("visuals_ragdollforce_strenght")].c_str(), &config->misc.ragdollForceStrength, 1, 3);
         config->misc.ragdollForceStrength = std::clamp(config->misc.ragdollForceStrength, 1, 100);
     };
+
+
+    ImGui::Columns(1);
+
+    if (!contentOnly)
+        ImGui::End();
+}
+
+void GUI::renderWorldWindow(bool contentOnly) noexcept
+{
+    if (!contentOnly) {
+        if (!window.world)
+            return;
+        ImGui::SetNextWindowSize({ 700.0f, 0.0f });
+        ImGui::Begin(phrases[XorString("window_world")].c_str(), &window.world, windowFlags);
+    }
+    ImGui::Columns(2, nullptr, true);
+    ImGui::Combo(phrases[XorString("visuals_skybox")].c_str(), &config->visuals.skybox, Helpers::skyboxList.data(), Helpers::skyboxList.size());
+    ImGuiCustom::colorPicker(phrases[XorString("visuals_worldcolor")].c_str(), config->visuals.world);
+    ImGuiCustom::colorPicker(phrases[XorString("visuals_skycolor")].c_str(), config->visuals.sky);
+    ImGui::Checkbox(phrases[XorString("visuals_nograss")].c_str(), &config->visuals.noGrass);
+    ImGui::Checkbox(phrases[XorString("visuals_noshadows")].c_str(), &config->visuals.noShadows);
+    ImGui::Checkbox(phrases[XorString("visuals_nightmode")].c_str(), &config->visuals.nightMode);
+    ImGui::Checkbox(phrases[XorString("visuals_asuswalls")].c_str(), &config->visuals.asusWalls);
+    ImGui::NextColumn();
+    ImGui::Checkbox(phrases[XorString("visuals_nobloom")].c_str(), &config->visuals.noBloom);
+    ImGui::Checkbox(phrases[XorString("visuals_nofog")].c_str(), &config->visuals.noFog);
+    ImGui::Checkbox(phrases[XorString("visuals_no3dsky")].c_str(), &config->visuals.no3dSky);
+    ImGui::Checkbox(phrases[XorString("visuals_colorcorrection")].c_str(), &config->visuals.colorCorrection.enabled);
+    ImGui::SameLine();
+    bool ccPopup = ImGui::Button(phrases[XorString("global_edit")].c_str());
     if (ccPopup)
         ImGui::OpenPopup(XorString("##popup"));
 
@@ -1448,9 +1468,6 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
         ImGui::VSliderFloat(XorString("##7"), { 40.0f, 160.0f }, &config->visuals.colorCorrection.yellow, 0.0f, 1.0f, XorString("Yellow\n%.3f")); ImGui::SameLine();
         ImGui::EndPopup();
     }
-
-    ImGui::Columns(1);
-
     if (!contentOnly)
         ImGui::End();
 }
@@ -2132,6 +2149,9 @@ void GUI::renderGuiStyle3() noexcept
         }
         if (ImGui::Button(phrases[XorString("main_visuals")].c_str(), ImVec2(-1.0f, 0.0f))) {
             window.visuals = !window.visuals;
+        }
+        if (ImGui::Button(phrases[XorString("main_world")].c_str(), ImVec2(-1.0f, 0.0f))) {
+            window.world = !window.world;
         }
         if (ImGui::Button(XorString("Skin Changer"), ImVec2(-1.0f, 0.0f))) {
             window.skinChanger = !window.skinChanger;
