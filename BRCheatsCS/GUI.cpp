@@ -87,6 +87,7 @@ void GUI::render() noexcept
     renderVisualsWindow();
     renderSkinChangerWindow();
     renderProfileChangerWindow();
+    renderMedalChangerWindow();
     renderMiscWindow();
     renderConfigWindow();
     renderAutoConfigWindow();
@@ -1945,6 +1946,50 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
         ImGui::Columns(1);
         if (!contentOnly)
             ImGui::End();
+}
+
+void GUI::renderMedalChangerWindow(bool contentOnly) noexcept
+{
+
+    ImGui::Checkbox("Enable Medal Changer", &config->medalChanger.enabled);
+    static int medal_id = 0;
+    ImGui::InputInt("Medal ID", &medal_id);
+    if (ImGui::Button("Add") && medal_id != 0) {
+        config->medalChanger.medals.insert(config->medalChanger.medals.end(), medal_id);
+        medal_id = 0;
+    }
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 1));
+    ImGui::ListBoxHeader("Medal List");
+    for (int m = 0; m < config->medalChanger.medals.size(); m++) {
+        if (ImGui::Selectable(std::to_string(config->medalChanger.medals[m]).c_str())) {
+            if (config->medalChanger.equipped_medal == config->medalChanger.medals[m]) {
+                config->medalChanger.equipped_medal = 0;
+                config->medalChanger.equipped_medal_override = false;
+            }
+            config->medalChanger.medals.erase(config->medalChanger.medals.begin() + m);
+        }
+    }
+    ImGui::ListBoxFooter();
+    ImGui::PopStyleColor();
+    ImGui::Checkbox("Equipped Medal Override", &config->medalChanger.equipped_medal_override);
+    if (config->medalChanger.equipped_medal_override) {
+        static int equipped_medal = 0;
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 1));
+        if (ImGui::Combo("Equipped Medal", &equipped_medal, [](void* data, int idx, const char** out_text)
+            {
+                *out_text = std::to_string(config->medalChanger.medals[idx]).c_str();
+                return true;
+            }, nullptr, config->medalChanger.medals.size(), 5)) {
+            config->medalChanger.equipped_medal = config->medalChanger.medals[equipped_medal];
+        }
+        ImGui::PopStyleColor();
+    }
+    if (ImGui::Button("Apply##Medals")) {
+        write.SendClientHello();
+    }
+
+
+
 }
 
 void GUI::renderProfileChangerWindow(bool contentOnly) noexcept

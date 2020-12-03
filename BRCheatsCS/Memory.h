@@ -83,6 +83,7 @@ public:
     uintptr_t InvalidateBoneCache;
     MemAlloc* memalloc;
     ISteamGameCoordinator* SteamGameCoordinator;
+    ISteamUser* SteamUser;
 	
     std::add_pointer_t<void __cdecl(const char* msg, ...)> debugMsg;
     std::add_pointer_t<void __cdecl(const std::array<std::uint8_t, 4>& color, const char* msg, ...)> conColorMsg;

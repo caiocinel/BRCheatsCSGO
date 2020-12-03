@@ -30,6 +30,7 @@ private:
     void renderVisualsWindow(bool contentOnly = false) noexcept;
     void renderSkinChangerWindow(bool contentOnly = false) noexcept;
     void renderProfileChangerWindow(bool contentOnly = false) noexcept;
+    void renderMedalChangerWindow(bool contentOnly = false) noexcept;
     void renderMiscWindow(bool contentOnly = false) noexcept;
     void renderAutoConfigWindow(bool contentOnly = false) noexcept;
     void renderConfigWindow(bool contentOnly = false) noexcept;
@@ -49,6 +50,7 @@ private:
         bool visuals = false;
         bool skinChanger = false;
         bool profileChanger = false;
+        bool medalChanger = false;
         bool sound = false;
         bool style = false;
         bool misc = false;

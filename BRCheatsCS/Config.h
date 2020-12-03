@@ -480,6 +480,13 @@ public:
         int ban_time = 0;
     } profileChanger;
 
+    struct medalChanger {
+        bool enabled = false;
+        std::vector<uint32_t> medals = {};
+        bool equipped_medal_override = false;
+        uint32_t equipped_medal = 0;
+    } medalChanger;
+
     struct Misc {
         int lang{ 0 };
         int menuKey{ 0x2D }; // VK_INSERT
