@@ -395,7 +395,7 @@ static void __stdcall frameStageNotify(FrameStage stage) noexcept
         Visuals::applyZoom(stage);
         Misc::fixAnimationLOD(stage);
         Backtrack::update(stage);
-        SkinChanger::run(stage);
+       // SkinChanger::run(stage);
         Visuals::rainbowCrosshair();
     }
     hooks->client.callOriginal<void, 37>(stage);
@@ -802,7 +802,7 @@ static bool __fastcall WriteUsercmdDeltaToBuffer(void* ecx, void* edx, int slot,
 
 void Hooks::install() noexcept
 {
-    SkinChanger::initializeKits();
+    //SkinChanger::initializeKits();
 
     originalPresent = **reinterpret_cast<decltype(originalPresent)**>(memory->present);
     **reinterpret_cast<decltype(present)***>(memory->present) = present;
