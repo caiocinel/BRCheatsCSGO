@@ -98,7 +98,7 @@ namespace XorCompileTime
 	};
 
 
-#define XorString(s) (XorCompileTime::XorString<sizeof( s ) - 1,__COUNTER__>(s, std::make_index_sequence<sizeof(s) - 1>()).decrypt())
+#define XorString(s) (XorCompileTime::XorString<sizeof( s ) - 1,(int)__COUNTER__>(s, std::make_index_sequence<sizeof(s) - 1>()).decrypt())
 #define XorStringW(s) (XorCompileTime::XorStringW<sizeof( s ) - 1,__COUNTER__>(s, std::make_index_sequence<sizeof(s) - 1>()).decrypt())
 }
 
