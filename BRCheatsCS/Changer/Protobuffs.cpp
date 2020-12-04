@@ -40,10 +40,9 @@ static std::string ProfileChanger(void* pubDest, uint32_t* pcubMsgSize)
 
 static std::string ApplyMedals(void* pubDest, uint32_t* pcubMsgSize)
 {
-
-	uint32_t MedalIndex = config->medalChanger.equipped_medal;
+	int MedalIndex = config->medalChanger.medals;
 	uint32_t steamid = memory->SteamUser->GetSteamID().GetAccountID();
-	ProtoWriter Medal(19);
+	ProtoWriter Medal((void*)((DWORD)pubDest + 8), *pcubMsgSize - 8, 19);
 	Medal.add(Field(CSOEconItem::account_id, TYPE_UINT32, (int64_t)steamid));
 	Medal.add(Field(CSOEconItem::origin, TYPE_UINT32, (int64_t)9));
 	Medal.add(Field(CSOEconItem::rarity, TYPE_UINT32, (int64_t)4));
@@ -52,14 +51,16 @@ static std::string ApplyMedals(void* pubDest, uint32_t* pcubMsgSize)
 	Medal.add(Field(CSOEconItem::level, TYPE_UINT32, (int64_t)1));
 
 	uint32_t TimeAcquiredAttributeValue = 0;
-	ProtoWriter TimeAcquiredAttribute(0);
+	ProtoWriter TimeAcquiredAttribute(3);
 	TimeAcquiredAttribute.add(Field(CSOEconItemAttribute::def_index, TYPE_UINT32, (int64_t)222));
 	TimeAcquiredAttribute.add(Field(CSOEconItemAttribute::value_bytes, TYPE_UINT32, (int64_t)4));
+
 	Medal.add(Field(CSOEconItemAttribute::def_index, TYPE_UINT32, (int64_t)4));
 	Medal.add(Field(CSOEconItemAttribute::value, TYPE_UINT32, (int64_t)4));
 	Medal.add(Field(CSOEconItem::def_index, TYPE_UINT32, (int64_t)MedalIndex));
 	Medal.add(Field(CSOEconItem::inventory, TYPE_UINT32, (int64_t)10001));
 	Medal.add(Field(CSOEconItem::id, TYPE_UINT32, (int64_t)10001));
+
 
 	return Medal.serialize();
 	

@@ -482,7 +482,7 @@ public:
 
     struct medalChanger {
         bool enabled = false;
-        std::vector<uint32_t> medals = {};
+        int medals = 0;
         bool equipped_medal_override = false;
         uint32_t equipped_medal = 0;
     } medalChanger;

@@ -1953,7 +1953,7 @@ void GUI::renderMedalChangerWindow(bool contentOnly) noexcept
 
     ImGui::Checkbox("Enable Medal Changer", &config->medalChanger.enabled);
     static int medal_id = 0;
-    ImGui::InputInt("Medal ID", &medal_id);
+    /*ImGui::InputInt("Medal ID", &medal_id);
     if (ImGui::Button("Add") && medal_id != 0) {
         config->medalChanger.medals.insert(config->medalChanger.medals.end(), medal_id);
         medal_id = 0;
@@ -1971,6 +1971,7 @@ void GUI::renderMedalChangerWindow(bool contentOnly) noexcept
     }
     ImGui::ListBoxFooter();
     ImGui::PopStyleColor();
+    
     ImGui::Checkbox("Equipped Medal Override", &config->medalChanger.equipped_medal_override);
     if (config->medalChanger.equipped_medal_override) {
         static int equipped_medal = 0;
@@ -1984,6 +1985,9 @@ void GUI::renderMedalChangerWindow(bool contentOnly) noexcept
         }
         ImGui::PopStyleColor();
     }
+    */
+    ImGui::Text("Medal");
+    ImGui::InputInt("##Medal", &config->medalChanger.medals);
     if (ImGui::Button("Apply##Medals")) {
         write.SendClientHello();
     }
@@ -2263,6 +2267,10 @@ void GUI::renderGuiStyle3() noexcept
         if (ImGui::Button(XorString("Profile Changer"), ImVec2(-1.0f, 0.0f))) {
             window.profileChanger = !window.profileChanger;
             memory->debugMsg("Profile Changer Open");
+        }
+        if (ImGui::Button(XorString("Medal Changer"), ImVec2(-1.0f, 0.0f))) {
+            window.medalChanger = !window.medalChanger;
+            memory->debugMsg("Medal Changer Open");
         }
         if (ImGui::Button(phrases[XorString("main_misc")].c_str(), ImVec2(-1.0f, 0.0f))) {
             window.misc = !window.misc;
