@@ -27,6 +27,7 @@
     <ClCompile Include="Hacks\Debug.cpp" />
     <ClCompile Include="Hacks\EnginePrediction.cpp" />
     <ClCompile Include="Hacks\Glow.cpp" />
+    <ClCompile Include="Hacks\InventoryChanger.cpp" />
     <ClCompile Include="Hacks\Multipoints.cpp" />
     <ClCompile Include="Hacks\Ragebot.cpp" />
     <ClCompile Include="Hacks\Resolver.cpp" />
@@ -67,6 +68,7 @@
     <ClCompile Include="SDK\AnimState.cpp" />
     <ClCompile Include="SDK\Entity.cpp" />
     <ClCompile Include="SDK\GlobalVars.cpp" />
+    <ClCompile Include="SDK\items.cpp" />
     <ClCompile Include="SDK\KeyValues.cpp" />
     <ClCompile Include="SDK\Utils.cpp" />
   </ItemGroup>
@@ -79,6 +81,7 @@
     <ClInclude Include="Changer\ProtoField.h" />
     <ClInclude Include="Changer\ProtoWriter.h" />
     <ClInclude Include="Changer\valve_parser.h" />
+    <ClInclude Include="Hacks\InventoryChanger.h" />
     <ClInclude Include="Hooks\vfunc_hook.hpp" />
     <ClInclude Include="Lang.h" />
     <ClInclude Include="Config.h" />
@@ -159,6 +162,7 @@
     <ClInclude Include="SDK\GlowObjectManager.h" />
     <ClInclude Include="SDK\Input.h" />
     <ClInclude Include="SDK\InputSystem.h" />
+    <ClInclude Include="SDK\items.h" />
     <ClInclude Include="SDK\ItemSchema.h" />
     <ClInclude Include="SDK\KeyValues.h" />
     <ClInclude Include="SDK\Localize.h" />

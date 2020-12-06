@@ -31,6 +31,7 @@ private:
     void renderSkinChangerWindow(bool contentOnly = false) noexcept;
     void renderProfileChangerWindow(bool contentOnly = false) noexcept;
     void renderMedalChangerWindow(bool contentOnly = false) noexcept;
+    void renderInventoryChangerWindow(bool contentOnly = false) noexcept;
     void renderMiscWindow(bool contentOnly = false) noexcept;
     void renderAutoConfigWindow(bool contentOnly = false) noexcept;
     void renderConfigWindow(bool contentOnly = false) noexcept;
@@ -51,6 +52,7 @@ private:
         bool skinChanger = false;
         bool profileChanger = false;
         bool medalChanger = false;
+        bool inventoryChanger = false;
         bool sound = false;
         bool style = false;
         bool misc = false;
@@ -58,6 +60,5 @@ private:
         bool autoconfig = false;
     } window;
 };
-
 inline std::unique_ptr<GUI> gui;
 

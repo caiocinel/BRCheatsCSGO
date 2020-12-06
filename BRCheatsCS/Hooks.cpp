@@ -395,7 +395,7 @@ static void __stdcall frameStageNotify(FrameStage stage) noexcept
         Visuals::applyZoom(stage);
         Misc::fixAnimationLOD(stage);
         Backtrack::update(stage);
-       // SkinChanger::run(stage);
+        SkinChanger::run(stage);
         Visuals::rainbowCrosshair();
     }
     hooks->client.callOriginal<void, 37>(stage);
@@ -735,18 +735,19 @@ EGCResult __fastcall hkGCRetrieveMessage(void* ecx, void*, uint32_t* punMsgType,
 }
 
 
-/*
-EGCResults __fastcall hkGCSendMessage(void* ecx, void*, uint32_t unMsgType, const void* pubData, uint32_t cubData)
+
+EGCResult __fastcall hkGCSendMessage(void* ecx, void*, uint32_t unMsgType, const void* pubData, uint32_t cubData)
 {
     static auto oGCSendMessage = hooks->gc_hook.get_original<GCSendMessage>(0);
     bool sendMessage = write.PreSendMessage(unMsgType, const_cast<void*>(pubData), cubData);
 
     if (!sendMessage)
-        return EGCResults::k_EGCResultOK;
+        return EGCResult::k_EGCResultOK;
 
+    memory->debugMsg("[->] Message Sent!\n");
     return oGCSendMessage(ecx, unMsgType, const_cast<void*>(pubData), cubData);
 }
-*/
+
 static bool __fastcall WriteUsercmdDeltaToBuffer(void* ecx, void* edx, int slot, void* buffer, int from, int to, bool isnewcommand) noexcept
 {
     auto original = hooks->client.getOriginal<bool, 24>(slot, buffer, from, to, isnewcommand);
@@ -802,7 +803,7 @@ static bool __fastcall WriteUsercmdDeltaToBuffer(void* ecx, void* edx, int slot,
 
 void Hooks::install() noexcept
 {
-    //SkinChanger::initializeKits();
+    SkinChanger::initializeKits();
 
     originalPresent = **reinterpret_cast<decltype(originalPresent)**>(memory->present);
     **reinterpret_cast<decltype(present)***>(memory->present) = present;
@@ -847,7 +848,7 @@ void Hooks::install() noexcept
     svCheats.hookAt(13, svCheatsGetBool);
     viewRender.hookAt(39, render2dEffectsPreHud);
     viewRender.hookAt(41, renderSmokeOverlay);
-    //gc_hook.hook_index(indexhooks::send_message, hkGCSendMessage);
+    gc_hook.hook_index(0, hkGCSendMessage);
     gc_hook.hook_index(2, hkGCRetrieveMessage);
 
     if (DWORD oldProtection; VirtualProtect(memory->dispatchSound, 4, PAGE_EXECUTE_READWRITE, &oldProtection)) {

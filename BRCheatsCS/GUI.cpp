@@ -10,6 +10,7 @@
 #include "imgui/imgui_internal.h"
 
 #include "imguiCustom.h"
+#include "Hacks/InventoryChanger.h"
 
 #include "GUI.h"
 #include "XorStr/xorstr.hpp"
@@ -23,9 +24,11 @@
 #include "SDK/InputSystem.h"
 #include "Changer/Protobuffs.h"
 #include "memory.h"
+#include "SDK/items.h"
 
 constexpr auto windowFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 extern std::map<std::string, std::string> phrases;
+IDirect3DTexture9* skinImage = nullptr;
 
 namespace ImGui {
 
@@ -87,7 +90,9 @@ void GUI::render() noexcept
     renderVisualsWindow();
     renderSkinChangerWindow();
     renderProfileChangerWindow();
-    renderMedalChangerWindow();
+    /*renderMedalChangerWindow();
+    renderInventoryChangerWindow();
+    */
     renderMiscWindow();
     renderConfigWindow();
     renderAutoConfigWindow();
@@ -1951,10 +1956,17 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
 void GUI::renderMedalChangerWindow(bool contentOnly) noexcept
 {
 
+    if (!contentOnly) {
+        if (!window.medalChanger)
+            return;
+        ImGui::SetNextWindowSize({ 290.0f, 0.0f });
+        ImGui::Begin("Medal Changer", &window.medalChanger, windowFlags);
+    }
+
     ImGui::Checkbox("Enable Medal Changer", &config->medalChanger.enabled);
     static int medal_id = 0;
-    /*ImGui::InputInt("Medal ID", &medal_id);
-    if (ImGui::Button("Add") && medal_id != 0) {
+    ImGui::InputInt("Medal ID", &config->medalChanger.medals);
+   /* if (ImGui::Button("Add") && medal_id != 0) {
         config->medalChanger.medals.insert(config->medalChanger.medals.end(), medal_id);
         medal_id = 0;
     }
@@ -1986,14 +1998,129 @@ void GUI::renderMedalChangerWindow(bool contentOnly) noexcept
         ImGui::PopStyleColor();
     }
     */
-    ImGui::Text("Medal");
-    ImGui::InputInt("##Medal", &config->medalChanger.medals);
     if (ImGui::Button("Apply##Medals")) {
         write.SendClientHello();
     }
 
 
+    if (!contentOnly)
+        ImGui::End();
+}
 
+void GUI::renderInventoryChangerWindow(bool contentOnly) noexcept
+{
+    if (!contentOnly) {
+        if (!window.inventoryChanger)
+            return;
+        ImGui::SetNextWindowSize({ 290.0f, 0.0f });
+        ImGui::Begin("Inventory Changer", &window.inventoryChanger, windowFlags);
+    }
+    ImGui::Columns(2, nullptr, true);
+    
+    ImGui::Checkbox("Enabled##inv-changer", &config->inventory.enabled);
+    static wskin weaponSkin;
+    if (weaponSkin.wId == WEAPON_NONE)
+        weaponSkin.wId = WEAPON_DEAGLE;
+    ImGui::Text("Weapon");
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 1.f, 1.f, 1.f));
+    if (ImGui::BeginCombo("##Weapon", k_inventory_names.at(weaponSkin.wId)))
+    {
+        for (const auto& weapon : k_inventory_names)
+        {
+            if (ImGui::Selectable(weapon.second, weaponSkin.wId == weapon.first))
+            {
+                weaponSkin.wId = weapon.first;
+                weaponSkin.paintKit = 0;
+                skinImage = nullptr;
+            }
+        }
+        ImGui::EndCombo();
+    }
+    ImGui::PopStyleColor();
+
+    auto weaponName = weaponnames(weaponSkin.wId);
+    ImGui::Text("Skin");
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 1.f, 1.f, 1.f));
+    if (ImGui::BeginCombo("##Paint Kit", weaponSkin.paintKit > 0 ? config->inventory.skinInfo[weaponSkin.paintKit].name.c_str() : ""))
+    {
+        int lastID = ImGui::GetItemID();
+
+        for (auto skin : config->inventory.skinInfo)
+        {
+            for (auto names : skin.second.weaponName)
+            {
+                if (weaponName != names)
+                    continue;
+
+                ImGui::PushID(lastID++);
+
+                if (ImGui::Selectable(skin.second.name.c_str(), skin.first == weaponSkin.paintKit))
+                    weaponSkin.paintKit = skin.first;
+
+                ImGui::PopID();
+            }
+        }
+        ImGui::EndCombo();
+    }
+    ImGui::PopStyleColor();
+    ImGui::Text("Wear");
+    ImGui::SliderFloat("##Wear##new", &weaponSkin.wear, 0.f, 1.f, "%.5f");
+    ImGui::Text("Seed");
+    ImGui::InputInt("##Seed##new", &weaponSkin.seed);
+    ImGui::Text("Name");
+    ImGui::InputText("##Name##new", (char*)weaponSkin.name.c_str(), IM_ARRAYSIZE((char*)weaponSkin.name.c_str()));
+
+    if (ImGui::Button("Add##new"))
+    {
+        g_InventorySkins.insert({ memory->RandomInt(20000, 200000), weaponSkin });
+        config->inventory.itemCount = g_InventorySkins.size();
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Apply"))
+    {
+        write.SendClientHello();
+        write.SendMatchmakingClient2GCHello();
+    }
+
+    ImGui::NextColumn();
+
+    static int selectedId = 0;
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 1.f, 1.f, 1.f));
+    if (ImGui::ListBoxHeader("##skins", ImVec2(-1, 0)))
+    {
+        int lastID = ImGui::GetItemID();
+        for (auto weapon : g_InventorySkins)
+        {
+            if (!weapon.second.wId || !weapon.second.paintKit)
+                continue;
+
+            ImGui::PushID(lastID++);
+
+            if (ImGui::Selectable((k_inventory_names.at(weapon.second.wId) + std::string(" | ") + config->inventory.skinInfo[weapon.second.paintKit].name).c_str(), selectedId == weapon.first))
+                selectedId = weapon.first;
+            ImGui::PopID();
+        }
+
+        ImGui::ListBoxFooter();
+    }
+    ImGui::PopStyleColor();
+    if (selectedId != 0)
+    {
+        ImGui::Text("Wear");
+        ImGui::SliderFloat("##Wear##existing", &g_InventorySkins[selectedId].wear, 0.f, 1.f, "%.5f");
+        ImGui::Text("Seed");
+        ImGui::InputInt("##Seed##existing", &g_InventorySkins[selectedId].seed);
+
+        if (ImGui::Button("Delete##existing", ImVec2(-1, 25)))
+        {
+            g_InventorySkins.erase(selectedId);
+            config->inventory.itemCount = g_InventorySkins.size();
+        }
+    }
+
+    ImGui::Columns(1);
+    if (!contentOnly)
+        ImGui::End();
 }
 
 void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
@@ -2266,12 +2393,17 @@ void GUI::renderGuiStyle3() noexcept
         }
         if (ImGui::Button(XorString("Profile Changer"), ImVec2(-1.0f, 0.0f))) {
             window.profileChanger = !window.profileChanger;
-            memory->debugMsg("Profile Changer Open");
         }
+        /*
         if (ImGui::Button(XorString("Medal Changer"), ImVec2(-1.0f, 0.0f))) {
             window.medalChanger = !window.medalChanger;
             memory->debugMsg("Medal Changer Open");
         }
+        if (ImGui::Button(XorString("Inv Changer"), ImVec2(-1.0f, 0.0f))) {
+            window.inventoryChanger = !window.inventoryChanger;
+            memory->debugMsg("Inv Changer Open");
+        }
+        */
         if (ImGui::Button(phrases[XorString("main_misc")].c_str(), ImVec2(-1.0f, 0.0f))) {
             window.misc = !window.misc;
         }

@@ -212,6 +212,12 @@
     <ClCompile Include="Hooks\vfunc_hook.cpp">
       <Filter>Hooks</Filter>
     </ClCompile>
+    <ClCompile Include="Hacks\InventoryChanger.cpp">
+      <Filter>Hacks</Filter>
+    </ClCompile>
+    <ClCompile Include="SDK\items.cpp">
+      <Filter>SDK</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GUI.h">
@@ -588,6 +594,12 @@
     </ClInclude>
     <ClInclude Include="Hooks\vfunc_hook.hpp">
       <Filter>Hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="Hacks\InventoryChanger.h">
+      <Filter>Hacks</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\items.h">
+      <Filter>SDK</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
