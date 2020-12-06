@@ -1,6 +1,7 @@
 #include "Interfaces.h"
 #include "Memory.h"
 #include "SDK/LocalPlayer.h"
+#include "SDK/SteamAPI.h"
 
 template <typename T>
 static constexpr auto relativeToAbsolute(uintptr_t address) noexcept
@@ -62,6 +63,10 @@ Memory::Memory() noexcept
     UpdateState = findPattern(L"client", "\x55\x8B\xEC\x83\xE4\xF8\x83\xEC\x18\x56\x57\x8B\xF9\xF3\x0F\x11\x54\x24");
     InvalidateBoneCache = findPattern(L"client", "\x80\x3D?????\x74\x16\xA1????\x48\xC7\x81");
     memalloc = *reinterpret_cast<MemAlloc**>(GetProcAddress(GetModuleHandleA("tier0.dll"), "g_pMemAlloc"));
+    ISteamClient* SteamClient = ((ISteamClient * (__cdecl*)(void))GetProcAddress(GetModuleHandleA("steam_api.dll"), "SteamClient"))();
+    SteamGameCoordinator = (ISteamGameCoordinator*)SteamClient->GetISteamGenericInterface((void*)1, (void*)1, "SteamGameCoordinator001");
+    SteamUser = SteamClient->GetISteamUser((void*)1, (void*)1, "SteamUser019");
+    RandomInt = reinterpret_cast<decltype(RandomInt)>(GetProcAddress(GetModuleHandleA("vstdlib.dll"), "RandomInt"));
 
     localPlayer.init(*reinterpret_cast<Entity***>(findPattern(L"client", "\xA1????\x89\x45\xBC\x85\xC0") + 1));
     WriteUsercmdDeltaToBufferReturn = *(reinterpret_cast<void**>(findPattern(L"engine", "\x84\xC0\x74\x04\xB0\x01\xEB\x02\x32\xC0\x8B\xFE\x46\x3B\xF3\x7E\xC9\x84\xC0\x0F\x84????")));

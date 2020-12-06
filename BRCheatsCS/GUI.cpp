@@ -10,6 +10,7 @@
 #include "imgui/imgui_internal.h"
 
 #include "imguiCustom.h"
+#include "Hacks/InventoryChanger.h"
 
 #include "GUI.h"
 #include "XorStr/xorstr.hpp"
@@ -21,9 +22,13 @@
 #include "Hooks.h"
 #include "Interfaces.h"
 #include "SDK/InputSystem.h"
+#include "Changer/Protobuffs.h"
+#include "memory.h"
+#include "SDK/items.h"
 
 constexpr auto windowFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 extern std::map<std::string, std::string> phrases;
+IDirect3DTexture9* skinImage = nullptr;
 
 namespace ImGui {
 
@@ -85,6 +90,10 @@ void GUI::render() noexcept
     renderVisualsWindow();
     renderWorldWindow();
     renderSkinChangerWindow();
+    renderProfileChangerWindow();
+    /*renderMedalChangerWindow();
+    renderInventoryChangerWindow();
+    */
     renderMiscWindow();
     renderConfigWindow();
     renderAutoConfigWindow();
@@ -1971,6 +1980,262 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
             ImGui::End();
 }
 
+void GUI::renderMedalChangerWindow(bool contentOnly) noexcept
+{
+
+    if (!contentOnly) {
+        if (!window.medalChanger)
+            return;
+        ImGui::SetNextWindowSize({ 290.0f, 0.0f });
+        ImGui::Begin("Medal Changer", &window.medalChanger, windowFlags);
+    }
+
+    ImGui::Checkbox("Enable Medal Changer", &config->medalChanger.enabled);
+    static int medal_id = 0;
+    ImGui::InputInt("Medal ID", &config->medalChanger.medals);
+   /* if (ImGui::Button("Add") && medal_id != 0) {
+        config->medalChanger.medals.insert(config->medalChanger.medals.end(), medal_id);
+        medal_id = 0;
+    }
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 1));
+    ImGui::ListBoxHeader("Medal List");
+    for (int m = 0; m < config->medalChanger.medals.size(); m++) {
+        if (ImGui::Selectable(std::to_string(config->medalChanger.medals[m]).c_str())) {
+            if (config->medalChanger.equipped_medal == config->medalChanger.medals[m]) {
+                config->medalChanger.equipped_medal = 0;
+                config->medalChanger.equipped_medal_override = false;
+            }
+            config->medalChanger.medals.erase(config->medalChanger.medals.begin() + m);
+        }
+    }
+    ImGui::ListBoxFooter();
+    ImGui::PopStyleColor();
+    
+    ImGui::Checkbox("Equipped Medal Override", &config->medalChanger.equipped_medal_override);
+    if (config->medalChanger.equipped_medal_override) {
+        static int equipped_medal = 0;
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 1));
+        if (ImGui::Combo("Equipped Medal", &equipped_medal, [](void* data, int idx, const char** out_text)
+            {
+                *out_text = std::to_string(config->medalChanger.medals[idx]).c_str();
+                return true;
+            }, nullptr, config->medalChanger.medals.size(), 5)) {
+            config->medalChanger.equipped_medal = config->medalChanger.medals[equipped_medal];
+        }
+        ImGui::PopStyleColor();
+    }
+    */
+    if (ImGui::Button("Apply##Medals")) {
+        write.SendClientHello();
+    }
+
+
+    if (!contentOnly)
+        ImGui::End();
+}
+
+void GUI::renderInventoryChangerWindow(bool contentOnly) noexcept
+{
+    if (!contentOnly) {
+        if (!window.inventoryChanger)
+            return;
+        ImGui::SetNextWindowSize({ 290.0f, 0.0f });
+        ImGui::Begin("Inventory Changer", &window.inventoryChanger, windowFlags);
+    }
+    ImGui::Columns(2, nullptr, true);
+    
+    ImGui::Checkbox("Enabled##inv-changer", &config->inventory.enabled);
+    static wskin weaponSkin;
+    if (weaponSkin.wId == WEAPON_NONE)
+        weaponSkin.wId = WEAPON_DEAGLE;
+    ImGui::Text("Weapon");
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 1.f, 1.f, 1.f));
+    if (ImGui::BeginCombo("##Weapon", k_inventory_names.at(weaponSkin.wId)))
+    {
+        for (const auto& weapon : k_inventory_names)
+        {
+            if (ImGui::Selectable(weapon.second, weaponSkin.wId == weapon.first))
+            {
+                weaponSkin.wId = weapon.first;
+                weaponSkin.paintKit = 0;
+                skinImage = nullptr;
+            }
+        }
+        ImGui::EndCombo();
+    }
+    ImGui::PopStyleColor();
+
+    auto weaponName = weaponnames(weaponSkin.wId);
+    ImGui::Text("Skin");
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 1.f, 1.f, 1.f));
+    if (ImGui::BeginCombo("##Paint Kit", weaponSkin.paintKit > 0 ? config->inventory.skinInfo[weaponSkin.paintKit].name.c_str() : ""))
+    {
+        int lastID = ImGui::GetItemID();
+
+        for (auto skin : config->inventory.skinInfo)
+        {
+            for (auto names : skin.second.weaponName)
+            {
+                if (weaponName != names)
+                    continue;
+
+                ImGui::PushID(lastID++);
+
+                if (ImGui::Selectable(skin.second.name.c_str(), skin.first == weaponSkin.paintKit))
+                    weaponSkin.paintKit = skin.first;
+
+                ImGui::PopID();
+            }
+        }
+        ImGui::EndCombo();
+    }
+    ImGui::PopStyleColor();
+    ImGui::Text("Wear");
+    ImGui::SliderFloat("##Wear##new", &weaponSkin.wear, 0.f, 1.f, "%.5f");
+    ImGui::Text("Seed");
+    ImGui::InputInt("##Seed##new", &weaponSkin.seed);
+    ImGui::Text("Name");
+    ImGui::InputText("##Name##new", (char*)weaponSkin.name.c_str(), IM_ARRAYSIZE((char*)weaponSkin.name.c_str()));
+
+    if (ImGui::Button("Add##new"))
+    {
+        g_InventorySkins.insert({ memory->RandomInt(20000, 200000), weaponSkin });
+        config->inventory.itemCount = g_InventorySkins.size();
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Apply"))
+    {
+        write.SendClientHello();
+        write.SendMatchmakingClient2GCHello();
+    }
+
+    ImGui::NextColumn();
+
+    static int selectedId = 0;
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 1.f, 1.f, 1.f));
+    if (ImGui::ListBoxHeader("##skins", ImVec2(-1, 0)))
+    {
+        int lastID = ImGui::GetItemID();
+        for (auto weapon : g_InventorySkins)
+        {
+            if (!weapon.second.wId || !weapon.second.paintKit)
+                continue;
+
+            ImGui::PushID(lastID++);
+
+            if (ImGui::Selectable((k_inventory_names.at(weapon.second.wId) + std::string(" | ") + config->inventory.skinInfo[weapon.second.paintKit].name).c_str(), selectedId == weapon.first))
+                selectedId = weapon.first;
+            ImGui::PopID();
+        }
+
+        ImGui::ListBoxFooter();
+    }
+    ImGui::PopStyleColor();
+    if (selectedId != 0)
+    {
+        ImGui::Text("Wear");
+        ImGui::SliderFloat("##Wear##existing", &g_InventorySkins[selectedId].wear, 0.f, 1.f, "%.5f");
+        ImGui::Text("Seed");
+        ImGui::InputInt("##Seed##existing", &g_InventorySkins[selectedId].seed);
+
+        if (ImGui::Button("Delete##existing", ImVec2(-1, 25)))
+        {
+            g_InventorySkins.erase(selectedId);
+            config->inventory.itemCount = g_InventorySkins.size();
+        }
+    }
+
+    ImGui::Columns(1);
+    if (!contentOnly)
+        ImGui::End();
+}
+
+void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
+{
+    if (!contentOnly) {
+        if (!window.profileChanger)
+            return;
+        ImGui::SetNextWindowSize({ 290.0f, 0.0f });
+        ImGui::Begin("Profile Changer | BRCheats", &window.profileChanger, windowFlags);
+    }
+
+    static const char* bans_gui[] =
+    {
+        "Off",
+        "You were kicked from the last match (competitive cooldown)",
+        "You killed too many teammates (competitive cooldown)",
+        "You killed a teammate at round start (competitive cooldown)",
+        "You failed to reconnect to the last match (competitive cooldown)",
+        "You abandoned the last match (competitive cooldown)",
+        "You did too much damage to your teammates (competitive cooldown)",
+        "You did too much damage to your teammates at round start (competitive cooldown)",
+        "This account is permanently untrusted (global cooldown)",
+        "You were kicked from too many recent matches (competitive cooldown)",
+        "Convicted by overwatch - majorly disruptive (global cooldown)",
+        "Convicted by overwatch - minorly disruptive (global cooldown)",
+        "Resolving matchmaking state for your account (temporary cooldown)",
+        "Resolving matchmaking state after the last match (temporary cooldown)",
+        "This account is permanently untrusted (global cooldown)",
+        "(global cooldown)",
+        "You failed to connect by match start. (competitive cooldown)",
+        "You have kicked too many teammates in recent matches (competitive cooldown)",
+        "Congratulations on your recent competitive wins! before you play competitive matches further please wait for matchmaking servers to calibrate your skill group placement based on your lastest performance. (temporary cooldown)",
+        "A server using your game server login token has been banned. your account is now permanently banned from operating game servers, and you have a cooldown from connecting to game servers. (global cooldown)"
+    };
+    const char* ranks_gui[] = {
+        "Off",
+        "Silver 1",
+        "Silver 2",
+        "Silver 3",
+        "Silver 4",
+        "Silver elite",
+        "Silver elite master",
+        "Gold nova 1",
+        "Gold nova 2",
+        "Gold nova 3",
+        "Gold nova master",
+        "Master guardian 1",
+        "Master guardian 2",
+        "Master guardian elite",
+        "Distinguished master guardian",
+        "Legendary eagle",
+        "Legendary eagle master",
+        "Supreme master first class",
+        "The global elite"
+    };
+
+        ImGui::Checkbox("Enabled##profile", &config->profileChanger.enabled);
+        ImGui::Text("Rank");
+        ImGui::Combo("##Rank", &config->profileChanger.rank, ranks_gui, ARRAYSIZE(ranks_gui));
+        ImGui::Text("Level");
+        ImGui::SliderInt("##Level", &config->profileChanger.level, 0, 40);
+        ImGui::Text("XP");
+        ImGui::InputInt("##Xp##level", &config->profileChanger.exp);
+        ImGui::Text("Wins");
+        ImGui::InputInt("##Wins", &config->profileChanger.wins);
+        ImGui::Text("Friend");
+        ImGui::InputInt("##Friend", &config->profileChanger.friendly);
+        ImGui::Text("Teach");
+        ImGui::InputInt("##Teach", &config->profileChanger.teach);
+        ImGui::Text("Leader");
+        ImGui::InputInt("##Leader", &config->profileChanger.leader);
+        ImGui::Text("Fake ban type");
+        ImGui::Combo("##fake-ban", &config->profileChanger.ban_type, bans_gui, IM_ARRAYSIZE(bans_gui));
+        ImGui::Text("Fake ban time");
+        ImGui::SliderInt("##fake-ban-time", &config->profileChanger.ban_time, 0, 1000, "Seconds: %d");
+        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + (250 / 2) - (190 / 2) - 20.f);
+        if (ImGui::Button("Apply", ImVec2(190, 30)))
+        {
+            write.SendClientHello();
+            write.SendMatchmakingClient2GCHello();
+        }
+
+            
+   
+        if (!contentOnly)
+            ImGui::End();
+}
+
 void GUI::renderAutoConfigWindow(bool contentOnly) noexcept
 {
 
@@ -2156,6 +2421,19 @@ void GUI::renderGuiStyle3() noexcept
         if (ImGui::Button(XorString("Skin Changer"), ImVec2(-1.0f, 0.0f))) {
             window.skinChanger = !window.skinChanger;
         }
+        if (ImGui::Button(XorString("Profile Changer"), ImVec2(-1.0f, 0.0f))) {
+            window.profileChanger = !window.profileChanger;
+        }
+        /*
+        if (ImGui::Button(XorString("Medal Changer"), ImVec2(-1.0f, 0.0f))) {
+            window.medalChanger = !window.medalChanger;
+            memory->debugMsg("Medal Changer Open");
+        }
+        if (ImGui::Button(XorString("Inv Changer"), ImVec2(-1.0f, 0.0f))) {
+            window.inventoryChanger = !window.inventoryChanger;
+            memory->debugMsg("Inv Changer Open");
+        }
+        */
         if (ImGui::Button(phrases[XorString("main_misc")].c_str(), ImVec2(-1.0f, 0.0f))) {
             window.misc = !window.misc;
         }

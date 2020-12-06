@@ -4,12 +4,50 @@
 #include <filesystem>
 #include <memory>
 #include <string>
-
+#include <unordered_map>
+#include <vector>
+#include <set>
+#include <map>
 #include "imgui/imgui.h"
 #include "nSkinz/config_.hpp"
 #include "ConfigStructs.h"
-
 #include "SDK/Vector.h"
+
+//using namespace std;
+
+struct skinInfo
+{
+    std::string name;
+    std::string cdnName;
+    std::vector<std::string> weaponName;
+    int rarity;
+};
+
+
+struct skins_s
+{
+    struct sides
+    {
+        bool enabled = false;
+        int definitionIndex = 0;
+        int paintKit = 0;
+        int seed = 0;
+        int stattrak = -1;
+        int quality = 4;
+        float wear = FLT_MIN;
+    };
+
+    sides t;
+    sides ct;
+};
+
+struct weaponsInv
+{
+    skins_s skins;
+};
+
+
+
 
 class Config {
 public:
@@ -588,6 +626,38 @@ public:
         } reportbot;
    } misc;
 
+
+
+
+   struct profileChanger {
+       bool enabled{ 0 };
+       int friendly = 0;
+       int teach = 0;
+       int leader = 0;
+       int rank = 0;
+       int wins = 0;
+       int level = 0;
+       int exp = 0;
+       int ban_type = 0;
+       int ban_time = 0;
+   } profileChanger;
+
+   struct medalChanger {
+       bool enabled = false;
+       int medals = 0;
+       bool equipped_medal_override = false;
+       uint32_t equipped_medal = 0;
+   } medalChanger;
+   
+
+   std::map<short, weaponsInv> weaponsInv;
+   struct
+   {
+       std::unordered_map<int, skinInfo> skinInfo;
+       int itemCount = 0;
+       bool enabled = false;
+   } inventory;
+
 	 struct globals{
         bool thirdPersonAnglesSet{ false };
         Vector fakeAngle;
@@ -620,5 +690,6 @@ private:
     std::filesystem::path path;
     std::vector<std::string> configs;
 };
+
 
 inline std::unique_ptr<Config> config;

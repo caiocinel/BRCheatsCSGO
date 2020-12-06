@@ -34,6 +34,7 @@
 #include "Hacks/Visuals.h"
 #include "Hacks/Resolver.h"
 #include "Hacks/Tickbase.h"
+#include "Changer/Protobuffs.h"
 
 #include "SDK/Engine.h"
 #include "SDK/Entity.h"
@@ -63,6 +64,7 @@
 #include "SDK/InputSystem.h"
 #include "SDK/StudioRender.h"
 #include "SDK/GameEvent.h"
+#include "SDK/SteamAPI.h"
 
 const char* steamID = "steamid";
 int rageBestDmg = 0;
@@ -710,6 +712,42 @@ void WriteUsercmd(void* buf, UserCmd* in, UserCmd* out)
         add esp, 4
     }
 }
+using GCRetrieveMessage = EGCResult(__thiscall*)(void*, uint32_t* punMsgType, void* pubDest, uint32_t cubDest, uint32_t* pcubMsgSize);
+using GCSendMessage = EGCResult(__thiscall*)(void*, uint32_t unMsgType, const void* pubData, uint32_t cubData);
+EGCResult __fastcall hkGCRetrieveMessage(void* ecx, void*, uint32_t* punMsgType, void* pubDest, uint32_t cubDest, uint32_t* pcubMsgSize)
+{
+
+    static auto oGCRetrieveMessage = hooks->gc_hook.get_original<GCRetrieveMessage>(2);
+    auto status = oGCRetrieveMessage(ecx, punMsgType, pubDest, cubDest, pcubMsgSize);
+
+    if (status == k_EGCResultOK)
+    {
+
+        void* thisPtr = nullptr;
+        __asm mov thisPtr, ebx;
+        auto oldEBP = *reinterpret_cast<void**>((uint32_t)_AddressOfReturnAddress() - 4);
+
+        uint32_t messageType = *punMsgType & 0x7FFFFFFF;
+        memory->debugMsg("[->] Message received from GC [%d]!\n", messageType);
+        write.ReceiveMessage(thisPtr, oldEBP, messageType, pubDest, cubDest, pcubMsgSize);
+    }
+    memory->debugMsg("[->] Status returned [%d]!\n", status);
+    return status;
+}
+
+
+
+EGCResult __fastcall hkGCSendMessage(void* ecx, void*, uint32_t unMsgType, const void* pubData, uint32_t cubData)
+{
+    static auto oGCSendMessage = hooks->gc_hook.get_original<GCSendMessage>(0);
+    bool sendMessage = write.PreSendMessage(unMsgType, const_cast<void*>(pubData), cubData);
+
+    if (!sendMessage)
+        return EGCResult::k_EGCResultOK;
+
+    memory->debugMsg("[->] Message Sent!\n");
+    return oGCSendMessage(ecx, unMsgType, const_cast<void*>(pubData), cubData);
+}
 
 static bool __fastcall WriteUsercmdDeltaToBuffer(void* ecx, void* edx, int slot, void* buffer, int from, int to, bool isnewcommand) noexcept
 {
@@ -787,7 +825,7 @@ void Hooks::install() noexcept
     svCheats.init(interfaces->cvar->findVar("sv_cheats"));
     viewRender.init(memory->viewRender);
 	gameEventManager.init(interfaces->gameEventManager);
-
+    gc_hook.setup(memory->SteamGameCoordinator);
     bspQuery.hookAt(6, listLeavesInBox);
     client.hookAt(24, WriteUsercmdDeltaToBuffer);
     client.hookAt(37, frameStageNotify);
@@ -811,6 +849,8 @@ void Hooks::install() noexcept
     svCheats.hookAt(13, svCheatsGetBool);
     viewRender.hookAt(39, render2dEffectsPreHud);
     viewRender.hookAt(41, renderSmokeOverlay);
+    gc_hook.hook_index(0, hkGCSendMessage);
+    gc_hook.hook_index(2, hkGCRetrieveMessage);
 
     if (DWORD oldProtection; VirtualProtect(memory->dispatchSound, 4, PAGE_EXECUTE_READWRITE, &oldProtection)) {
         originalDispatchSound = decltype(originalDispatchSound)(uintptr_t(memory->dispatchSound + 1) + *memory->dispatchSound);
@@ -864,6 +904,8 @@ void Hooks::uninstall() noexcept
     viewRender.restore();
     networkChannel.restore();
     extraHook.restore();
+
+    gc_hook.unhook_all();
 
     netvars->restore();
 

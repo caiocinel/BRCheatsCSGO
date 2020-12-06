@@ -33,6 +33,9 @@
     <Filter Include="Xorstr">
       <UniqueIdentifier>{b04093f0-1c7f-4531-94ef-826276dbe162}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Changer">
+      <UniqueIdentifier>{761181c0-92fa-4576-aec8-26fe635dacaf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GUI.cpp">
@@ -196,6 +199,24 @@
     </ClCompile>
     <ClCompile Include="BRCheatsCS.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Changer.cpp">
+      <Filter>Hacks</Filter>
+    </ClCompile>
+    <ClCompile Include="Changer\valve_parser.cpp">
+      <Filter>Changer</Filter>
+    </ClCompile>
+    <ClCompile Include="Changer\Protobuffs.cpp">
+      <Filter>Changer</Filter>
+    </ClCompile>
+    <ClCompile Include="Hooks\vfunc_hook.cpp">
+      <Filter>Hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="Hacks\InventoryChanger.cpp">
+      <Filter>Hacks</Filter>
+    </ClCompile>
+    <ClCompile Include="SDK\items.cpp">
+      <Filter>SDK</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -549,6 +570,36 @@
     </ClInclude>
     <ClInclude Include="BRC_UserActivity.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Changer.h">
+      <Filter>Hacks</Filter>
+    </ClInclude>
+    <ClInclude Include="Changer\ProtoField.h">
+      <Filter>Changer</Filter>
+    </ClInclude>
+    <ClInclude Include="Changer\ProtoWriter.h">
+      <Filter>Changer</Filter>
+    </ClInclude>
+    <ClInclude Include="Changer\valve_parser.h">
+      <Filter>Changer</Filter>
+    </ClInclude>
+    <ClInclude Include="Changer\Protobuffs.h">
+      <Filter>Changer</Filter>
+    </ClInclude>
+    <ClInclude Include="Changer\Messages.h">
+      <Filter>Changer</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\SteamAPI.h">
+      <Filter>SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="Hooks\vfunc_hook.hpp">
+      <Filter>Hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="Hacks\InventoryChanger.h">
+      <Filter>Hacks</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\items.h">
+      <Filter>SDK</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

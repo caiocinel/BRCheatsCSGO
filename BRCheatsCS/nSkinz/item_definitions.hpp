@@ -28,6 +28,7 @@
 
 enum ItemDefinitionIndex : int
 {
+    WEAPON_NONE = 0,
     WEAPON_DEAGLE = 1,
     WEAPON_ELITE = 2,
     WEAPON_FIVESEVEN = 3,
