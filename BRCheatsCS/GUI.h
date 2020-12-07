@@ -37,7 +37,9 @@ private:
     void renderAutoConfigWindow(bool contentOnly = false) noexcept;
     void renderConfigWindow(bool contentOnly = false) noexcept;
     void renderAimHacksWindow(bool contentOnly = false) noexcept;
-    void renderWallhacksWindow(bool contentOnly) noexcept;
+    void renderWallhacksWindow(bool contentOnly = false) noexcept;
+    void renderChangersWindow(bool contentOnly = false) noexcept;
+    void renderConfigsWindow(bool contentOnly = false) noexcept;
     void renderGuiStyle2() noexcept;
     void renderWarningWindow() noexcept;
 
@@ -65,6 +67,8 @@ private:
         bool autoconfig = false;
         bool aimhacks = false;
         bool wallhacks = false;
+        bool changers = false;
+        bool configs = false;
     } window;
 };
 inline std::unique_ptr<GUI> gui;

@@ -2397,6 +2397,10 @@ void GUI::renderAimHacksWindow(bool contentOnly) noexcept
             renderAimbotWindow(true);
             ImGui::EndTabItem();
         }
+        if (ImGui::BeginTabItem("Ragebot")) {
+            renderRagebotWindow(true);
+            ImGui::EndTabItem();
+        }
         if (ImGui::BeginTabItem("TriggerBot")) {
             renderTriggerbotWindow(true);
             ImGui::EndTabItem();
@@ -2444,6 +2448,67 @@ void GUI::renderWallhacksWindow(bool contentOnly) noexcept
         ImGui::End();
 }
 
+void GUI::renderChangersWindow(bool contentOnly) noexcept
+{
+    if (!contentOnly) {
+        if (!window.changers)
+            return;
+        ImGui::SetNextWindowSize({ 0.0f, 0.0f });
+        ImGui::Begin("Changers", &window.changers, windowFlags);
+    }
+
+    if (ImGui::BeginTabBar("Changers", ImGuiTabBarFlags_NoTooltip)) {
+        if (ImGui::BeginTabItem("Skins")) {
+            renderSkinChangerWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Profile")) {
+            renderProfileChangerWindow(true);
+            ImGui::EndTabItem();
+        }
+        /*
+        if (ImGui::BeginTabItem("Inventory")) {
+            renderInventoryChangerWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Medal")) {
+            renderMedalChangerWindow(true);
+            ImGui::EndTabItem();
+        }
+        */
+        ImGui::EndTabBar();
+    }
+
+
+    if (!contentOnly)
+        ImGui::End();
+}
+
+void GUI::renderChangersWindow(bool contentOnly) noexcept
+{
+    if (!contentOnly) {
+        if (!window.configs)
+            return;
+        ImGui::SetNextWindowSize({ 0.0f, 0.0f });
+        ImGui::Begin("Configs", &window.configs, windowFlags);
+    }
+
+    if (ImGui::BeginTabBar("Configs", ImGuiTabBarFlags_NoTooltip)) {
+        if (ImGui::BeginTabItem("Config")) {
+            renderConfigWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("EzConfig")) {
+            renderMiscWindow(true);
+            ImGui::EndTabItem();
+        }
+        ImGui::EndTabBar();
+    }
+
+
+    if (!contentOnly)
+        ImGui::End();
+}
 
 void GUI::renderWarningWindow() noexcept
 {
@@ -2465,60 +2530,28 @@ void GUI::renderGuiStyle2() noexcept
     ImGui::Begin("BRCheats", nullptr, windowFlags | ImGuiWindowFlags_AlwaysAutoResize);
 
     if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyScroll | ImGuiTabBarFlags_NoTooltip)) {
-        if (ImGui::BeginTabItem("Aimbot")) {
-            renderAimbotWindow(true);
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("Ragebot")) {
-            renderRagebotWindow(true);
+        if (ImGui::BeginTabItem("Aimhacks")) {
+            renderAimHacksWindow(true);
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("Anti aim")) {
             renderAntiAimWindow(true);
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Triggerbot")) {
-            renderTriggerbotWindow(true);
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("Backtrack")) {
-            renderBacktrackWindow(true);
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("Glow")) {
-            renderGlowWindow(true);
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("Chams")) {
-            renderChamsWindow(true);
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("ESP")) {
-            renderStreamProofESPWindow(true);
+        if (ImGui::BeginTabItem("Wallhacks")) {
+            renderWallhacksWindow(true);
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("Visuals")) {
             renderVisualsWindow(true);
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Skin changer")) {
-            renderSkinChangerWindow(true);
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("Profile Changer")) {
-            renderProfileChangerWindow(true);
+        if (ImGui::BeginTabItem("Changers")) {
+            renderChangersWindow(true);
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("Misc")) {
             renderMiscWindow(true);
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("EzConfig")) {
-            renderMiscWindow(true);
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("Config")) {
-            renderConfigWindow(true);
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem(phrases[XorString("main_lang")].c_str())) {
