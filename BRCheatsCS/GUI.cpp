@@ -2462,7 +2462,7 @@ void GUI::renderWarningWindow() noexcept
 
 void GUI::renderGuiStyle2() noexcept
 {
-    ImGui::Begin("Osiris", nullptr, windowFlags | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::Begin("BRCheats", nullptr, windowFlags | ImGuiWindowFlags_AlwaysAutoResize);
 
     if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyScroll | ImGuiTabBarFlags_NoTooltip)) {
         if (ImGui::BeginTabItem("Aimbot")) {
