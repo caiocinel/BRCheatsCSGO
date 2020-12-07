@@ -38,7 +38,6 @@ private:
     void renderConfigWindow(bool contentOnly = false) noexcept;
     void renderAimHacksWindow(bool contentOnly = false) noexcept;
     void renderWallhacksWindow(bool contentOnly) noexcept;
-    void renderGuiStyle3() noexcept;
     void renderGuiStyle2() noexcept;
     void renderWarningWindow() noexcept;
 
