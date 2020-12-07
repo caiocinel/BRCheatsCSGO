@@ -36,8 +36,12 @@ private:
     void renderMiscWindow(bool contentOnly = false) noexcept;
     void renderAutoConfigWindow(bool contentOnly = false) noexcept;
     void renderConfigWindow(bool contentOnly = false) noexcept;
+    void renderAimHacksWindow(bool contentOnly = false) noexcept;
+    void renderWallhacksWindow(bool contentOnly) noexcept;
     void renderGuiStyle3() noexcept;
+    void renderGuiStyle2() noexcept;
     void renderWarningWindow() noexcept;
+
 
     struct {
         bool warning = true;
@@ -60,6 +64,8 @@ private:
         bool misc = false;
         bool config = false;
         bool autoconfig = false;
+        bool aimhacks = false;
+        bool wallhacks = false;
     } window;
 };
 inline std::unique_ptr<GUI> gui;

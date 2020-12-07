@@ -380,8 +380,10 @@ static void __stdcall frameStageNotify(FrameStage stage) noexcept
         Misc::fakePrime();
         Misc::ragdollForce();
     	Animations::real();
+        /*
         Visuals::NightMode();
     	Visuals::transparentWorld();
+        */
     }
     if (interfaces->engine->isInGame()) {
     	Resolver::Update();

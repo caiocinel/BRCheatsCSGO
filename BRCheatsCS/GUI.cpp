@@ -252,7 +252,6 @@ void GUI::renderAimbotWindow(bool contentOnly) noexcept
     ImGui::Combo("", &config->aimbot[currentWeapon].keyMode, XorString("Hold\0Toggle\0"));
     ImGui::PopItemWidth();
     ImGui::PopID();
-
     ImGui::Separator();
     ImGui::Columns(2, nullptr, false);
     ImGui::SetColumnOffset(1, 220.0f);
@@ -1455,8 +1454,10 @@ void GUI::renderWorldWindow(bool contentOnly) noexcept
     ImGuiCustom::colorPicker(phrases[XorString("visuals_skycolor")].c_str(), config->visuals.sky);
     ImGui::Checkbox(phrases[XorString("visuals_nograss")].c_str(), &config->visuals.noGrass);
     ImGui::Checkbox(phrases[XorString("visuals_noshadows")].c_str(), &config->visuals.noShadows);
+    /*
     ImGui::Checkbox(phrases[XorString("visuals_nightmode")].c_str(), &config->visuals.nightMode);
     ImGui::Checkbox(phrases[XorString("visuals_asuswalls")].c_str(), &config->visuals.asusWalls);
+    */
     ImGui::NextColumn();
     ImGui::Checkbox(phrases[XorString("visuals_nobloom")].c_str(), &config->visuals.noBloom);
     ImGui::Checkbox(phrases[XorString("visuals_nofog")].c_str(), &config->visuals.noFog);
@@ -2382,9 +2383,69 @@ void GUI::renderAutoConfigWindow(bool contentOnly) noexcept
         ImGui::End();
 }
 
+void GUI::renderAimHacksWindow(bool contentOnly) noexcept
+{
+    if (!contentOnly) {
+        if (!window.aimhacks)
+            return;
+        ImGui::SetNextWindowSize({ 0.0f, 0.0f });
+        ImGui::Begin("AimHacks", &window.aimhacks, windowFlags);
+    }
+
+    if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_NoTooltip)) {
+        if (ImGui::BeginTabItem("Aimbot")) {
+            renderAimbotWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("TriggerBot")) {
+            renderTriggerbotWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Backtrack")) {
+            renderBacktrackWindow(true);
+            ImGui::EndTabItem();
+        }
+
+        ImGui::EndTabBar();
+    }
+
+    if (!contentOnly)
+        ImGui::End();
+}
+
+void GUI::renderWallhacksWindow(bool contentOnly) noexcept
+{
+    if (!contentOnly) {
+        if (!window.wallhacks)
+            return;
+        ImGui::SetNextWindowSize({ 0.0f, 0.0f });
+        ImGui::Begin("Wallhacks", &window.wallhacks, windowFlags);
+    }
+
+    if (ImGui::BeginTabBar("Wallhacks", ImGuiTabBarFlags_NoTooltip)) {
+        if (ImGui::BeginTabItem("ESP")) {
+            renderStreamProofESPWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Glow")) {
+            renderGlowWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Chams")) {
+            renderChamsWindow(true);
+            ImGui::EndTabItem();
+        }
+
+        ImGui::EndTabBar();
+    }
+
+
+    if (!contentOnly)
+        ImGui::End();
+}
+
 void GUI::renderGuiStyle3() noexcept
 {
-  
 
     ImGui::SetNextWindowSize({ 100.0f, 0.0f });
     if (ImGui::Begin(phrases[XorString("main_windowTitle")].c_str(), &gui->open, windowFlags)) {
@@ -2421,7 +2482,7 @@ void GUI::renderGuiStyle3() noexcept
         if (ImGui::Button(XorString("Skin Changer"), ImVec2(-1.0f, 0.0f))) {
             window.skinChanger = !window.skinChanger;
         }
-        if (ImGui::Button(XorString("Profile Changer"), ImVec2(-1.0f, 0.0f))) {
+        if (ImGui::Button(XorString("Profile \n Changer"), ImVec2(-1.0f, 0.0f))) {
             window.profileChanger = !window.profileChanger;
         }
         /*
@@ -2457,18 +2518,85 @@ void GUI::renderWarningWindow() noexcept
         if (!window.warning)
             return;
 
-        ImGui::Begin("Info", &window.warning, windowFlags);
-    
+        ImGui::Begin("Warning Modal", &window.warning, windowFlags);
+        ImGui::Text("Pra ser usado se precisar de novo");
 
-        ImGui::Text("Apresentamos uma nova versao refeita do cheat");
-        ImGui::Text("Se voce tiver qualquer problema informe imediatamente no site");
-        ImGui::Text("O periodo gratuito durara ate as 23:59 de 15/10");
-        ImGui::Separator();
-        ImGui::Text("We present a new remake of the cheat");
-        ImGui::Text("If you have any problems, report it immediately on the website");
-        ImGui::Text("The free period will last until 23:59 on 10/15 (BRT)");
 
 
     
+    ImGui::End();
+}
+
+void GUI::renderGuiStyle2() noexcept
+{
+    ImGui::Begin("Osiris", nullptr, windowFlags | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize);
+
+    if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyScroll | ImGuiTabBarFlags_NoTooltip)) {
+        if (ImGui::BeginTabItem("Aimbot")) {
+            renderAimbotWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Ragebot")) {
+            renderRagebotWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Anti aim")) {
+            renderAntiAimWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Triggerbot")) {
+            renderTriggerbotWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Backtrack")) {
+            renderBacktrackWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Glow")) {
+            renderGlowWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Chams")) {
+            renderChamsWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("ESP")) {
+            renderStreamProofESPWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Visuals")) {
+            renderVisualsWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Skin changer")) {
+            renderSkinChangerWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Profile Changer")) {
+            renderProfileChangerWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Misc")) {
+            renderMiscWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("EzConfig")) {
+            renderMiscWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Config")) {
+            renderConfigWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem(phrases[XorString("main_lang")].c_str())) {
+            renderConfigWindow(true);
+            ImGui::EndTabItem();
+        }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Language precisa arrumar um lugar melhor    /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        ImGui::EndTabBar();
+    }
+
     ImGui::End();
 }
