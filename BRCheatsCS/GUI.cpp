@@ -78,7 +78,7 @@ void GUI::render() noexcept
 {
     UpdateLanguage();
     ImGui::PushFont(fonts.segoeui);
-    renderGuiStyle3();
+    renderGuiStyle2();
     renderAimbotWindow();
     renderRagebotWindow();
     renderAntiAimWindow();
