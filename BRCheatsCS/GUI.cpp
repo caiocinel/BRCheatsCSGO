@@ -713,6 +713,7 @@ void GUI::renderAntiAimWindow(bool contentOnly) noexcept
                 }
             }
         }
+        ImGui::Columns(1);
 
     if (!contentOnly)
         ImGui::End();
@@ -977,7 +978,7 @@ void GUI::renderStreamProofESPWindow(bool contentOnly) noexcept
     if (!contentOnly) {
         if (!window.streamProofESP)
             return;
-        ImGui::SetNextWindowSize({ 0.0f, 0.0f });
+        ImGui::SetNextWindowSize({ 0.0f, 400.0f });
         ImGui::Begin(phrases[XorString("window_esp")].c_str(), &window.streamProofESP, windowFlags);
     }
 
@@ -1224,7 +1225,7 @@ void GUI::renderStreamProofESPWindow(bool contentOnly) noexcept
 
     ImGui::SameLine();
 
-    if (ImGui::BeginChild("##child", { 400.0f, 0.0f })) {
+    if (ImGui::BeginChild("##child", { 400.0f, 300.0f })) {
         auto& sharedConfig = getConfigShared(currentCategory, currentItem);
 
         ImGui::Checkbox(phrases[XorString("global_enabled")].c_str(), &sharedConfig.enabled);
@@ -2484,7 +2485,7 @@ void GUI::renderChangersWindow(bool contentOnly) noexcept
         ImGui::End();
 }
 
-void GUI::renderChangersWindow(bool contentOnly) noexcept
+void GUI::renderConfigsWindow(bool contentOnly) noexcept
 {
     if (!contentOnly) {
         if (!window.configs)
@@ -2527,19 +2528,20 @@ void GUI::renderWarningWindow() noexcept
 
 void GUI::renderGuiStyle2() noexcept
 {
-    ImGui::Begin("BRCheats", nullptr, windowFlags | ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::SetNextWindowSize({ 600.0f, 0.0f });
+    ImGui::Begin("BRCheats", nullptr, windowFlags);
 
-    if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyScroll | ImGuiTabBarFlags_NoTooltip)) {
+    if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_FittingPolicyScroll | ImGuiTabBarFlags_NoTooltip)) {
         if (ImGui::BeginTabItem("Aimhacks")) {
             renderAimHacksWindow(true);
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Anti aim")) {
-            renderAntiAimWindow(true);
-            ImGui::EndTabItem();
-        }
         if (ImGui::BeginTabItem("Wallhacks")) {
             renderWallhacksWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Anti Aim")) {
+            renderAntiAimWindow(true);
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("Visuals")) {

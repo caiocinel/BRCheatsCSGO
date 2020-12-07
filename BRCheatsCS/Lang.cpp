@@ -58,7 +58,7 @@ void UpdateLanguage()
 		phrases[XorString("window_backtrack")] = XorString("Backtrack | BRCheats");
 		phrases[XorString("window_glow")] = XorString("Glow | BRCheats");
 		phrases[XorString("window_chams")] = XorString("Chams | BRCheats");
-		phrases[XorString("window_esp")] = XorString("ESP BRCheats | Use Game Capture from OBS, this ESP and the Menu will not be visible in your stream");
+		phrases[XorString("window_esp")] = XorString("ESP | BRCheats");
 		phrases[XorString("window_visuals")] = XorString("Visuals | BRCheats");
 		phrases[XorString("window_skinchanger")] = XorString("Skin Changer | BRCheats");
 		phrases[XorString("window_misc")] = XorString("Misc | BRCheats");
