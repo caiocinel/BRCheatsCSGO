@@ -35,7 +35,7 @@ extern std::map<std::string, std::string> phrases;
 IDirect3DTexture9* skinImage = nullptr;
 
 void RightText() {
-    std::string text = "xxx";
+    std::string text = "xxxxxxxxx";
     ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetColumnWidth() - ImGui::CalcTextSize(text.c_str()).x
         - ImGui::GetScrollX() - 2 * ImGui::GetStyle().ItemSpacing.x / 2);
 
@@ -64,7 +64,14 @@ GUI::GUI() noexcept
     ImGui::StyleColorsDark();
     ImGuiStyle& style = ImGui::GetStyle();
 
-    style.ScrollbarSize = 9.0f;
+    ImGui::GetStyle().WindowRounding = 4.0f;
+    ImGui::GetStyle().ChildRounding = 0.0f;
+    ImGui::GetStyle().FrameRounding = 0.0f;
+    ImGui::GetStyle().GrabRounding = 0.0f;
+    ImGui::GetStyle().PopupRounding = 0.0f;
+    ImGui::GetStyle().ScrollbarRounding = 0.0f;
+    ImGui::GetStyle().TabRounding = 0.0f;
+    ImGui::GetStyle().ScrollbarSize = 9.0f;
 
     ImGuiIO& io = ImGui::GetIO();
     io.IniFilename = nullptr;
@@ -2411,19 +2418,19 @@ void GUI::renderAimHacksWindow(bool contentOnly) noexcept
     }
 
     if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_NoTooltip)) {
-        if (ImGui::BeginTabItem("Aimbot")) {
+        if (ImGui::BeginTabItem("Aimbot " ICON_FA_LEAF)) {
             renderAimbotWindow(true);
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Ragebot")) {
+        if (ImGui::BeginTabItem("Ragebot " ICON_FA_FIRE)) {
             renderRagebotWindow(true);
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("TriggerBot")) {
+        if (ImGui::BeginTabItem("TriggerBot " ICON_FA_ROBOT)) {
             renderTriggerbotWindow(true);
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Backtrack")) {
+        if (ImGui::BeginTabItem("Backtrack " ICON_FA_BACKWARD)) {
             renderBacktrackWindow(true);
             ImGui::EndTabItem();
         }
@@ -2445,15 +2452,15 @@ void GUI::renderWallhacksWindow(bool contentOnly) noexcept
     }
 
     if (ImGui::BeginTabBar("Wallhacks", ImGuiTabBarFlags_NoTooltip)) {
-        if (ImGui::BeginTabItem("ESP")) {
+        if (ImGui::BeginTabItem("ESP " ICON_FA_CODE_BRANCH)) {
             renderStreamProofESPWindow(true);
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Glow")) {
+        if (ImGui::BeginTabItem("Glow " ICON_FA_BLIND)) {
             renderGlowWindow(true);
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Chams")) {
+        if (ImGui::BeginTabItem("Chams " ICON_FA_CHILD)) {
             renderChamsWindow(true);
             ImGui::EndTabItem();
         }
@@ -2472,15 +2479,15 @@ void GUI::renderChangersWindow(bool contentOnly) noexcept
         if (!window.changers)
             return;
         ImGui::SetNextWindowSize({ 0.0f, 0.0f });
-        ImGui::Begin("Changers", &window.changers, windowFlags);
+        ImGui::Begin("Changers", &window.changers, windowFlags | ImGuiWindowFlags_AlwaysAutoResize);
     }
 
     if (ImGui::BeginTabBar("Changers", ImGuiTabBarFlags_NoTooltip)) {
-        if (ImGui::BeginTabItem("Skins")) {
+        if (ImGui::BeginTabItem("Skins " ICON_FA_BRIEFCASE)) {
             renderSkinChangerWindow(true);
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Profile")) {
+        if (ImGui::BeginTabItem("Profile " ICON_FA_USER)) {
             renderProfileChangerWindow(true);
             ImGui::EndTabItem();
         }
@@ -2512,12 +2519,12 @@ void GUI::renderConfigsWindow(bool contentOnly) noexcept
     }
 
     if (ImGui::BeginTabBar("Configs", ImGuiTabBarFlags_NoTooltip)) {
-        if (ImGui::BeginTabItem("Config")) {
+        if (ImGui::BeginTabItem("Config " ICON_FA_COG)) {
             renderConfigWindow(true);
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("EzConfig")) {
-            renderMiscWindow(true);
+        if (ImGui::BeginTabItem("EzConfig " ICON_FA_USERS_COG)) {
+            renderAutoConfigWindow(true);
             ImGui::EndTabItem();
         }
         ImGui::EndTabBar();
@@ -2548,49 +2555,33 @@ void GUI::renderGuiStyle2() noexcept
    
 
     ImGui::SetNextWindowSize({ 600.0f, 0.0f });
-    ImGui::Begin("BRCheats", nullptr, windowFlags | ImGuiWindowFlags_AlwaysAutoResize);
-        if (ImGui::Button("Aimhacks\n   " ICON_FA_CROSSHAIRS)) {
+    ImGui::Begin("BRCheats", nullptr, windowFlags);
+        if (ImGui::Button("      " ICON_FA_CROSSHAIRS "\nAimhacks",ImVec2(97.0f, 0.0f))) {
             window.tab = 0;
         }
-        ImGui::SameLine();
-        if (ImGui::Button("Wallhacks")) {
-            
+        ImGui::SameLine(0,0);
+        if (ImGui::Button("       " ICON_FA_EYE  "\nWallhacks", ImVec2(97.0f, 0.0f))) {
             window.tab = 1;
-            
         }
-        ImGui::SameLine();
-        if (ImGui::Button("Anti Aim")) {
-            
+        ImGui::SameLine(0,0);
+        if (ImGui::Button("      " ICON_FA_ATOM "\nAnti Aim", ImVec2(97.0f, 0.0f))) {
             window.tab = 2;
-            
         }
-        ImGui::SameLine();
-        if (ImGui::Button("Visuals")) {
-            
+        ImGui::SameLine(0, 0);
+        if (ImGui::Button("    " ICON_FA_PALETTE  "\nVisuals", ImVec2(97.0f, 0.0f))) {
             window.tab = 3;
-            
         }
-        ImGui::SameLine();
-        if (ImGui::Button("Changers")) {
-            
+        ImGui::SameLine(0, 0);
+        if (ImGui::Button("      " ICON_FA_PENCIL_ALT "\nChangers", ImVec2(97.0f, 0.0f))) {
             window.tab = 4;
-            
         }
-        ImGui::SameLine();
-        if (ImGui::Button("Misc")) {
-            
+        ImGui::SameLine(0, 0);
+        if (ImGui::Button("    " ICON_FA_ASTERISK "\n  Misc  ", ImVec2(97.0f, 0.0f))) {
             window.tab = 5;
-            
         }
-        ImGui::SameLine();
-        if (ImGui::Button("Config")) {
-            
-            window.tab = 6;
-            
-        }
-        ImGui::Separator();
 
         switch (window.tab) {
+
             case 0:
                 renderAimHacksWindow(true);
                 break;
@@ -2626,13 +2617,14 @@ void GUI::renderGuiStyle2() noexcept
     
     
     ImGui::Separator();
-    if (ImGui::Button("EN-US"))
+    if (ImGui::Button("EN-US " ICON_FA_FLAG_USA))
         config->misc.lang = 0;
     ImGui::SameLine();
-    if (ImGui::Button("PT-BR"))
+    if (ImGui::Button("PT-BR " ICON_FA_GEM))
         config->misc.lang = 1;
     ImGui::SameLine();
     RightText();
-    ImGui::Button(ICON_FA_COG);
+    if(ImGui::Button("Config " ICON_FA_COGS))
+        window.tab = 6;
     ImGui::End();
 }
