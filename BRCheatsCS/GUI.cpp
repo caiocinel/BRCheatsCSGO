@@ -25,10 +25,21 @@
 #include "Changer/Protobuffs.h"
 #include "memory.h"
 #include "SDK/items.h"
+#include "Fonts/IconsFontAwesome5.h"
+#include "Fonts/icons.cpp"
+#include "Fonts/font.cpp"
+
 
 constexpr auto windowFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 extern std::map<std::string, std::string> phrases;
 IDirect3DTexture9* skinImage = nullptr;
+
+void RightText() {
+    std::string text = "xxx";
+    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetColumnWidth() - ImGui::CalcTextSize(text.c_str()).x
+        - ImGui::GetScrollX() - 2 * ImGui::GetStyle().ItemSpacing.x / 2);
+
+}
 
 namespace ImGui {
 
@@ -59,7 +70,14 @@ GUI::GUI() noexcept
     io.IniFilename = nullptr;
     io.LogFilename = nullptr;
     io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
-
+    
+    static const ImWchar icons_ranges[] = { 0xf000, 0xf3ff, 0 };
+    ImFontConfig icons_config; 
+    ImFontConfig font_config;
+    icons_config.MergeMode = true; 
+    io.Fonts->AddFontFromMemoryCompressedTTF(font_data, font_size, 16.0f, &font_config, Helpers::getFontGlyphRanges());
+    io.Fonts->AddFontFromMemoryCompressedTTF(icons_data, icons_size, 16.0f, &icons_config, icons_ranges);
+    io.Fonts->Build();
     if (PWSTR pathToFonts; SUCCEEDED(SHGetKnownFolderPath(FOLDERID_Fonts, 0, nullptr, &pathToFonts))) {
         const std::filesystem::path path{ pathToFonts };
         CoTaskMemFree(pathToFonts);
@@ -69,15 +87,15 @@ GUI::GUI() noexcept
         cfg.OversampleV = 3;
 
         fonts.tahoma = io.Fonts->AddFontFromFileTTF((path / XorString("tahoma.ttf")).string().c_str(), 15.0f, &cfg, Helpers::getFontGlyphRanges());
-        fonts.segoeui = io.Fonts->AddFontFromFileTTF((path / XorString("segoeui.ttf")).string().c_str(), 15.0f, &cfg, Helpers::getFontGlyphRanges());
         fonts.arial = io.Fonts->AddFontFromFileTTF((path / "arial.ttf").string().c_str(), 15.0f, &cfg, ranges);
+        fonts.segoeui = io.Fonts->AddFontFromFileTTF((path / XorString("segoeui.ttf")).string().c_str(), 15.0f, &cfg, Helpers::getFontGlyphRanges());
+        
     }
 }
 
 void GUI::render() noexcept
 {
     UpdateLanguage();
-    ImGui::PushFont(fonts.segoeui);
     renderGuiStyle2();
     renderAimbotWindow();
     renderRagebotWindow();
@@ -98,7 +116,6 @@ void GUI::render() noexcept
     renderConfigWindow();
     renderAutoConfigWindow();
   //  renderWarningWindow();
-   ImGui::PopFont();
 }
 
 void GUI::updateColors() const noexcept
@@ -2536,7 +2553,7 @@ void GUI::renderGuiStyle2() noexcept
             renderAimHacksWindow(true);
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Wallhacks")) {
+        if (ImGui::BeginTabItem("Wallhacks" )) {
             renderWallhacksWindow(true);
             ImGui::EndTabItem();
         }
@@ -2565,6 +2582,14 @@ void GUI::renderGuiStyle2() noexcept
 
         ImGui::EndTabBar();
     }
-
+    ImGui::Separator();
+    if (ImGui::Button("EN-US"))
+        config->misc.lang = 0;
+    ImGui::SameLine();
+    if (ImGui::Button("PT-BR"))
+        config->misc.lang = 1;
+    ImGui::SameLine();
+    RightText();
+    ImGui::Button(ICON_FA_COG);
     ImGui::End();
 }

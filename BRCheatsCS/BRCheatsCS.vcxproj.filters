@@ -36,6 +36,9 @@
     <Filter Include="Changer">
       <UniqueIdentifier>{761181c0-92fa-4576-aec8-26fe635dacaf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fonts">
+      <UniqueIdentifier>{4075d602-0db8-4d5c-9c76-46f532283969}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GUI.cpp">
@@ -217,6 +220,12 @@
     </ClCompile>
     <ClCompile Include="SDK\items.cpp">
       <Filter>SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="Fonts\icons.cpp">
+      <Filter>Fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="Fonts\font.cpp">
+      <Filter>Fonts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -601,8 +610,78 @@
     <ClInclude Include="SDK\items.h">
       <Filter>SDK</Filter>
     </ClInclude>
+    <ClInclude Include="Fonts\IconsFontaudio.h">
+      <Filter>Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="Fonts\IconsFontAwesome4.h">
+      <Filter>Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="Fonts\IconsFontAwesome5.h">
+      <Filter>Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="Fonts\IconsFontAwesome5Brands.h">
+      <Filter>Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="Fonts\IconsFontAwesome5Pro.h">
+      <Filter>Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="Fonts\IconsFontAwesome5ProBrands.h">
+      <Filter>Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="Fonts\IconsForkAwesome.h">
+      <Filter>Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="Fonts\IconsKenney.h">
+      <Filter>Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="Fonts\IconsMaterialDesign.h">
+      <Filter>Fonts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="BRC_UserActivity.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Fonts\fontawesome-webfont.ttf">
+      <Filter>Fonts</Filter>
+    </Font>
+    <Font Include="Fonts\fa-regular-400.ttf">
+      <Filter>Fonts</Filter>
+    </Font>
+    <Font Include="Fonts\fa-solid-900.ttf">
+      <Filter>Fonts</Filter>
+    </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Fonts\GenerateIconFontCppHeaders.py">
+      <Filter>Fonts</Filter>
+    </None>
+    <None Include="Fonts\IconsFontaudio.cs">
+      <Filter>Fonts</Filter>
+    </None>
+    <None Include="Fonts\IconsFontAwesome4.cs">
+      <Filter>Fonts</Filter>
+    </None>
+    <None Include="Fonts\IconsFontAwesome5.cs">
+      <Filter>Fonts</Filter>
+    </None>
+    <None Include="Fonts\IconsFontAwesome5Brands.cs">
+      <Filter>Fonts</Filter>
+    </None>
+    <None Include="Fonts\IconsFontAwesome5Pro.cs">
+      <Filter>Fonts</Filter>
+    </None>
+    <None Include="Fonts\IconsFontAwesome5ProBrands.cs">
+      <Filter>Fonts</Filter>
+    </None>
+    <None Include="Fonts\IconsForkAwesome.cs">
+      <Filter>Fonts</Filter>
+    </None>
+    <None Include="Fonts\IconsKenney.cs">
+      <Filter>Fonts</Filter>
+    </None>
+    <None Include="Fonts\IconsMaterialDesign.cs">
+      <Filter>Fonts</Filter>
+    </None>
   </ItemGroup>
 </Project>

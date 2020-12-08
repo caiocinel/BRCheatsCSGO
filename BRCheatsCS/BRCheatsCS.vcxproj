@@ -17,6 +17,8 @@
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="EventListener.cpp" />
     <ClCompile Include="extraHooks.cpp" />
+    <ClCompile Include="Fonts\font.cpp" />
+    <ClCompile Include="Fonts\icons.cpp" />
     <ClCompile Include="GameData.cpp" />
     <ClCompile Include="Hacks\Aimbot.cpp" />
     <ClCompile Include="Hacks\Animations.cpp" />
@@ -81,6 +83,15 @@
     <ClInclude Include="Changer\ProtoField.h" />
     <ClInclude Include="Changer\ProtoWriter.h" />
     <ClInclude Include="Changer\valve_parser.h" />
+    <ClInclude Include="Fonts\IconsFontaudio.h" />
+    <ClInclude Include="Fonts\IconsFontAwesome4.h" />
+    <ClInclude Include="Fonts\IconsFontAwesome5.h" />
+    <ClInclude Include="Fonts\IconsFontAwesome5Brands.h" />
+    <ClInclude Include="Fonts\IconsFontAwesome5Pro.h" />
+    <ClInclude Include="Fonts\IconsFontAwesome5ProBrands.h" />
+    <ClInclude Include="Fonts\IconsForkAwesome.h" />
+    <ClInclude Include="Fonts\IconsKenney.h" />
+    <ClInclude Include="Fonts\IconsMaterialDesign.h" />
     <ClInclude Include="Hacks\InventoryChanger.h" />
     <ClInclude Include="Hooks\vfunc_hook.hpp" />
     <ClInclude Include="Lang.h" />
@@ -203,6 +214,23 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="BRC_UserActivity.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Fonts\fa-regular-400.ttf" />
+    <Font Include="Fonts\fa-solid-900.ttf" />
+    <Font Include="Fonts\fontawesome-webfont.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Fonts\GenerateIconFontCppHeaders.py" />
+    <None Include="Fonts\IconsFontaudio.cs" />
+    <None Include="Fonts\IconsFontAwesome4.cs" />
+    <None Include="Fonts\IconsFontAwesome5.cs" />
+    <None Include="Fonts\IconsFontAwesome5Brands.cs" />
+    <None Include="Fonts\IconsFontAwesome5Pro.cs" />
+    <None Include="Fonts\IconsFontAwesome5ProBrands.cs" />
+    <None Include="Fonts\IconsForkAwesome.cs" />
+    <None Include="Fonts\IconsKenney.cs" />
+    <None Include="Fonts\IconsMaterialDesign.cs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

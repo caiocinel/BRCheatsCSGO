@@ -7,6 +7,7 @@
 #include "Lang.h"
 #include "Xorstr/xorstr.hpp"
 #include "Config.h"
+#include "Fonts/IconsFontAwesome5.h"
 
 std::map<std::string, std::string> phrases;
 
@@ -20,6 +21,7 @@ void UpdateLanguage()
 		phrases[XorString("main_misc")] = XorString("Misc");
 		phrases[XorString("main_lang")] = XorString("Idioma");
 		phrases[XorString("main_world")] = XorString("World");
+
 		phrases[XorString("main_langAlert")] = XorString("Your language has been changed to English");
 		phrases[XorString("global_enabled")] = XorString("Enabled");
 		phrases[XorString("global_threedots")] = XorString("...");
@@ -339,7 +341,7 @@ void UpdateLanguage()
 	phrases[XorString("window_backtrack")] = XorString("Backtrack | BRCheats");
 	phrases[XorString("window_glow")] = XorString("Glow | BRCheats");
 	phrases[XorString("window_chams")] = XorString("Chams | BRCheats");
-	phrases[XorString("window_esp")] = XorString("ESP BRCheats | Use Game Capture do OBS, o ESP e Menu nao serao visiveis");
+	phrases[XorString("window_esp")] = XorString("ESP | BRCheats");
 	phrases[XorString("window_visuals")] = XorString("Visuais | BRCheats");
 	phrases[XorString("window_skinchanger")] = XorString("Skin Changer | BRCheats");
 	phrases[XorString("window_misc")] = XorString("Outros | BRCheats");
