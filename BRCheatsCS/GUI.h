@@ -45,7 +45,7 @@ private:
 
 
     struct {
-        bool warning = true;
+        bool warning = false;
         bool aimbot = false;
         bool ragebot = false;
         bool antiAim = false;
@@ -69,6 +69,7 @@ private:
         bool wallhacks = false;
         bool changers = false;
         bool configs = false;
+        int tab = 0;
     } window;
 };
 inline std::unique_ptr<GUI> gui;

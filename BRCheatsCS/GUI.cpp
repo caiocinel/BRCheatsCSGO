@@ -71,7 +71,7 @@ GUI::GUI() noexcept
     io.LogFilename = nullptr;
     io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
     
-    static const ImWchar icons_ranges[] = { 0xf000, 0xf3ff, 0 };
+    static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
     ImFontConfig icons_config; 
     ImFontConfig font_config;
     icons_config.MergeMode = true; 
@@ -2545,43 +2545,86 @@ void GUI::renderWarningWindow() noexcept
 
 void GUI::renderGuiStyle2() noexcept
 {
-    ImGui::SetNextWindowSize({ 600.0f, 0.0f });
-    ImGui::Begin("BRCheats", nullptr, windowFlags);
+   
 
-    if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_FittingPolicyScroll | ImGuiTabBarFlags_NoTooltip)) {
-        if (ImGui::BeginTabItem("Aimhacks")) {
-            renderAimHacksWindow(true);
-            ImGui::EndTabItem();
+    ImGui::SetNextWindowSize({ 600.0f, 0.0f });
+    ImGui::Begin("BRCheats", nullptr, windowFlags | ImGuiWindowFlags_AlwaysAutoResize);
+        if (ImGui::Button("Aimhacks\n   " ICON_FA_CROSSHAIRS)) {
+            window.tab = 0;
         }
-        if (ImGui::BeginTabItem("Wallhacks" )) {
-            renderWallhacksWindow(true);
-            ImGui::EndTabItem();
+        ImGui::SameLine();
+        if (ImGui::Button("Wallhacks")) {
+            
+            window.tab = 1;
+            
         }
-        if (ImGui::BeginTabItem("Anti Aim")) {
-            renderAntiAimWindow(true);
-            ImGui::EndTabItem();
+        ImGui::SameLine();
+        if (ImGui::Button("Anti Aim")) {
+            
+            window.tab = 2;
+            
         }
-        if (ImGui::BeginTabItem("Visuals")) {
-            renderVisualsWindow(true);
-            ImGui::EndTabItem();
+        ImGui::SameLine();
+        if (ImGui::Button("Visuals")) {
+            
+            window.tab = 3;
+            
         }
-        if (ImGui::BeginTabItem("Changers")) {
-            renderChangersWindow(true);
-            ImGui::EndTabItem();
+        ImGui::SameLine();
+        if (ImGui::Button("Changers")) {
+            
+            window.tab = 4;
+            
         }
-        if (ImGui::BeginTabItem("Misc")) {
-            renderMiscWindow(true);
-            ImGui::EndTabItem();
+        ImGui::SameLine();
+        if (ImGui::Button("Misc")) {
+            
+            window.tab = 5;
+            
         }
-        if (ImGui::BeginTabItem(phrases[XorString("main_lang")].c_str())) {
-            renderConfigWindow(true);
-            ImGui::EndTabItem();
+        ImGui::SameLine();
+        if (ImGui::Button("Config")) {
+            
+            window.tab = 6;
+            
+        }
+        ImGui::Separator();
+
+        switch (window.tab) {
+            case 0:
+                renderAimHacksWindow(true);
+                break;
+
+            case 1:
+                renderWallhacksWindow(true);
+                break;
+
+
+            case 2:
+                renderAntiAimWindow(true);
+                break;
+            
+            case 3:
+                renderVisualsWindow(true);
+                break;
+
+            case 4:
+                renderChangersWindow(true);
+                break;
+
+            case 5:
+                renderMiscWindow(true);
+                break;
+
+            case 6:
+                renderConfigsWindow(true);
+                break;
         }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Language precisa arrumar um lugar melhor    /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        ImGui::EndTabBar();
-    }
+    
+    
     ImGui::Separator();
     if (ImGui::Button("EN-US"))
         config->misc.lang = 0;
