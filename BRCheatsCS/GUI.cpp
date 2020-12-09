@@ -1411,6 +1411,14 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
     hotkey(config->visuals.zoomKey);
     ImGui::Combo(phrases[XorString("visuals_t_model")].c_str(), &config->visuals.playerModelT, playerModels);
     ImGui::Combo(phrases[XorString("visuals_ct_model")].c_str(), &config->visuals.playerModelCT, playerModels);
+    ImGuiCustom::colorPicker(phrases[XorString("visuals_watermark")].c_str(), config->misc.watermark);
+
+    ImGui::Checkbox(phrases[XorString("visuals_ragdollforce")].c_str(), &config->misc.ragdollForce);
+    if (config->misc.ragdollForce) {
+        ImGui::SetNextItemWidth(90.0f);
+        ImGui::InputInt(phrases[XorString("visuals_ragdollforce_strenght")].c_str(), &config->misc.ragdollForceStrength, 1, 3);
+        config->misc.ragdollForceStrength = std::clamp(config->misc.ragdollForceStrength, 1, 100);
+    };
     ImGui::NextColumn();
     ImGui::Checkbox(phrases[XorString("visuals_thirdperson")].c_str(), &config->visuals.thirdperson);
     ImGui::SameLine();
@@ -1440,6 +1448,7 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
 	ImGui::Checkbox(phrases[XorString("visuals_indicators")].c_str(), &config->visuals.indicatorsEnabled);
     ImGui::SameLine();
     ImGui::PushID(6);
+    ImGui::SetNextItemWidth(175.0f);
     ImGuiCustom::MultiCombo("", config->visuals.indicators, config->visuals.selectedIndicators, 5);
     ImGui::PopID();
     ImGui::Checkbox(phrases[XorString("visuals_rainbowcrosshair")].c_str(), &config->visuals.rainbowCrosshair);
@@ -1450,14 +1459,7 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
     ImGui::PopItemWidth();
     ImGuiCustom::colorPicker(phrases[XorString("visuals_noscopecrosshair")].c_str(), config->misc.noscopeCrosshair);
     ImGuiCustom::colorPicker(phrases[XorString("visuals_recoilcrosshair")].c_str(), config->misc.recoilCrosshair);
-    ImGuiCustom::colorPicker(phrases[XorString("visuals_watermark")].c_str(), config->misc.watermark);
 
-    ImGui::Checkbox(phrases[XorString("visuals_ragdollforce")].c_str(), &config->misc.ragdollForce);
-    if (config->misc.ragdollForce) {
-        ImGui::SetNextItemWidth(90.0f);
-        ImGui::InputInt(phrases[XorString("visuals_ragdollforce_strenght")].c_str(), &config->misc.ragdollForceStrength, 1, 3);
-        config->misc.ragdollForceStrength = std::clamp(config->misc.ragdollForceStrength, 1, 100);
-    };
 
 
     ImGui::Columns(1);
@@ -1474,7 +1476,7 @@ void GUI::renderWorldWindow(bool contentOnly) noexcept
         ImGui::SetNextWindowSize({ 700.0f, 0.0f });
         ImGui::Begin(phrases[XorString("window_world")].c_str(), &window.world, windowFlags);
     }
-    ImGui::Columns(2, nullptr, true);
+    ImGui::Columns(2);
     ImGui::Combo(phrases[XorString("visuals_skybox")].c_str(), &config->visuals.skybox, Helpers::skyboxList.data(), Helpers::skyboxList.size());
     ImGuiCustom::colorPicker(phrases[XorString("visuals_worldcolor")].c_str(), config->visuals.world);
     ImGuiCustom::colorPicker(phrases[XorString("visuals_skycolor")].c_str(), config->visuals.sky);
@@ -1500,6 +1502,9 @@ void GUI::renderWorldWindow(bool contentOnly) noexcept
         ImGui::VSliderFloat(XorString("##7"), { 40.0f, 160.0f }, &config->visuals.colorCorrection.yellow, 0.0f, 1.0f, XorString("Yellow\n%.3f")); ImGui::SameLine();
         ImGui::EndPopup();
     }
+
+    ImGui::Columns(1);
+
     if (!contentOnly)
         ImGui::End();
 }
@@ -2598,11 +2603,11 @@ void GUI::renderMiscsWindow(bool contentOnly) noexcept
     }
     if (ImGui::BeginTabBar("Miscs", ImGuiTabBarFlags_NoTooltip)) {
         if (ImGui::BeginTabItem("Misc " ICON_FA_CHESS_PAWN)) {
-            renderVisualsWindow(true);
+            renderMiscWindow(true);
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("Nick " ICON_FA_SIGNATURE)) {
-            renderWorldWindow(true);
+            renderNickWindow(true);
             ImGui::EndTabItem();
         }
         ImGui::EndTabBar();
@@ -2659,7 +2664,7 @@ void GUI::renderGuiStyle2() noexcept
             window.tab = 4;
         }
         ImGui::SameLine(0, 0);
-        if (ImGui::Button("    " ICON_FA_ASTERISK "\n  Miscs  ", ImVec2(97.0f, 0.0f))) {
+        if (ImGui::Button("     " ICON_FA_ASTERISK "\n  Miscs  ", ImVec2(97.0f, 0.0f))) {
             window.tab = 5;
         }
 
