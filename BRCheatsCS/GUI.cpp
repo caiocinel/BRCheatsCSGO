@@ -116,6 +116,8 @@ void GUI::render() noexcept
     renderWorldWindow();
     renderSkinChangerWindow();
     renderProfileChangerWindow();
+    renderPerformanceWindow();
+    renderNickWindow();
     drawDemo();
     /*renderMedalChangerWindow();
     renderInventoryChangerWindow();
@@ -1727,47 +1729,6 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     ImGui::PushID(1);
     ImGui::InputText("", &config->misc.killMessageString);
     ImGui::PopID();
-
-    ImGui::Combo(phrases[XorString("misc_nameexploit")].c_str(), &config->misc.nameChangeSelection, XorString("Off\0Fake Ban\0Fake Item\0Custom Name\0"));
-    if (config->misc.nameChangeSelection == 1)
-    {
-        ImGui::PushID(3);
-        ImGui::SetNextItemWidth(100.0f);
-        ImGui::Combo("", &config->misc.banColor, XorString("White\0Red\0Purple\0Green\0Light green\0Turquoise\0Light red\0Gray\0Yellow\0Gray 2\0Light blue\0Gray/Purple\0Blue\0Pink\0Dark orange\0Orange\0"));
-        ImGui::PopID();
-        ImGui::SameLine();
-        ImGui::PushID(4);
-        ImGui::InputText("", &config->misc.banText);
-        ImGui::PopID();
-        ImGui::SameLine();
-        if (ImGui::Button(phrases[XorString("misc_setupfakeban")].c_str()))
-            Misc::fakeBan(true);
-    }
-    else if (config->misc.nameChangeSelection == 2)
-    {
-        ImGui::SetNextItemWidth(200.0f);
-        ImGuiCustom::MultiCombo(phrases[XorString("misc_fakeitemflags")].c_str(), config->misc.fakeItemFlags, config->misc.selectedFakeItemFlags, 4);
-        ImGui::SetNextItemWidth(200.0f);
-        ImGui::Combo(phrases[XorString("global_team")].c_str(), &config->misc.fakeItemTeam, XorString("Counter-Terrorist\0Terrorist"));
-        ImGui::SetNextItemWidth(200.0f);
-        ImGui::Combo(phrases[XorString("misc_messagetype")].c_str(), &config->misc.fakeItemMessageType, XorString("Unbox\0Trade\0"));
-        ImGui::SetNextItemWidth(200.0f);
-        ImGui::Combo(phrases[XorString("misc_itemtype")].c_str(), &config->misc.fakeItemType, XorString("AK-47\0AUG\0AWP\0Bayonet\0Bowie Knife\0Butterfly Knife\0CZ75-Auto\0Classic Knife\0Desert Eagle\0Dual Berettas\0FAMAS\0Falchion Knife\0Five-SeveN\0Flip Knife\0G3SG1\0Galil AR\0Glock-18\0Gut Knife\0Huntsman Knife\0Karambit\0M249\0M4A1-S\0M4A4\0M9 Bayonet\0MAC-10\0MAG-7\0MP5-SD\0MP7\0MP9\0Navaja Knife\0Negev\0Nomad Knife\0Nova\0P2000\0P250\0P90\0PP-Bizon\0Paracord Knife\0R8 Revolver\0SCAR-20\0SG 553\0SSG 08\0Sawed-Off\0Shadow Daggers\0Skeleton Knife\0Spectral Shiv\0Stiletto Knife\0Survival Knife\0Talon Knife\0Tec-9\0UMP-45\0USP-S\0Ursus Knife\0XM1014\0Hand Wraps\0Moto Gloves\0Specialist Gloves\0Sport Gloves\0Bloodhound Gloves\0Hydra Gloves\0Driver Gloves\0"));
-        ImGui::SetNextItemWidth(200.0f);
-        ImGui::Combo(phrases[XorString("misc_itemrarity")].c_str(), &config->misc.fakeItemRarity, XorString("Consumer Grade (White)\0Industrial Grade (Light blue)\0Mil-Spec (Blue)\0Restricted (Purple)\0Classified (Pink)\0Covert (Red)\0Contrabanned(Orange/Gold)\0"));
-        ImGui::Combo(phrases[XorString("misc_playercolor")].c_str(), &config->misc.fakeItemPlayerColor, XorString("Yellow\0Green\0Blue\0Purple\0Orange"));
-        ImGui::InputText(phrases[XorString("misc_playername")].c_str(), &config->misc.fakeItemPlayerName);
-        ImGui::InputText(phrases[XorString("misc_skinname")].c_str(), &config->misc.fakeItemName);
-        if (ImGui::Button(phrases[XorString("misc_changename")].c_str()))
-            Misc::fakeItem(true);
-    }
-    else if (config->misc.nameChangeSelection == 3)
-    {
-        ImGui::Checkbox(phrases[XorString("misc_namestealer")].c_str(), &config->misc.nameStealer);
-        ImGui::InputText(phrases[XorString("misc_customname")].c_str(), &config->misc.customName);
-        if (ImGui::Button(phrases[XorString("misc_changename")].c_str()))
-            Misc::setName(true);
-    }
     
     ImGui::Combo(phrases[XorString("misc_hitsound")].c_str(), &config->misc.hitSound, XorString("None\0Metal\0Gamesense\0Bell\0Glass\0Custom\0"));
     if (config->misc.hitSound == 5) {
@@ -2557,6 +2518,56 @@ void GUI::renderVisualhacksWindow(bool contentOnly) noexcept
 
 }
 
+void GUI::renderNickWindow(bool contentOnly) noexcept
+{
+    if (!contentOnly) {
+        if (!window.nick)
+            return;
+        ImGui::SetNextWindowSize({ 0.0f, 0.0f });
+        ImGui::Begin("nickexploit", &window.nick, windowFlags);
+    }
+    ImGui::Combo(phrases[XorString("misc_nameexploit")].c_str(), &config->misc.nameChangeSelection, XorString("Off\0Fake Ban\0Fake Item\0Custom Name\0"));
+    if (config->misc.nameChangeSelection == 1)
+    {
+        ImGui::PushID(3);
+        ImGui::SetNextItemWidth(100.0f);
+        ImGui::Combo("", &config->misc.banColor, XorString("White\0Red\0Purple\0Green\0Light green\0Turquoise\0Light red\0Gray\0Yellow\0Gray 2\0Light blue\0Gray/Purple\0Blue\0Pink\0Dark orange\0Orange\0"));
+        ImGui::PopID();
+        ImGui::SameLine();
+        ImGui::PushID(4);
+        ImGui::InputText("", &config->misc.banText);
+        ImGui::PopID();
+        ImGui::SameLine();
+        if (ImGui::Button(phrases[XorString("misc_setupfakeban")].c_str()))
+            Misc::fakeBan(true);
+    }
+    else if (config->misc.nameChangeSelection == 2)
+    {
+        ImGui::SetNextItemWidth(200.0f);
+        ImGuiCustom::MultiCombo(phrases[XorString("misc_fakeitemflags")].c_str(), config->misc.fakeItemFlags, config->misc.selectedFakeItemFlags, 4);
+        ImGui::SetNextItemWidth(200.0f);
+        ImGui::Combo(phrases[XorString("global_team")].c_str(), &config->misc.fakeItemTeam, XorString("Counter-Terrorist\0Terrorist"));
+        ImGui::SetNextItemWidth(200.0f);
+        ImGui::Combo(phrases[XorString("misc_messagetype")].c_str(), &config->misc.fakeItemMessageType, XorString("Unbox\0Trade\0"));
+        ImGui::SetNextItemWidth(200.0f);
+        ImGui::Combo(phrases[XorString("misc_itemtype")].c_str(), &config->misc.fakeItemType, XorString("AK-47\0AUG\0AWP\0Bayonet\0Bowie Knife\0Butterfly Knife\0CZ75-Auto\0Classic Knife\0Desert Eagle\0Dual Berettas\0FAMAS\0Falchion Knife\0Five-SeveN\0Flip Knife\0G3SG1\0Galil AR\0Glock-18\0Gut Knife\0Huntsman Knife\0Karambit\0M249\0M4A1-S\0M4A4\0M9 Bayonet\0MAC-10\0MAG-7\0MP5-SD\0MP7\0MP9\0Navaja Knife\0Negev\0Nomad Knife\0Nova\0P2000\0P250\0P90\0PP-Bizon\0Paracord Knife\0R8 Revolver\0SCAR-20\0SG 553\0SSG 08\0Sawed-Off\0Shadow Daggers\0Skeleton Knife\0Spectral Shiv\0Stiletto Knife\0Survival Knife\0Talon Knife\0Tec-9\0UMP-45\0USP-S\0Ursus Knife\0XM1014\0Hand Wraps\0Moto Gloves\0Specialist Gloves\0Sport Gloves\0Bloodhound Gloves\0Hydra Gloves\0Driver Gloves\0"));
+        ImGui::SetNextItemWidth(200.0f);
+        ImGui::Combo(phrases[XorString("misc_itemrarity")].c_str(), &config->misc.fakeItemRarity, XorString("Consumer Grade (White)\0Industrial Grade (Light blue)\0Mil-Spec (Blue)\0Restricted (Purple)\0Classified (Pink)\0Covert (Red)\0Contrabanned(Orange/Gold)\0"));
+        ImGui::Combo(phrases[XorString("misc_playercolor")].c_str(), &config->misc.fakeItemPlayerColor, XorString("Yellow\0Green\0Blue\0Purple\0Orange"));
+        ImGui::InputText(phrases[XorString("misc_playername")].c_str(), &config->misc.fakeItemPlayerName);
+        ImGui::InputText(phrases[XorString("misc_skinname")].c_str(), &config->misc.fakeItemName);
+        if (ImGui::Button(phrases[XorString("misc_changename")].c_str()))
+            Misc::fakeItem(true);
+    }
+    else if (config->misc.nameChangeSelection == 3)
+    {
+        ImGui::Checkbox(phrases[XorString("misc_namestealer")].c_str(), &config->misc.nameStealer);
+        ImGui::InputText(phrases[XorString("misc_customname")].c_str(), &config->misc.customName);
+        if (ImGui::Button(phrases[XorString("misc_changename")].c_str()))
+            Misc::setName(true);
+    }
+}
+
 void GUI::renderPerformanceWindow(bool contentOnly) noexcept
 {
     if (!contentOnly) {
@@ -2585,7 +2596,17 @@ void GUI::renderMiscsWindow(bool contentOnly) noexcept
         ImGui::SetNextWindowSize({ 0.0f, 0.0f });
         ImGui::Begin("Miscs", &window.miscs, windowFlags);
     }
-
+    if (ImGui::BeginTabBar("Miscs", ImGuiTabBarFlags_NoTooltip)) {
+        if (ImGui::BeginTabItem("Misc " ICON_FA_CHESS_PAWN)) {
+            renderVisualsWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Nick " ICON_FA_SIGNATURE)) {
+            renderWorldWindow(true);
+            ImGui::EndTabItem();
+        }
+        ImGui::EndTabBar();
+    }
 
 
 }
@@ -2638,7 +2659,7 @@ void GUI::renderGuiStyle2() noexcept
             window.tab = 4;
         }
         ImGui::SameLine(0, 0);
-        if (ImGui::Button("    " ICON_FA_ASTERISK "\n  Misc  ", ImVec2(97.0f, 0.0f))) {
+        if (ImGui::Button("    " ICON_FA_ASTERISK "\n  Miscs  ", ImVec2(97.0f, 0.0f))) {
             window.tab = 5;
         }
 
@@ -2666,7 +2687,7 @@ void GUI::renderGuiStyle2() noexcept
                 break;
 
             case 5:
-                renderMiscWindow(true);
+                renderMiscsWindow(true);
                 break;
 
             case 6:

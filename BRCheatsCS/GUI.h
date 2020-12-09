@@ -43,6 +43,7 @@ private:
     void renderVisualhacksWindow(bool contentOnly = false) noexcept;
     void renderPerformanceWindow(bool contentOnly = false) noexcept;
     void renderMiscsWindow(bool contentOnly = false) noexcept;
+    void renderNickWindow(bool coententOnly = false) noexcept;
     void renderGuiStyle2() noexcept;
     void drawDemo() noexcept;
     void renderWarningWindow() noexcept;
@@ -76,6 +77,7 @@ private:
         bool visualhacks = false;
         bool performance = false;
         bool miscs = false;
+        bool nick = false;
         int tab = 0;
     } window;
 };
