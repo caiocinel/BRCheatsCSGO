@@ -116,6 +116,7 @@ void GUI::render() noexcept
     renderWorldWindow();
     renderSkinChangerWindow();
     renderProfileChangerWindow();
+    drawDemo();
     /*renderMedalChangerWindow();
     renderInventoryChangerWindow();
     */
@@ -1393,9 +1394,7 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
     constexpr auto playerModels = "Default\0Special Agent Ava | FBI\0Operator | FBI SWAT\0Markus Delrow | FBI HRT\0Michael Syfers | FBI Sniper\0B Squadron Officer | SAS\0Seal Team 6 Soldier | NSWC SEAL\0Buckshot | NSWC SEAL\0Lt. Commander Ricksaw | NSWC SEAL\0Third Commando Company | KSK\0'Two Times' McCoy | USAF TACP\0Dragomir | Sabre\0Rezan The Ready | Sabre\0'The Doctor' Romanov | Sabre\0Maximus | Sabre\0Blackwolf | Sabre\0The Elite Mr. Muhlik | Elite Crew\0Ground Rebel | Elite Crew\0Osiris | Elite Crew\0Prof. Shahmat | Elite Crew\0Enforcer | Phoenix\0Slingshot | Phoenix\0Soldier | Phoenix\0Pirate\0Pirate Variant A\0Pirate Variant B\0Pirate Variant C\0Pirate Variant D\0Anarchist\0Anarchist Variant A\0Anarchist Variant B\0Anarchist Variant C\0Anarchist Variant D\0Balkan Variant A\0Balkan Variant B\0Balkan Variant C\0Balkan Variant D\0Balkan Variant E\0Jumpsuit Variant A\0Jumpsuit Variant B\0Jumpsuit Variant C\0";
     ImGui::Checkbox(phrases[XorString("visuals_noweapons")].c_str(), &config->visuals.noWeapons);
     ImGui::Checkbox(phrases[XorString("visuals_nosmoke")].c_str(), &config->visuals.noSmoke);
-    ImGui::Checkbox(phrases[XorString("visuals_noblur")].c_str(), &config->visuals.noBlur);
     ImGui::Checkbox(phrases[XorString("visuals_noscopeoverlay")].c_str(), &config->visuals.noScopeOverlay);
-    ImGui::Checkbox(phrases[XorString("visuals_disablepostprocessing")].c_str(), &config->visuals.disablePostProcessing);
     ImGui::Checkbox(phrases[XorString("visuals_inverseragdoll")].c_str(), &config->visuals.inverseRagdollGravity);
 
     ImGui::Checkbox(phrases[XorString("visuals_noaimpunch")].c_str(), &config->visuals.noAimPunch);
@@ -1477,16 +1476,12 @@ void GUI::renderWorldWindow(bool contentOnly) noexcept
     ImGui::Combo(phrases[XorString("visuals_skybox")].c_str(), &config->visuals.skybox, Helpers::skyboxList.data(), Helpers::skyboxList.size());
     ImGuiCustom::colorPicker(phrases[XorString("visuals_worldcolor")].c_str(), config->visuals.world);
     ImGuiCustom::colorPicker(phrases[XorString("visuals_skycolor")].c_str(), config->visuals.sky);
-    ImGui::Checkbox(phrases[XorString("visuals_nograss")].c_str(), &config->visuals.noGrass);
-    ImGui::Checkbox(phrases[XorString("visuals_noshadows")].c_str(), &config->visuals.noShadows);
+
     /*
     ImGui::Checkbox(phrases[XorString("visuals_nightmode")].c_str(), &config->visuals.nightMode);
     ImGui::Checkbox(phrases[XorString("visuals_asuswalls")].c_str(), &config->visuals.asusWalls);
     */
     ImGui::NextColumn();
-    ImGui::Checkbox(phrases[XorString("visuals_nobloom")].c_str(), &config->visuals.noBloom);
-    ImGui::Checkbox(phrases[XorString("visuals_nofog")].c_str(), &config->visuals.noFog);
-    ImGui::Checkbox(phrases[XorString("visuals_no3dsky")].c_str(), &config->visuals.no3dSky);
     ImGui::Checkbox(phrases[XorString("visuals_colorcorrection")].c_str(), &config->visuals.colorCorrection.enabled);
     ImGui::SameLine();
     bool ccPopup = ImGui::Button(phrases[XorString("global_edit")].c_str());
@@ -2535,6 +2530,66 @@ void GUI::renderConfigsWindow(bool contentOnly) noexcept
         ImGui::End();
 }
 
+void GUI::renderVisualhacksWindow(bool contentOnly) noexcept
+{
+    if (!contentOnly) {
+        if (!window.visualhacks)
+            return;
+        ImGui::SetNextWindowSize({ 0.0f, 0.0f });
+        ImGui::Begin("Visualhacks", &window.visualhacks, windowFlags);
+    }
+
+    if (ImGui::BeginTabBar("Visualhacks", ImGuiTabBarFlags_NoTooltip)) {
+        if (ImGui::BeginTabItem("Visuals " ICON_FA_MAGIC)) {
+            renderVisualsWindow(true);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("World " ICON_FA_GLOBE_AMERICAS)) {
+            renderWorldWindow(true);
+            ImGui::EndTabItem();
+        }           
+        if (ImGui::BeginTabItem("Performance " ICON_FA_BURN)) {
+            renderPerformanceWindow(true);
+            ImGui::EndTabItem();
+        }
+        ImGui::EndTabBar();
+    }
+
+}
+
+void GUI::renderPerformanceWindow(bool contentOnly) noexcept
+{
+    if (!contentOnly) {
+        if (!window.performance)
+            return;
+        ImGui::SetNextWindowSize({ 0.0f, 0.0f });
+        ImGui::Begin("Performance", &window.performance, windowFlags);
+    }
+    ImGui::Columns(2, nullptr, true);
+    ImGui::Checkbox(phrases[XorString("visuals_noblur")].c_str(), &config->visuals.noBlur);
+    ImGui::Checkbox(phrases[XorString("visuals_disablepostprocessing")].c_str(), &config->visuals.disablePostProcessing);
+    ImGui::Checkbox(phrases[XorString("visuals_nograss")].c_str(), &config->visuals.noGrass);
+    ImGui::Checkbox(phrases[XorString("visuals_noshadows")].c_str(), &config->visuals.noShadows);
+    ImGui::NextColumn();
+    ImGui::Checkbox(phrases[XorString("visuals_nobloom")].c_str(), &config->visuals.noBloom);
+    ImGui::Checkbox(phrases[XorString("visuals_nofog")].c_str(), &config->visuals.noFog);
+    ImGui::Checkbox(phrases[XorString("visuals_no3dsky")].c_str(), &config->visuals.no3dSky);
+    ImGui::Columns(1);
+}
+
+void GUI::renderMiscsWindow(bool contentOnly) noexcept
+{
+    if (!contentOnly) {
+        if (!window.miscs)
+            return;
+        ImGui::SetNextWindowSize({ 0.0f, 0.0f });
+        ImGui::Begin("Miscs", &window.miscs, windowFlags);
+    }
+
+
+
+}
+
 void GUI::renderWarningWindow() noexcept
 {
 
@@ -2548,6 +2603,13 @@ void GUI::renderWarningWindow() noexcept
 
     
     ImGui::End();
+}
+
+void GUI::drawDemo() noexcept
+{
+
+    ImGui::ShowDemoWindow();
+
 }
 
 void GUI::renderGuiStyle2() noexcept
@@ -2596,7 +2658,7 @@ void GUI::renderGuiStyle2() noexcept
                 break;
             
             case 3:
-                renderVisualsWindow(true);
+                renderVisualhacksWindow(true);
                 break;
 
             case 4:

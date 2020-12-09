@@ -40,7 +40,11 @@ private:
     void renderWallhacksWindow(bool contentOnly = false) noexcept;
     void renderChangersWindow(bool contentOnly = false) noexcept;
     void renderConfigsWindow(bool contentOnly = false) noexcept;
+    void renderVisualhacksWindow(bool contentOnly = false) noexcept;
+    void renderPerformanceWindow(bool contentOnly = false) noexcept;
+    void renderMiscsWindow(bool contentOnly = false) noexcept;
     void renderGuiStyle2() noexcept;
+    void drawDemo() noexcept;
     void renderWarningWindow() noexcept;
 
 
@@ -69,6 +73,9 @@ private:
         bool wallhacks = false;
         bool changers = false;
         bool configs = false;
+        bool visualhacks = false;
+        bool performance = false;
+        bool miscs = false;
         int tab = 0;
     } window;
 };
