@@ -335,6 +335,7 @@ static void from_json(const json& j, Config::Ragebot& r)
 	read(j, "Min damage", r.WallDamage);
 	read(j, "Hit Chance", r.hitChance);
 	read(j, "Auto Stop", r.autoStop);
+    read(j, "Auto Shot", r.autoShot);
 	read(j, "Head", r.BonesBools[0]);
 	read(j, "Neck", r.BonesBools[1]);
 	read(j, "Upper Chest", r.BonesBools[2]);
