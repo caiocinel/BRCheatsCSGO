@@ -730,10 +730,8 @@ EGCResult __fastcall hkGCRetrieveMessage(void* ecx, void*, uint32_t* punMsgType,
         auto oldEBP = *reinterpret_cast<void**>((uint32_t)_AddressOfReturnAddress() - 4);
 
         uint32_t messageType = *punMsgType & 0x7FFFFFFF;
-        memory->debugMsg("[->] Message received from GC [%d]!\n", messageType);
         write.ReceiveMessage(thisPtr, oldEBP, messageType, pubDest, cubDest, pcubMsgSize);
     }
-    memory->debugMsg("[->] Status returned [%d]!\n", status);
     return status;
 }
 
@@ -747,7 +745,6 @@ EGCResult __fastcall hkGCSendMessage(void* ecx, void*, uint32_t unMsgType, const
     if (!sendMessage)
         return EGCResult::k_EGCResultOK;
 
-    memory->debugMsg("[->] Message Sent!\n");
     return oGCSendMessage(ecx, unMsgType, const_cast<void*>(pubData), cubData);
 }
 
@@ -863,7 +860,7 @@ void Hooks::install() noexcept
     if constexpr (std::is_same_v<HookType, MinHook>)
         MH_EnableHook(MH_ALL_HOOKS);
 
-  //BRC_StartUserActivity(ActivityId_CSGO);
+  BRC_StartUserActivity(ActivityId_CSGO);
 
 
 }
