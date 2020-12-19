@@ -277,8 +277,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <GenerateManifest>false</GenerateManifest>
-    <IncludePath>$(VC_IncludePath);</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x86);</LibraryPath>
+    <IncludePath>$(VC_IncludePath);D:\Windows Kits\10\Include\10.0.18362.0\um;D:\Windows Kits\10\Include\10.0.18362.0\shared;D:\Windows Kits\10\Include\10.0.18362.0\ucrt;</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);D:\Windows Kits\10\Lib\10.0.18362.0\um\x86;D:\Windows Kits\10\Lib\10.0.18362.0\ucrt\x86;</LibraryPath>
+    <ExecutablePath>$(VC_ExecutablePath_x86);$(CommonExecutablePath);D:\Windows Kits\10\bin\10.0.18362.0\x86;</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
