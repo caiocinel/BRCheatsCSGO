@@ -586,8 +586,18 @@ void Misc::drawFov() noexcept
     auto local = localPlayer.get();
     if (!local)
         return;
+    auto active = localPlayer->getActiveWeapon();
 
-    int weaponId = getWeaponIndex(localPlayer->getActiveWeapon()->itemDefinitionIndex2());
+    if (!active)
+        return;
+
+    auto itemIndex = active->itemDefinitionIndex2();
+
+    if ((int)itemIndex < WEAPON_NONE && (int)itemIndex > GLOVE_HYDRA)
+        return;
+
+    int weaponId = getWeaponIndex(itemIndex);
+
     if (!config->aimbot[weaponId].enabled) weaponId = 0;
     if (config->aimbot[weaponId].drawFov)
     {
