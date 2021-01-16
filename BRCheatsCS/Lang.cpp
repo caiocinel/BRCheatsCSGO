@@ -272,6 +272,8 @@ void UpdateLanguage()
 		phrases[XorString("misc_reportbot_reset")] = XorString("Reset");
 		phrases[XorString("misc_cheatspam")] = XorString("Cheat Spam");
 
+		phrases[XorString("misc_chatspam")] = XorString("Chat Spam");
+
 		phrases[XorString("config_reload")] = XorString("Reload configs");
 		phrases[XorString("config_placeholder_configname")] = XorString("Config Name");
 		phrases[XorString("config_create")] = XorString("Create Config");
