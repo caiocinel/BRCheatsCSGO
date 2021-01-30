@@ -621,18 +621,6 @@ static void from_json(const json& j, PreserveKillfeed& o)
     read(j, "Only Headshots", o.onlyHeadshots);
 }
 
-static void from_json(const json& j, Config::Misc::Spam& r)
-{
-    read(j, "Chat Picker", r.say);
-    read(j, "Show Health", r.showHealth);
-    read(j, "Show LastPlace", r.showLastplace);
-    read(j, "Show Money", r.showMoney);
-    read(j, "Show Name", r.showName);
-    read(j, "Spam Picker", r.spam_picker);
-    read(j, "Team Picker", r.team);
-    read(j, "Clear Chat", r.clearchat);
-}
-
 static void from_json(const json& j, Config::Misc& m)
 {
     read(j, "Lang", m.lang);
@@ -1188,7 +1176,6 @@ static void to_json(json& j, const Config::Misc& o)
 	 WRITE("ShotsCout", ShotsCout);
     WRITE("Reportbot", reportbot);
     WRITE("Preserve Killfeed", preserveKillfeed);
-    WRITE("Chat spammer", spam);
     WRITE("Ragdoll force", ragdollForce);
     WRITE("Ragdoll force strength", ragdollForceStrength);
 }
@@ -1204,19 +1191,6 @@ static void to_json(json& j, const Config::Visuals::ColorCorrection& o, const Co
     WRITE("Green", green);
     WRITE("Yellow", yellow);
 }
-
-static void to_json(json& j, const Config::Misc::Spam& o, const Config::Misc::Spam& dummy = {})
-{
-    WRITE("Chat Picker", say);
-    WRITE("Show Health", showHealth);
-    WRITE("Show LastPlace", showLastplace);
-    WRITE("Show Money", showMoney);
-    WRITE("Show Name", showName);
-    WRITE("Spam Picker", spam_picker);
-    WRITE("Team Picker", team);
-    WRITE("Clear Chat", clearchat);
-}
-
 
 static void to_json(json& j, const Config::Visuals& o)
 {

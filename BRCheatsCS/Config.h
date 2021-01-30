@@ -638,18 +638,6 @@ public:
             int delay = 1;
             int rounds = 1;
         } reportbot;
-
-        struct Spam {
-            bool say;
-            int team = 1;
-            bool showName = false;
-            bool showHealth = false;
-            bool showMoney = false;
-            bool showLastplace = false;
-            int spam_picker = 0; 
-            bool clearchat = false;
-        } spam;
-
    } misc;
 
 
