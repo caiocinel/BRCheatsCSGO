@@ -637,6 +637,9 @@
     <ClInclude Include="Fonts\IconsMaterialDesign.h">
       <Filter>Fonts</Filter>
     </ClInclude>
+    <ClInclude Include="SDK\FileSystem.h">
+      <Filter>SDK</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="BRC_UserActivity.lib" />
