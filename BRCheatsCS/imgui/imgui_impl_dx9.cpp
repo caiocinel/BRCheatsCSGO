@@ -22,6 +22,8 @@
 //  2018-02-16: Misc: Obsoleted the io.RenderDrawListsFn callback and exposed ImGui_ImplDX9_RenderDrawData() in the .h file so you can call it yourself.
 //  2018-02-06: Misc: Removed call to ImGui::Shutdown() which is not available from 1.60 WIP, user needs to call CreateContext/DestroyContext themselves.
 
+#include <memory>
+
 #include "imgui.h"
 #include "imgui_impl_dx9.h"
 
@@ -62,8 +64,8 @@ static void ImGui_ImplDX9_SetupRenderState(ImDrawData* draw_data)
     g_pd3dDevice->SetRenderState(D3DRS_SCISSORTESTENABLE, true);
     g_pd3dDevice->SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
     g_pd3dDevice->SetRenderState(D3DRS_FOGENABLE, false);
-    g_pd3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
-    g_pd3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
+    g_pd3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+    g_pd3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
     g_pd3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
     g_pd3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
     g_pd3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
@@ -124,7 +126,6 @@ void ImGui_ImplDX9_RenderDrawData(ImDrawData* draw_data)
     if (d3d9_state_block->Capture() != D3D_OK)
         return;
 
-
     ImDrawVert* vtx_dst;
     ImDrawIdx* idx_dst;
     if (g_pVB->Lock(0, (UINT)(draw_data->TotalVtxCount * sizeof(ImDrawVert)), (void**)&vtx_dst, D3DLOCK_DISCARD) < 0)
@@ -134,7 +135,6 @@ void ImGui_ImplDX9_RenderDrawData(ImDrawData* draw_data)
     for (int n = 0; n < draw_data->CmdListsCount; n++)
     {
         ImDrawList* cmd_list = draw_data->CmdLists[n];
-
         memcpy(vtx_dst, cmd_list->VtxBuffer.Data, cmd_list->VtxBuffer.Size * sizeof(ImDrawVert));
         vtx_dst += cmd_list->VtxBuffer.Size;
         memcpy(idx_dst, cmd_list->IdxBuffer.Data, cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx));
@@ -142,12 +142,10 @@ void ImGui_ImplDX9_RenderDrawData(ImDrawData* draw_data)
     }
     g_pVB->Unlock();
     g_pIB->Unlock();
-
     g_pd3dDevice->SetStreamSource(0, g_pVB, 0, sizeof(ImDrawVert));
     g_pd3dDevice->SetIndices(g_pIB);
 
     constexpr D3DVERTEXELEMENT9 elements[]{
-
         { 0, 0, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
         { 0, 8, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
         { 0, 16, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
@@ -181,10 +179,12 @@ void ImGui_ImplDX9_RenderDrawData(ImDrawData* draw_data)
                     ImGui_ImplDX9_SetupRenderState(draw_data);
                 else
                     pcmd->UserCallback(cmd_list, pcmd);
-            } else
+            }
+            else
             {
                 const RECT r = { (LONG)(pcmd->ClipRect.x - clip_off.x), (LONG)(pcmd->ClipRect.y - clip_off.y), (LONG)(pcmd->ClipRect.z - clip_off.x), (LONG)(pcmd->ClipRect.w - clip_off.y) };
                 const LPDIRECT3DTEXTURE9 texture = (LPDIRECT3DTEXTURE9)pcmd->TextureId;
+                g_pd3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, texture == g_FontTexture ? D3DTOP_SELECTARG2 : D3DTOP_MODULATE);
                 g_pd3dDevice->SetTexture(0, texture);
                 g_pd3dDevice->SetScissorRect(&r);
                 g_pd3dDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, pcmd->VtxOffset + global_vtx_offset, 0, (UINT)cmd_list->VtxBuffer.Size, pcmd->IdxOffset + global_idx_offset, pcmd->ElemCount / 3);
@@ -242,6 +242,11 @@ static bool ImGui_ImplDX9_CreateFontsTexture()
     return true;
 }
 
+void ImGui_ImplDX9_DestroyFontsTexture()
+{
+    if (g_FontTexture) { g_FontTexture->Release(); g_FontTexture = NULL; ImGui::GetIO().Fonts->TexID = NULL; } // We copied g_pFontTextureView to io.Fonts->TexID so let's clear that as well.
+}
+
 bool ImGui_ImplDX9_CreateDeviceObjects()
 {
     if (!g_pd3dDevice)
@@ -257,7 +262,36 @@ void ImGui_ImplDX9_InvalidateDeviceObjects()
         return;
     if (g_pVB) { g_pVB->Release(); g_pVB = NULL; }
     if (g_pIB) { g_pIB->Release(); g_pIB = NULL; }
-    if (g_FontTexture) { g_FontTexture->Release(); g_FontTexture = NULL; ImGui::GetIO().Fonts->TexID = NULL; } // We copied g_pFontTextureView to io.Fonts->TexID so let's clear that as well.
+    ImGui_ImplDX9_DestroyFontsTexture();
+}
+
+void* ImGui_CreateTextureRGBA(int width, int height, const unsigned char* data)
+{
+    IDirect3DTexture9* texture;
+    if (g_pd3dDevice->CreateTexture(width, height, 1, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &texture, nullptr) != D3D_OK)
+        return nullptr;
+
+    D3DLOCKED_RECT lockedRect;
+    if (texture->LockRect(0, &lockedRect, nullptr, 0) != D3D_OK) {
+        texture->Release();
+        return nullptr;
+    }
+
+    const auto buffer = std::make_unique<std::uint32_t[]>(width * height);
+    std::memcpy(buffer.get(), data, width * height * 4);
+    for (int i = 0; i < width * height; ++i)
+        buffer[i] = (buffer[i] & 0xFF00FF00) | ((buffer[i] & 0xFF0000) >> 16) | ((buffer[i] & 0xFF) << 16); // RGBA --> ARGB
+
+    for (int y = 0; y < height; ++y)
+        std::memcpy((unsigned char*)lockedRect.pBits + lockedRect.Pitch * y, buffer.get() + width * y, width * 4);
+
+    texture->UnlockRect(0);
+    return texture;
+}
+
+void ImGui_DestroyTexture(void* texture)
+{
+    reinterpret_cast<IDirect3DTexture9*>(texture)->Release();
 }
 
 void ImGui_ImplDX9_NewFrame()
