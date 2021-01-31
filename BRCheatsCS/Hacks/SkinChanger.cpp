@@ -45,12 +45,10 @@ static std::vector<SkinChanger::PaintKit> skinKits{ { 0, "-", L"-" } };
 static std::vector<SkinChanger::PaintKit> gloveKits;
 static std::vector<SkinChanger::PaintKit> stickerKits{ { 0, "None", L"NONE" } };
 
-static void initializeKits() noexcept
+void SkinChanger::initializeKits() noexcept
 {
-    static bool initalized = false;
-    if (initalized)
-        return;
-    initalized = true;
+    const std::locale original;
+    std::locale::global(std::locale{ "en_US.utf8" });
 
     const auto itemSchema = memory->itemSystem()->getItemSchema();
 
@@ -62,58 +60,62 @@ static void initializeKits() noexcept
     };
 
     std::vector<KitWeapon> kitsWeapons;
-    kitsWeapons.reserve(itemSchema->alternateIcons.numElements);
 
-    for (const auto& node : itemSchema->alternateIcons) {
-        // https://github.com/perilouswithadollarsign/cstrike15_src/blob/f82112a2388b841d72cb62ca48ab1846dfcc11c8/game/shared/econ/econ_item_schema.cpp#L325-L329
-        if (const auto encoded = node.key; (encoded & 3) == 0)
-            kitsWeapons.emplace_back(int((encoded & 0xFFFF) >> 2), WeaponId(encoded >> 16), node.value.simpleName.data());
+    for (int i = 0; i < itemSchema->getLootListCount(); ++i) {
+        const auto& contents = itemSchema->getLootList(i)->getLootListContents();
+
+        for (int j = 0; j < contents.size; ++j) {
+            if (contents[j].paintKit != 0)
+                kitsWeapons.emplace_back(contents[j].paintKit, contents[j].weaponId());
+        }
     }
 
-    std::sort(kitsWeapons.begin(), kitsWeapons.end(), [](const auto& a, const auto& b) { return a.paintKit < b.paintKit; });
+    for (int i = 0; i < itemSchema->getItemSetCount(); ++i) {
+        const auto set = itemSchema->getItemSet(i);
 
-    skinKits.reserve(itemSchema->paintKits.lastAlloc);
-    gloveKits.reserve(itemSchema->paintKits.lastAlloc);
-    for (const auto& node : itemSchema->paintKits) {
-        const auto paintKit = node.value;
+        for (int j = 0; j < set->getItemCount(); ++j) {
+            const auto paintKit = set->getItemPaintKit(j);
+            if (paintKit != 0)
+                kitsWeapons.emplace_back(paintKit, set->getItemDef(j));
+        }
+    }
+
+    for (int i = 0; i <= itemSchema->paintKits.lastAlloc; i++) {
+        const auto paintKit = itemSchema->paintKits.memory[i].value;
 
         if (paintKit->id == 0 || paintKit->id == 9001) // ignore workshop_default
             continue;
 
-        if (paintKit->id >= 10000) {
-            std::wstring name;
-            std::string iconPath;
+        std::string name;
 
-            if (const auto it = std::lower_bound(kitsWeapons.begin(), kitsWeapons.end(), paintKit->id, [](const auto& p, auto id) { return p.paintKit < id; }); it != kitsWeapons.end() && it->paintKit == paintKit->id) {
-                if (const auto itemDef = itemSchema->getItemDefinitionInterface(it->weaponId)) {
-                    name = interfaces->localize->findSafe(itemDef->getItemBaseName());
-                    name += L" | ";
-                }
-                iconPath = it->iconPath;
-            }
-
-            name += interfaces->localize->findSafe(paintKit->itemName.data() + 1);
-            gloveKits.emplace_back(paintKit->id, std::move(name), std::move(iconPath), paintKit->rarity);
+        if (const auto it = std::find_if(kitsWeapons.begin(), kitsWeapons.end(), [&paintKit](const auto& p) { return p.first == paintKit->id; }); it != kitsWeapons.end()) {
+            name = interfaces->localize->findAsUTF8(itemSchema->getItemDefinitionInterface(it->second)->getItemBaseName());
+            name += " | ";
         }
-        else {
-            for (auto it = std::lower_bound(kitsWeapons.begin(), kitsWeapons.end(), paintKit->id, [](const auto& p, auto id) { return p.paintKit < id; }); it != kitsWeapons.end() && it->paintKit == paintKit->id; ++it) {
 
-                const auto itemDef = itemSchema->getItemDefinitionInterface(it->weaponId);
-                if (!itemDef)
-                    continue;
+        name += interfaces->localize->findAsUTF8(paintKit->itemName.data() + 1);
 
-                std::wstring name = interfaces->localize->findSafe(itemDef->getItemBaseName());
-                name += L" | ";
-                name += interfaces->localize->findSafe(paintKit->itemName.data() + 1);
-                skinKits.emplace_back(paintKit->id, std::move(name), it->iconPath, std::clamp(itemDef->getRarity() + paintKit->rarity - 1, 0, (paintKit->rarity == 7) ? 7 : 6));
-            }
+        if (paintKit->id < 10000) {
+            skinKits.emplace_back(paintKit->id, name, toUpperWide(name));
+        } else {
+            std::string_view gloveName{ paintKit->name.data() };
+            name += ' ';
+            name += '(' + std::string{ gloveName.substr(0, gloveName.find('_')) } + ')';
+            gloveKits.emplace_back(paintKit->id, name, toUpperWide(name));
         }
     }
 
     std::sort(skinKits.begin() + 1, skinKits.end());
-    skinKits.shrink_to_fit();
     std::sort(gloveKits.begin(), gloveKits.end());
-    gloveKits.shrink_to_fit();
+
+    for (int i = 0; i <= itemSchema->stickerKits.lastAlloc; i++) {
+        const auto stickerKit = itemSchema->stickerKits.memory[i].value;
+        std::string name = interfaces->localize->findAsUTF8(stickerKit->id != 242 ? stickerKit->itemName.data() + 1 : "StickerKit_dhw2014_teamdignitas_gold");
+        stickerKits.emplace_back(stickerKit->id, name, toUpperWide(name));
+    }
+
+    std::sort(std::next(stickerKits.begin()), stickerKits.end());
+    std::locale::global(original);
 }
 
 static std::unordered_map<std::string, const char*> iconOverrides;
@@ -475,74 +477,4 @@ const std::vector<SkinChanger::PaintKit>& SkinChanger::getGloveKits() noexcept
 const std::vector<SkinChanger::PaintKit>& SkinChanger::getStickerKits() noexcept
 {
     return stickerKits;
-}
-
-class Texture {
-    ImTextureID texture = nullptr;
-public:
-    Texture() = default;
-    ~Texture() { clear(); }
-    Texture(const Texture&) = delete;
-    Texture& operator=(const Texture&) = delete;
-    Texture(Texture&& other) noexcept : texture{ other.texture } { other.texture = nullptr; }
-    Texture& operator=(Texture&& other) noexcept { clear(); texture = other.texture; other.texture = nullptr; return *this; }
-
-    void init(int width, int height, const std::uint8_t* data) noexcept;
-    void clear() noexcept;
-    ImTextureID get() noexcept { return texture; }
-};
-
-void Texture::init(int width, int height, const std::uint8_t* data) noexcept
-{
-    texture = ImGui_CreateTextureRGBA(width, height, data);
-}
-
-void Texture::clear() noexcept
-{
-    if (texture)
-        ImGui_DestroyTexture(texture);
-    texture = nullptr;
-}
-
-static std::unordered_map<std::string, Texture> iconTextures;
-
-ImTextureID SkinChanger::getItemIconTexture(const std::string& iconpath) noexcept
-{
-    if (iconpath.empty())
-        return 0;
-
-    if (iconTextures[iconpath].get())
-        return iconTextures[iconpath].get();
-
-    if (iconTextures.size() >= 50)
-        iconTextures.erase(iconTextures.begin());
-
-    if (const auto handle = interfaces->baseFileSystem->open(("resource/flash/" + iconpath + "_large.png").c_str(), "r", "GAME")) {
-        if (const auto size = interfaces->baseFileSystem->size(handle); size >= 0) {
-            const auto buffer = std::make_unique<std::uint8_t[]>(size);
-            if (interfaces->baseFileSystem->read(buffer.get(), size, handle) > 0) {
-                int width, height;
-                stbi_set_flip_vertically_on_load_thread(false);
-
-                if (const auto data = stbi_load_from_memory((const stbi_uc*)buffer.get(), size, &width, &height, nullptr, STBI_rgb_alpha)) {
-                    iconTextures[iconpath].init(width, height, data);
-                    stbi_image_free(data);
-                }
-                else {
-                    assert(false);
-                }
-            }
-        }
-        interfaces->baseFileSystem->close(handle);
-    }
-    else {
-        assert(false);
-    }
-
-    return iconTextures[iconpath].get();
-}
-
-void SkinChanger::clearItemIconTextures() noexcept
-{
-    iconTextures.clear();
 }

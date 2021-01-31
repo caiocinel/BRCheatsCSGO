@@ -146,7 +146,7 @@ public:
     PAD(0x104)
         UtlMap<std::uint64_t, AlternateIconData> alternateIcons;
     PAD(0x48)
-    UtlMap<int, PaintKit*> paintKits;
+        UtlMap<int, PaintKit*> paintKits;
     UtlMap<int, StickerKit*> stickerKits;
 
     VIRTUAL_METHOD(EconItemDefinition*, getItemDefinitionInterface, 4, (WeaponId id), (this, id))
