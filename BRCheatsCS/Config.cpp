@@ -5,7 +5,7 @@
 
 #include "Config.h"
 #include "Helpers.h"
-#include "SDK/WeaponId.h"
+#include "Hacks/SkinChanger.h"
 
 #ifdef _WIN32
 int CALLBACK fontCallback(const LOGFONTW* lpelfe, const TEXTMETRICW*, DWORD, LPARAM lParam)
@@ -552,6 +552,7 @@ static void from_json(const json& j, sticker_setting& s)
     read(j, "Wear", s.wear);
     read(j, "Scale", s.scale);
     read(j, "Rotation", s.rotation);
+
     s.onLoad();
 }
 

@@ -104,7 +104,24 @@ public:
     Channel* channels;
     PlayerResource** playerResource;
     const wchar_t*(__thiscall* getDecoratedPlayerName)(PlayerResource* pr, int index, wchar_t* buffer, int buffsize, int flags);
+
+    void setOrAddAttributeValueByName(std::uintptr_t attributeList, const char* attribute, float value) const noexcept
+    {
+#ifdef _WIN32
+        __asm movd xmm2, value
+        setOrAddAttributeValueByNameFunction(attributeList, attribute);
+#else
+
+#endif
+    }
+
+    void setOrAddAttributeValueByName(std::uintptr_t attributeList, const char* attribute, int value) const noexcept
+    {
+        setOrAddAttributeValueByName(attributeList, attribute, *reinterpret_cast<float*>(&value) /* hack, but CSGO does that */);
+    }
 private:
+    void(__thiscall* setOrAddAttributeValueByNameFunction)(std::uintptr_t, const char* attribute);
+
     static std::uintptr_t findPattern(const wchar_t* module, const char* pattern) noexcept
     {
         static auto id = 0;

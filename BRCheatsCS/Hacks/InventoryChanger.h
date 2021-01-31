@@ -33,16 +33,16 @@ class Inventory
 public:
 	void FixNullInventory(ProtoWriter& cache);
 	void ClearEquipState(ProtoWriter& object);
-	void AddAllItems(ProtoWriter& object);
-	void AddItem(ProtoWriter& object, int index, int itemIndex, int rarity, int paintKit, int seed, float wear, std::string name);
+	//void AddAllItems(ProtoWriter& object);
+	//void AddItem(ProtoWriter& object, int index, int itemIndex, int rarity, int paintKit, int seed, float wear, std::string name);
 	bool Presend(uint32_t& unMsgType, void* pubData, uint32_t& cubData);
 	void ApplyMedals(ProtoWriter& object);
-	static int GetAvailableClassID(int definition_index);
+	//static int GetAvailableClassID(int definition_index);
 	std::string Changer(void* pubDest, uint32_t* pcubMsgSize);
 };
 
 inline Inventory* g_Inventory;
-
+/*
 static const char* weaponnames(const short id)
 {
 	switch (id)
@@ -178,4 +178,5 @@ static const char* weaponnames(const short id)
 	default:
 		return "";
 	}
-}
+	
+}*/

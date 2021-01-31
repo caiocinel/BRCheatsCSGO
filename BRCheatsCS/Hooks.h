@@ -20,7 +20,7 @@ using HookType = MinHook;
 
 class Hooks {
 public:
-    Hooks(HMODULE module) noexcept;
+    Hooks(HMODULE moduleHandle) noexcept;
 
     void install() noexcept;
     void uninstall() noexcept;
@@ -46,7 +46,7 @@ public:
 	VmtSwap networkChannel;
     HookType svCheats;
 private:
-    HMODULE module;
+    HMODULE moduleHandle;
     HWND window;
 };
 

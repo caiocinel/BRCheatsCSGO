@@ -315,7 +315,7 @@ std::vector<VectorAndDamage> GetHitBoxes(Entity* entity, Entity* weapon, int wea
 	if (!entity->setupBones(matrix, 256, 256, memory->globalVars->currenttime))
 		return possibleVectors;
 
-	minDamage = std::min(minDamage, static_cast<float>(entity->health()));
+	minDamage = (std::min)(minDamage, static_cast<float>(entity->health()));
 
 	if (config->ragebot[weaponIndex].keyForceShotEnabled && config->ragebot[weaponIndex].keyForceShot > 0 && GetAsyncKeyState(config->ragebot[weaponIndex].keyForceShot))
 	{

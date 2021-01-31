@@ -593,7 +593,7 @@ void Misc::drawFov() noexcept
 
     auto itemIndex = active->itemDefinitionIndex2();
 
-    if ((int)itemIndex < WEAPON_NONE && (int)itemIndex > GLOVE_HYDRA)
+    if ((int)itemIndex < 0 && (int)itemIndex > 10000)
         return;
 
     int weaponId = getWeaponIndex(itemIndex);

@@ -24,7 +24,7 @@ std::string Inventory::Changer(void* pubDest, uint32_t* pcubMsgSize)
 			object.clear(SubscribedType::object_data);
 
 			ClearEquipState(object);
-			AddAllItems(object);
+			// AddAllItems(object);
 			ApplyMedals(object);
 			cache.replace(Field(CMsgSOCacheSubscribed::objects, TYPE_STRING, object.serialize()), i);
 		}
@@ -117,11 +117,11 @@ static auto is_glove(const int i) -> bool
 {
 	return (i >= 5027 && i <= 5035);
 }
-
+/*
 void Inventory::AddAllItems(ProtoWriter& object)
 {
 	for (auto& x : g_InventorySkins)
-		AddItem(object, x.first, x.second.wId, config->inventory.skinInfo[x.second.paintKit].rarity, x.second.paintKit, x.second.seed, x.second.wear, x.second.name);
+		 AddItem(object, x.first, x.second.wId, config->inventory.skinInfo[x.second.paintKit].rarity, x.second.paintKit, x.second.seed, x.second.wear, x.second.name);
 }
 
 bool is_uncommon(int index)
@@ -195,10 +195,13 @@ void Inventory::AddItem(ProtoWriter& object, int index, int itemIndex, int rarit
 	item.add(Field(CSOEconItem::attribute, TYPE_STRING, WearAttribute.serialize()));
 
 	object.add(Field(SubscribedType::object_data, TYPE_STRING, item.serialize()));
+	
 }
 
+*/
 bool Inventory::Presend(uint32_t& unMsgType, void* pubData, uint32_t& cubData)
 {
+	
 	uint32_t MessageType = unMsgType & 0x7FFFFFFF;
 
 	if (MessageType == k_EMsgGCAdjustItemEquippedState) {
@@ -214,7 +217,7 @@ bool Inventory::Presend(uint32_t& unMsgType, void* pubData, uint32_t& cubData)
 		uint32_t new_class = msg.get(CMsgAdjustItemEquippedState::new_class).UInt32();
 
 		auto weapon = g_InventorySkins[item_id];
-
+		/*
 		if (new_class == 2)
 		{
 			for (auto& skins : g_InventorySkins)
@@ -275,11 +278,15 @@ bool Inventory::Presend(uint32_t& unMsgType, void* pubData, uint32_t& cubData)
 				config->weaponsInv[GLOVE_T_SIDE].skins.ct.wear = weapon.wear;
 				config->weaponsInv[GLOVE_T_SIDE].skins.ct.seed = weapon.seed;
 			}
+			
 		}
-
+		*/
 		memory->clientState->ForceFullUpdate();
-
+		
 		return false;
+		
 	}
-	return true;
+	
+
 }
+

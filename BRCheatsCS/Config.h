@@ -9,7 +9,7 @@
 #include <set>
 #include <map>
 #include "imgui/imgui.h"
-#include "nSkinz/config_.hpp"
+#include "Hacks/SkinChanger.h"
 #include "ConfigStructs.h"
 #include "SDK/Vector.h"
 

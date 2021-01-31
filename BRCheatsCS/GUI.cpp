@@ -1514,18 +1514,17 @@ void GUI::renderSkinChangerWindow(bool contentOnly) noexcept
     if (!contentOnly) {
         if (!window.skinChanger)
             return;
-        ImGui::SetNextWindowSize({ 700.0f, 0.0f });
+        ImGui::SetNextWindowSize({ 800.0f, 0.0f });
         ImGui::Begin(phrases[XorString("window_skinchanger")].c_str(), &window.skinChanger, windowFlags);
     }
 
-    SkinChanger::initializeKits();
     static auto itemIndex = 0;
 
     ImGui::PushItemWidth(110.0f);
     ImGui::Combo("##1", &itemIndex, [](void* data, int idx, const char** out_text) {
-        *out_text = game_data::weapon_names[idx].name;
+        *out_text = SkinChanger::weapon_names[idx].name;
         return true;
-        }, nullptr, IM_ARRAYSIZE(game_data::weapon_names), 5);
+        }, nullptr, SkinChanger::weapon_names.size(), 5);
     ImGui::PopItemWidth();
 
     auto& selected_entry = config->skinChanger[itemIndex];
@@ -1562,6 +1561,14 @@ void GUI::renderSkinChangerWindow(bool contentOnly) noexcept
                     ImGui::PushID(i);
                     if (ImGui::Selectable(kits[i].name.c_str(), i == selected_entry.paint_kit_vector_index))
                         selected_entry.paint_kit_vector_index = i;
+
+                    if (ImGui::IsItemHovered()) {
+                        if (const auto icon = SkinChanger::getItemIconTexture(kits[i].iconPath)) {
+                            ImGui::BeginTooltip();
+                            ImGui::Image(icon, { 200.0f, 150.0f });
+                            ImGui::EndTooltip();
+                        }
+                    }
                     ImGui::PopID();
                 }
             }
@@ -1648,6 +1655,15 @@ void GUI::renderSkinChangerWindow(bool contentOnly) noexcept
                     ImGui::PushID(i);
                     if (ImGui::Selectable(kits[i].name.c_str(), i == selected_sticker.kit_vector_index))
                         selected_sticker.kit_vector_index = i;
+
+                    if (ImGui::IsItemHovered()) {
+                        if (const auto icon = SkinChanger::getItemIconTexture(kits[i].iconPath)) {
+                            ImGui::BeginTooltip();
+                            ImGui::Image(icon, { 200.0f, 150.0f });
+                            ImGui::EndTooltip();
+                        }
+                    }
+
                     ImGui::PopID();
                 }
             }
@@ -2021,7 +2037,7 @@ void GUI::renderMedalChangerWindow(bool contentOnly) noexcept
     if (!contentOnly)
         ImGui::End();
 }
-
+/*
 void GUI::renderInventoryChangerWindow(bool contentOnly) noexcept
 {
     if (!contentOnly) {
@@ -2137,7 +2153,7 @@ void GUI::renderInventoryChangerWindow(bool contentOnly) noexcept
     if (!contentOnly)
         ImGui::End();
 }
-
+*/
 void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
 {
     if (!contentOnly) {

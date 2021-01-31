@@ -6,7 +6,6 @@
 #include "Messages.h"
 #include "ProtoWriter.h"
 #include "valve_parser.h"
-#include "../Hacks/InventoryChanger.h"
 #include <array>
 #define CAST(cast, address, add) reinterpret_cast<cast>((uint32_t)address + (uint32_t)add)
 
@@ -74,11 +73,11 @@ void Protobuffs::ReceiveMessage(void* thisPtr, void* oldEBP, uint32_t messageTyp
 		auto packet = ProfileChanger(pubDest, pcubMsgSize);
 		WritePacket(packet, thisPtr, oldEBP, pubDest, cubDest, pcubMsgSize);
 	}
-	else if (messageType == k_EMsgGCClientWelcome && config->inventory.enabled)
+	/*else if (messageType == k_EMsgGCClientWelcome && config->inventory.enabled)
 	{
 		auto packet = g_Inventory->Changer(pubDest, pcubMsgSize);
 		WritePacket(packet, thisPtr, oldEBP, pubDest, cubDest, pcubMsgSize);
-	}
+	}*/
 
 }
 
@@ -134,7 +133,7 @@ bool Protobuffs::SendMatchmakingClient2GCHello()
 
 	return result;
 }
-
+/*
 int Protobuffs::GetSlotID(int definition_index)
 {
 	switch (definition_index)
@@ -216,7 +215,7 @@ int Protobuffs::GetSlotID(int definition_index)
 	}
 }
 
-/*void Protobuffs::ParseSkins()
+void Protobuffs::ParseSkins()
 {
 	
 	valve_parser::Document doc;
