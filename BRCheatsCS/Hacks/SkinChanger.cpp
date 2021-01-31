@@ -17,9 +17,19 @@
 #include "../SDK/Localize.h"
 #include "../SDK/ModelInfo.h"
 #include "../SDK/EntityList.h"
+#include "../SDK/FileSystem.h"
 #include "../SDK/Entity.h"
 #include "../nSkinz/Utilities/vmt_smart_hook.hpp"
 #include "../SDK/GameEvent.h"
+
+#define STBI_ONLY_PNG
+#define STBI_NO_STDIO
+#define STB_IMAGE_IMPLEMENTATION
+#include "../stb_image.h"
+
+#include "../imgui/imgui.h"
+
+#include "../imgui/imgui_impl_dx9.h"
 
 static std::wstring toUpperWide(const std::string& s) noexcept
 {
@@ -42,7 +52,14 @@ void SkinChanger::initializeKits() noexcept
 
     const auto itemSchema = memory->itemSystem()->getItemSchema();
 
-    std::vector<std::pair<int, WeaponId>> kitsWeapons;
+    struct KitWeapon {
+        KitWeapon(int paintKit, WeaponId weaponId, const char* iconPath) noexcept : paintKit{ paintKit }, weaponId{ weaponId }, iconPath{ iconPath } {}
+        int paintKit;
+        WeaponId weaponId;
+        const char* iconPath;
+    };
+
+    std::vector<KitWeapon> kitsWeapons;
 
     for (int i = 0; i < itemSchema->getLootListCount(); ++i) {
         const auto& contents = itemSchema->getLootList(i)->getLootListContents();
