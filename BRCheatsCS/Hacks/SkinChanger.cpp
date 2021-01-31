@@ -1,28 +1,11 @@
 #include <algorithm>
+#include <cstring>
 #include <cwctype>
 #include <fstream>
-
-#include "../Interfaces.h"
-#include "../SDK/Entity.h"
-#include "SkinChanger.h"
-#include "../Config.h"
-#include "../SDK/Cvar.h"
-#include "../SDK/ConVar.h"
-
-#include "../SDK/Client.h"
-#include "../SDK/ClientClass.h"
-#include "../SDK/Engine.h"
-#include "../SDK/FrameStage.h"
-#include "../SDK/ItemSchema.h"
-#include "../SDK/Localize.h"
-#include "../SDK/ModelInfo.h"
-#include "../SDK/EntityList.h"
-#include "../SDK/FileSystem.h"
-#include "../SDK/Entity.h"
-#include "../nSkinz/Utilities/vmt_smart_hook.hpp"
-#include "../SDK/GameEvent.h"
+#include <unordered_set>
 
 #define STBI_ONLY_PNG
+#define STBI_NO_FAILURE_STRINGS
 #define STBI_NO_STDIO
 #define STB_IMAGE_IMPLEMENTATION
 #include "../stb_image.h"
@@ -30,6 +13,42 @@
 #include "../imgui/imgui.h"
 
 #include "../imgui/imgui_impl_dx9.h"
+
+
+#include "../Interfaces.h"
+
+#include "SkinChanger.h"
+#include "../Config.h"
+
+#include "../SDK/Client.h"
+#include "../SDK/ClientClass.h"
+#include "../SDK/ConVar.h"
+#include "../SDK/Cvar.h"
+#include "../SDK/Engine.h"
+#include "../SDK/Entity.h"
+#include "../SDK/EntityList.h"
+#include "../SDK/FileSystem.h"
+#include "../SDK/FrameStage.h"
+#include "../SDK/GameEvent.h"
+#include "../SDK/ItemSchema.h"
+#include "../SDK/Localize.h"
+#include "../SDK/ModelInfo.h"
+#include "../SDK/WeaponId.h"
+
+#include "../Helpers.h"
+
+
+
+item_setting* get_by_definition_index(WeaponId weaponId)
+{
+    const auto it = std::find_if(config->skinChanger.begin(), config->skinChanger.end(), [weaponId](const item_setting& e) { return e.enabled && e.itemId == weaponId; });
+    return it == config->skinChanger.end() ? nullptr : &*it;
+}
+
+static constexpr auto is_knife(WeaponId id)
+{
+    return (id >= WeaponId::Bayonet && id < WeaponId::GloveStuddedBloodhound) || id == WeaponId::KnifeT || id == WeaponId::Knife;
+}
 
 static std::wstring toUpperWide(const std::string& s) noexcept
 {
@@ -41,12 +60,17 @@ static std::wstring toUpperWide(const std::string& s) noexcept
     return upperCase;
 }
 
-static std::vector<SkinChanger::PaintKit> skinKits{ { 0, "-", L"-" } };
+static std::vector<SkinChanger::PaintKit> skinKits{ { 0, "-" } };
 static std::vector<SkinChanger::PaintKit> gloveKits;
-static std::vector<SkinChanger::PaintKit> stickerKits{ { 0, "None", L"NONE" } };
 
-void SkinChanger::initializeKits() noexcept
+static void initializeKits() noexcept
 {
+
+    static bool initalized = false;
+    if (initalized)
+        return;
+    initalized = true;
+
     const std::locale original;
     std::locale::global(std::locale{ "en_US.utf8" });
 
@@ -92,17 +116,31 @@ void SkinChanger::initializeKits() noexcept
             name = interfaces->localize->findAsUTF8(itemSchema->getItemDefinitionInterface(it->second)->getItemBaseName());
             name += " | ";
         }
+        else if (paintKit->id >= 10000) {
+            const std::string_view gloveName{ paintKit->name.data() };
+
+            if (gloveName.starts_with("bloodhound"))
+                name = interfaces->localize->findAsUTF8("CSGO_Wearable_t_studdedgloves");
+            else if (gloveName.starts_with("motorcycle"))
+                name = interfaces->localize->findAsUTF8("CSGO_Wearable_v_motorcycle_glove");
+            else if (gloveName.starts_with("slick"))
+                name = interfaces->localize->findAsUTF8("CSGO_Wearable_v_slick_glove");
+            else if (gloveName.starts_with("sporty"))
+                name = interfaces->localize->findAsUTF8("CSGO_Wearable_v_sporty_glove");
+            else if (gloveName.starts_with("specialist"))
+                name = interfaces->localize->findAsUTF8("CSGO_Wearable_v_specialist_glove");
+            else if (gloveName.starts_with("operation10"))
+                name = interfaces->localize->findAsUTF8("CSGO_Wearable_t_studded_brokenfang_gloves");
+            else if (gloveName.starts_with("handwrap"))
+                name = interfaces->localize->findAsUTF8("CSGO_Wearable_v_leather_handwrap");
+            else
+                assert(false);
+
+            name += " | ";
 
         name += interfaces->localize->findAsUTF8(paintKit->itemName.data() + 1);
 
-        if (paintKit->id < 10000) {
-            skinKits.emplace_back(paintKit->id, name, toUpperWide(name));
-        } else {
-            std::string_view gloveName{ paintKit->name.data() };
-            name += ' ';
-            name += '(' + std::string{ gloveName.substr(0, gloveName.find('_')) } + ')';
-            gloveKits.emplace_back(paintKit->id, name, toUpperWide(name));
-        }
+        (paintKit->id < 10000 ? skinKits : gloveKits).emplace_back(paintKit->id, name, toUpperWide(name));
     }
 
     std::sort(skinKits.begin() + 1, skinKits.end());
@@ -477,4 +515,232 @@ const std::vector<SkinChanger::PaintKit>& SkinChanger::getGloveKits() noexcept
 const std::vector<SkinChanger::PaintKit>& SkinChanger::getStickerKits() noexcept
 {
     return stickerKits;
+}
+
+const std::vector<SkinChanger::Quality>& SkinChanger::getQualities() noexcept
+{
+    static std::vector<Quality> qualities;
+    if (qualities.empty()) {
+        for (const auto& node : memory->itemSystem()->getItemSchema()->qualities) {
+            const auto quality = node.value;
+            if (const auto localizedName = interfaces->localize->findAsUTF8(quality.name); localizedName != quality.name)
+                qualities.emplace_back(quality.value, localizedName);
+        }
+
+        if (qualities.empty()) // fallback
+            qualities.emplace_back(0, "Default");
+    }
+
+    return qualities;
+}
+
+const std::vector<SkinChanger::Item>& SkinChanger::getGloveTypes() noexcept
+{
+    static std::vector<SkinChanger::Item> gloveTypes;
+    if (gloveTypes.empty()) {
+        gloveTypes.emplace_back(WeaponId{}, "Default");
+
+        const auto itemSchema = memory->itemSystem()->getItemSchema();
+        for (int i = 0; i <= itemSchema->itemsSorted.lastAlloc; i++) {
+            const auto item = itemSchema->itemsSorted.memory[i].value;
+            if (std::strcmp(item->getItemTypeName(), "#Type_Hands") == 0)
+                gloveTypes.emplace_back(item->getWeaponId(), interfaces->localize->findAsUTF8(item->getItemBaseName()));
+        }
+    }
+
+    return gloveTypes;
+}
+
+const std::vector<SkinChanger::Item>& SkinChanger::getKnifeTypes() noexcept
+{
+    static std::vector<SkinChanger::Item> knifeTypes;
+    if (knifeTypes.empty()) {
+        knifeTypes.emplace_back(WeaponId{}, "Default");
+
+        const auto itemSchema = memory->itemSystem()->getItemSchema();
+        for (int i = 0; i <= itemSchema->itemsSorted.lastAlloc; i++) {
+            const auto item = itemSchema->itemsSorted.memory[i].value;
+            if (std::strcmp(item->getItemTypeName(), "#CSGO_Type_Knife") == 0 && item->getRarity() == 6)
+                knifeTypes.emplace_back(item->getWeaponId(), interfaces->localize->findAsUTF8(item->getItemBaseName()));
+        }
+    }
+
+    return knifeTypes;
+}
+
+SkinChanger::PaintKit::PaintKit(int id, std::wstring&& name) noexcept : id(id), nameUpperCase(std::move(name))
+{
+    this->name = interfaces->localize->convertUnicodeToAnsi(nameUpperCase.c_str());
+    nameUpperCase = Helpers::toUpper(nameUpperCase);
+}
+
+SkinChanger::PaintKit::PaintKit(int id, const std::string& name) noexcept : id(id), name(name)
+{
+    nameUpperCase = Helpers::toUpper(Helpers::toWideString(name));
+}
+
+static int random(int min, int max) noexcept
+{
+    return rand() % (max - min + 1) + min;
+}
+
+static int get_new_animation(const uint32_t model, const int sequence) noexcept
+{
+    enum Sequence
+    {
+        SEQUENCE_DEFAULT_DRAW = 0,
+        SEQUENCE_DEFAULT_IDLE1 = 1,
+        SEQUENCE_DEFAULT_IDLE2 = 2,
+        SEQUENCE_DEFAULT_LIGHT_MISS1 = 3,
+        SEQUENCE_DEFAULT_LIGHT_MISS2 = 4,
+        SEQUENCE_DEFAULT_HEAVY_MISS1 = 9,
+        SEQUENCE_DEFAULT_HEAVY_HIT1 = 10,
+        SEQUENCE_DEFAULT_HEAVY_BACKSTAB = 11,
+        SEQUENCE_DEFAULT_LOOKAT01 = 12,
+
+        SEQUENCE_BUTTERFLY_DRAW = 0,
+        SEQUENCE_BUTTERFLY_DRAW2 = 1,
+        SEQUENCE_BUTTERFLY_LOOKAT01 = 13,
+        SEQUENCE_BUTTERFLY_LOOKAT03 = 15,
+
+        SEQUENCE_FALCHION_IDLE1 = 1,
+        SEQUENCE_FALCHION_HEAVY_MISS1 = 8,
+        SEQUENCE_FALCHION_HEAVY_MISS1_NOFLIP = 9,
+        SEQUENCE_FALCHION_LOOKAT01 = 12,
+        SEQUENCE_FALCHION_LOOKAT02 = 13,
+
+        SEQUENCE_DAGGERS_IDLE1 = 1,
+        SEQUENCE_DAGGERS_LIGHT_MISS1 = 2,
+        SEQUENCE_DAGGERS_LIGHT_MISS5 = 6,
+        SEQUENCE_DAGGERS_HEAVY_MISS2 = 11,
+        SEQUENCE_DAGGERS_HEAVY_MISS1 = 12,
+
+        SEQUENCE_BOWIE_IDLE1 = 1,
+    };
+
+    // Hashes for best performance.
+    switch (model) {
+    case fnv::hash("models/weapons/v_knife_butterfly.mdl"):
+    {
+        switch (sequence)
+        {
+        case SEQUENCE_DEFAULT_DRAW:
+            return random(SEQUENCE_BUTTERFLY_DRAW, SEQUENCE_BUTTERFLY_DRAW2);
+        case SEQUENCE_DEFAULT_LOOKAT01:
+            return random(SEQUENCE_BUTTERFLY_LOOKAT01, SEQUENCE_BUTTERFLY_LOOKAT03);
+        default:
+            return sequence + 1;
+        }
+    }
+    case fnv::hash("models/weapons/v_knife_falchion_advanced.mdl"):
+    {
+        switch (sequence)
+        {
+        case SEQUENCE_DEFAULT_IDLE2:
+            return SEQUENCE_FALCHION_IDLE1;
+        case SEQUENCE_DEFAULT_HEAVY_MISS1:
+            return random(SEQUENCE_FALCHION_HEAVY_MISS1, SEQUENCE_FALCHION_HEAVY_MISS1_NOFLIP);
+        case SEQUENCE_DEFAULT_LOOKAT01:
+            return random(SEQUENCE_FALCHION_LOOKAT01, SEQUENCE_FALCHION_LOOKAT02);
+        case SEQUENCE_DEFAULT_DRAW:
+        case SEQUENCE_DEFAULT_IDLE1:
+            return sequence;
+        default:
+            return sequence - 1;
+        }
+    }
+    case fnv::hash("models/weapons/v_knife_push.mdl"):
+    {
+        switch (sequence)
+        {
+        case SEQUENCE_DEFAULT_IDLE2:
+            return SEQUENCE_DAGGERS_IDLE1;
+        case SEQUENCE_DEFAULT_LIGHT_MISS1:
+        case SEQUENCE_DEFAULT_LIGHT_MISS2:
+            return random(SEQUENCE_DAGGERS_LIGHT_MISS1, SEQUENCE_DAGGERS_LIGHT_MISS5);
+        case SEQUENCE_DEFAULT_HEAVY_MISS1:
+            return random(SEQUENCE_DAGGERS_HEAVY_MISS2, SEQUENCE_DAGGERS_HEAVY_MISS1);
+        case SEQUENCE_DEFAULT_HEAVY_HIT1:
+        case SEQUENCE_DEFAULT_HEAVY_BACKSTAB:
+        case SEQUENCE_DEFAULT_LOOKAT01:
+            return sequence + 3;
+        case SEQUENCE_DEFAULT_DRAW:
+        case SEQUENCE_DEFAULT_IDLE1:
+            return sequence;
+        default:
+            return sequence + 2;
+        }
+    }
+    case fnv::hash("models/weapons/v_knife_survival_bowie.mdl"):
+    {
+        switch (sequence)
+        {
+        case SEQUENCE_DEFAULT_DRAW:
+        case SEQUENCE_DEFAULT_IDLE1:
+            return sequence;
+        case SEQUENCE_DEFAULT_IDLE2:
+            return SEQUENCE_BOWIE_IDLE1;
+        default:
+            return sequence - 1;
+        }
+    }
+    case fnv::hash("models/weapons/v_knife_ursus.mdl"):
+    case fnv::hash("models/weapons/v_knife_skeleton.mdl"):
+    case fnv::hash("models/weapons/v_knife_outdoor.mdl"):
+    case fnv::hash("models/weapons/v_knife_cord.mdl"):
+    case fnv::hash("models/weapons/v_knife_canis.mdl"):
+    {
+        switch (sequence)
+        {
+        case SEQUENCE_DEFAULT_DRAW:
+            return random(SEQUENCE_BUTTERFLY_DRAW, SEQUENCE_BUTTERFLY_DRAW2);
+        case SEQUENCE_DEFAULT_LOOKAT01:
+            return random(SEQUENCE_BUTTERFLY_LOOKAT01, 14);
+        default:
+            return sequence + 1;
+        }
+    }
+    case fnv::hash("models/weapons/v_knife_stiletto.mdl"):
+    {
+        switch (sequence)
+        {
+        case SEQUENCE_DEFAULT_LOOKAT01:
+            return random(12, 13);
+        }
+    }
+    case fnv::hash("models/weapons/v_knife_widowmaker.mdl"):
+    {
+        switch (sequence)
+        {
+        case SEQUENCE_DEFAULT_LOOKAT01:
+            return random(14, 15);
+        }
+    }
+    default:
+        return sequence;
+    }
+}
+
+void SkinChanger::fixKnifeAnimation(Entity* viewModelWeapon, long& sequence) noexcept
+{
+    if (!localPlayer)
+        return;
+
+    const auto activeWeapon = localPlayer->getActiveWeapon();
+    if (!activeWeapon)
+        return;
+
+    if (!is_knife(viewModelWeapon->itemDefinitionIndex2())))
+        return;
+
+    const auto active_conf = get_by_definition_index(WEAPON_KNIFE);
+    if (!active_conf || !active_conf->definition_override_index)
+        return;
+
+    const auto def = memory->itemSystem()->getItemSchema()->getItemDefinitionInterface(WeaponId(active_conf->definition_override_index));
+    if (!def)
+        return;
+
+    if (const auto model = def->getPlayerDisplayModel())
+        sequence = get_new_animation(fnv::hashRuntime(model), sequence);
 }

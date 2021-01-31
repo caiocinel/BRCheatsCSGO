@@ -1518,6 +1518,7 @@ void GUI::renderSkinChangerWindow(bool contentOnly) noexcept
         ImGui::Begin(phrases[XorString("window_skinchanger")].c_str(), &window.skinChanger, windowFlags);
     }
 
+    SkinChanger::initializeKits();
     static auto itemIndex = 0;
 
     ImGui::PushItemWidth(110.0f);
@@ -1568,9 +1569,9 @@ void GUI::renderSkinChangerWindow(bool contentOnly) noexcept
         }
 
         ImGui::Combo(phrases[XorString("skinchanger_quality")].c_str(), &selected_entry.entity_quality_vector_index, [](void* data, int idx, const char** out_text) {
-            *out_text = game_data::quality_names[idx].name;
+            *out_text = SkinChanger::getQualities()[idx].name.c_str(); 
             return true;
-            }, nullptr, IM_ARRAYSIZE(game_data::quality_names), 5);
+            }, nullptr, SkinChanger::getQualities().size(), 5);
 
         ImGui::InputInt(phrases[XorString("skinchanger_seed")].c_str(), &selected_entry.seed);
 
@@ -1581,14 +1582,14 @@ void GUI::renderSkinChangerWindow(bool contentOnly) noexcept
         ImGui::SliderFloat(phrases[XorString("skinchanger_wear")].c_str(), &selected_entry.wear, FLT_MIN, 1.f, XorString("%.10f"), ImGuiSliderFlags_Logarithmic);
         if (itemIndex == 0) {
             ImGui::Combo(phrases[XorString("skinchanger_knife")].c_str(), &selected_entry.definition_override_vector_index, [](void* data, int idx, const char** out_text) {
-                *out_text = game_data::knife_names[idx].name;
+                *out_text = SkinChanger::getKnifeTypes()[idx].name.c_str();
                 return true;
-                }, nullptr, IM_ARRAYSIZE(game_data::knife_names), 5);
+                }, nullptr, SkinChanger::getKnifeTypes().size(), 5);
         } else if (itemIndex == 1) {
             ImGui::Combo(phrases[XorString("skinchanger_glove")].c_str(), &selected_entry.definition_override_vector_index, [](void* data, int idx, const char** out_text) {
-                *out_text = game_data::glove_names[idx].name;
+                *out_text = SkinChanger::getGloveTypes()[idx].name.c_str();
                 return true;
-                }, nullptr, IM_ARRAYSIZE(game_data::glove_names), 5);
+                }, nullptr, SkinChanger::getGloveTypes().size(), 5);
         }
 
         ImGui::InputText(phrases[XorString("skinchanger_nametag")].c_str(), selected_entry.custom_name, 32);
@@ -1599,7 +1600,7 @@ void GUI::renderSkinChangerWindow(bool contentOnly) noexcept
     {
         ImGui::PushID(XorString("sticker"));
 
-        static auto selectedStickerSlot = 0;
+        static std::size_t selectedStickerSlot = 0;
 
         ImGui::PushItemWidth(-1);
 

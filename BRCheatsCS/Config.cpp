@@ -5,6 +5,7 @@
 
 #include "Config.h"
 #include "Helpers.h"
+#include "SDK/WeaponId.h"
 
 #ifdef _WIN32
 int CALLBACK fontCallback(const LOGFONTW* lpelfe, const TEXTMETRICW*, DWORD, LPARAM lParam)
@@ -69,6 +70,15 @@ static typename std::enable_if_t<!std::is_same_v<T, bool>> read(const json& j, c
         return;
 
     if (const auto& val = j[key]; val.type() == Type)
+        val.get_to(o);
+}
+
+static void read(const json& j, const char* key, WeaponId& o) noexcept
+{
+    if (!j.contains(key))
+        return;
+
+    if (const auto& val = j[key]; val.is_number_integer())
         val.get_to(o);
 }
 
@@ -539,25 +549,21 @@ static void from_json(const json& j, Config::Visuals& v)
 static void from_json(const json& j, sticker_setting& s)
 {
     read(j, "Kit", s.kit);
-    read(j, "Kit vector index", s.kit_vector_index);
     read(j, "Wear", s.wear);
     read(j, "Scale", s.scale);
     read(j, "Rotation", s.rotation);
+    s.onLoad();
 }
 
 static void from_json(const json& j, item_setting& i)
 {
     read(j, "Enabled", i.enabled);
     read(j, "Definition index", i.itemId);
-    read(j, "Definition vector index", i.itemIdIndex);
     read(j, "Quality", i.quality);
-    read(j, "Quality vector index", i.entity_quality_vector_index);
 
     read(j, "Paint Kit", i.paintKit);
-    read(j, "Paint Kit vector index", i.paint_kit_vector_index);
 
     read(j, "Definition override", i.definition_override_index);
-    read(j, "Definition override vector index", i.definition_override_vector_index);
 
     read(j, "Seed", i.seed);
     read(j, "StatTrak", i.stat_trak);
@@ -567,6 +573,8 @@ static void from_json(const json& j, item_setting& i)
         strncpy_s(i.custom_name, j["Custom name"].get<std::string>().c_str(), _TRUNCATE);
 
     read(j, "Stickers", i.stickers);
+
+    i.onLoad();
 }
 
 static void from_json(const json& j, Config::Sound::Player& p)
@@ -1264,7 +1272,6 @@ static void to_json(json& j, const sticker_setting& o)
     const sticker_setting dummy;
 
     WRITE("Kit", kit);
-    WRITE("Kit vector index", kit_vector_index);
     WRITE("Wear", wear);
     WRITE("Scale", scale);
     WRITE("Rotation", rotation);
@@ -1276,13 +1283,9 @@ static void to_json(json& j, const item_setting& o)
 
     WRITE("Enabled", enabled);
     WRITE("Definition index", itemId);
-    WRITE("Definition vector index", itemIdIndex);
     WRITE("Quality", quality);
-    WRITE("Quality vector index", entity_quality_vector_index);
     WRITE("Paint Kit", paintKit);
-    WRITE("Paint Kit vector index", paint_kit_vector_index);
     WRITE("Definition override", definition_override_index);
-    WRITE("Definition override vector index", definition_override_vector_index);
     WRITE("Seed", seed);
     WRITE("StatTrak", stat_trak);
     WRITE("Wear", wear);

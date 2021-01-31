@@ -6,6 +6,8 @@
 #include "UtlVector.h"
 #include "VirtualMethod.h"
 
+#define WIN32_LINUX(win32, linux) win32
+
 enum class WeaponId : short;
 
 template <typename T>
@@ -41,6 +43,8 @@ struct UtlMap {
     Node<Key, Value>* elements;
 };
 
+
+
 struct String {
     UtlMemory<char> buffer;
     int length;
@@ -68,31 +72,31 @@ struct StickerKit {
     String description;
     String itemName;
     PAD(2 * sizeof(String))
-        String inventoryImage;
+    String inventoryImage;
 };
 
 class EconItemDefinition {
 public:
     VIRTUAL_METHOD(WeaponId, getWeaponId, 0, (), (this))
-        VIRTUAL_METHOD(const char*, getItemBaseName, 2, (), (this))
-        VIRTUAL_METHOD(const char*, getItemTypeName, 3, (), (this))
-        VIRTUAL_METHOD(const char*, getPlayerDisplayModel, 6, (), (this))
-        VIRTUAL_METHOD(const char*, getWorldDisplayModel, 7, (), (this))
-        VIRTUAL_METHOD(std::uint8_t, getRarity, 12, (), (this))
+    VIRTUAL_METHOD(const char*, getItemBaseName, 2, (), (this))
+    VIRTUAL_METHOD(const char*, getItemTypeName, 3, (), (this))
+    VIRTUAL_METHOD(const char*, getPlayerDisplayModel, 6, (), (this))
+    VIRTUAL_METHOD(const char*, getWorldDisplayModel, 7, (), (this))
+    VIRTUAL_METHOD(std::uint8_t, getRarity, 12, (), (this))
 
-        int getCapabilities() noexcept
+    int getCapabilities() noexcept
     {
-        return *reinterpret_cast<int*>(this + 0x148);
+        return *reinterpret_cast<int*>(this + WIN32_LINUX(0x148, 0x1F8));
+    }
+
+    const char* getDefinitionName() noexcept
+    {
+        return *reinterpret_cast<const char**>(this + WIN32_LINUX(0x1BC, 0x2B0));
     }
 
     bool isPaintable() noexcept
     {
         return getCapabilities() & 1; // ITEM_CAP_PAINTABLE
-    }
-
-    const char* getDefinitionName() noexcept
-    {
-        return *reinterpret_cast<const char**>(this + 0x1BC);
     }
 };
 
@@ -105,6 +109,15 @@ struct ItemListEntry {
     {
         return static_cast<WeaponId>(itemDef);
     }
+};
+
+struct EconItemQualityDefinition {
+    int value;
+    const char* name;
+    unsigned weight;
+    bool explicitMatchesOnly;
+    bool canSupportSet;
+    const char* hexColor;
 };
 
 class EconLootListDefinition {
@@ -121,15 +134,6 @@ public:
         VIRTUAL_METHOD(int, getItemPaintKit, 6, (int index), (this, index))
 };
 
-struct EconItemQualityDefinition {
-    int value;
-    const char* name;
-    unsigned weight;
-    bool explicitMatchesOnly;
-    bool canSupportSet;
-    const char* hexColor;
-};
-
 struct AlternateIconData {
     String simpleName;
     String largeSimpleName;
@@ -139,19 +143,19 @@ struct AlternateIconData {
 
 class ItemSchema {
 public:
-    PAD(0x88)
-        UtlMap<int, EconItemQualityDefinition> qualities;
-    PAD(0x48)
-        UtlMap<int, EconItemDefinition*> itemsSorted;
-    PAD(0x104)
-        UtlMap<std::uint64_t, AlternateIconData> alternateIcons;
-    PAD(0x48)
-        UtlMap<int, PaintKit*> paintKits;
+    PAD(WIN32_LINUX(0x88, 0xB8))
+    UtlMap<int, EconItemQualityDefinition> qualities;
+    PAD(WIN32_LINUX(0x48, 0x60))
+    UtlMap<int, EconItemDefinition*> itemsSorted;
+    PAD(WIN32_LINUX(0x170, 0x1F8))
+    UtlMap<int, PaintKit*> paintKits;
     UtlMap<int, StickerKit*> stickerKits;
+
 
     VIRTUAL_METHOD(EconItemDefinition*, getItemDefinitionInterface, 4, (WeaponId id), (this, id))
         VIRTUAL_METHOD(const char*, getRarityName, 19, (uint8_t rarity), (this, rarity))
         VIRTUAL_METHOD(int, getItemSetCount, 28, (), (this))
+        VIRTUAL_METHOD(const char*, getItemTypeName, 3, (), (this))
         VIRTUAL_METHOD(EconItemSetDefinition*, getItemSet, 29, (int index), (this, index))
         VIRTUAL_METHOD(EconLootListDefinition*, getLootList, 32, (int index), (this, index))
         VIRTUAL_METHOD(int, getLootListCount, 34, (), (this))
