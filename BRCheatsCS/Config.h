@@ -515,7 +515,7 @@ public:
         int exp = 0;
         int ban_type = 0;
         int ban_time = 0;
-    } profileChanger;
+    } profilechanger;
 
     struct Style {
         int menuStyle{ 1 };

@@ -2188,25 +2188,25 @@ void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
         "The global elite"
     };
 
-        ImGui::Checkbox("Enabled##profile", &config->profileChanger.enabled);
+        ImGui::Checkbox("Enabled##profile", &config->profilechanger.enabled);
         ImGui::Text("Rank");
-        ImGui::Combo("##Rank", &config->profileChanger.rank, ranks_gui, ARRAYSIZE(ranks_gui));
+        ImGui::Combo("##Rank", &config->profilechanger.rank, ranks_gui, ARRAYSIZE(ranks_gui));
         ImGui::Text("Level");
-        ImGui::SliderInt("##Level", &config->profileChanger.level, 0, 40);
+        ImGui::SliderInt("##Level", &config->profilechanger.level, 0, 40);
         ImGui::Text("XP");
-        ImGui::InputInt("##Xp##level", &config->profileChanger.exp);
+        ImGui::InputInt("##Xp##level", &config->profilechanger.exp);
         ImGui::Text("Wins");
-        ImGui::InputInt("##Wins", &config->profileChanger.wins);
+        ImGui::InputInt("##Wins", &config->profilechanger.wins);
         ImGui::Text("Friend");
-        ImGui::InputInt("##Friend", &config->profileChanger.friendly);
+        ImGui::InputInt("##Friend", &config->profilechanger.friendly);
         ImGui::Text("Teach");
-        ImGui::InputInt("##Teach", &config->profileChanger.teach);
+        ImGui::InputInt("##Teach", &config->profilechanger.teach);
         ImGui::Text("Leader");
-        ImGui::InputInt("##Leader", &config->profileChanger.leader);
+        ImGui::InputInt("##Leader", &config->profilechanger.leader);
         ImGui::Text("Fake ban type");
-        ImGui::Combo("##fake-ban", &config->profileChanger.ban_type, bans_gui, IM_ARRAYSIZE(bans_gui));
+        ImGui::Combo("##fake-ban", &config->profilechanger.ban_type, bans_gui, IM_ARRAYSIZE(bans_gui));
         ImGui::Text("Fake ban time");
-        ImGui::SliderInt("##fake-ban-time", &config->profileChanger.ban_time, 0, 1000, "Seconds: %d");
+        ImGui::SliderInt("##fake-ban-time", &config->profilechanger.ban_time, 0, 1000, "Seconds: %d");
         ImGui::SetCursorPosX(ImGui::GetCursorPosX() + (250 / 2) - (190 / 2) - 20.f);
         if (ImGui::Button("Apply", ImVec2(190, 30)))
         {

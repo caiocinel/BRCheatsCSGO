@@ -386,7 +386,7 @@ static void from_json(const json& j, Config::Backtrack& b)
 
 static void from_json(const json& j, Config::AntiAim& a)
 {
-   read(j,"Enabled",a.general.enabled);
+    read(j,"Enabled",a.general.enabled);
 	read(j,"YawInverseAngleKey",a.general.yawInverseAngleKey);
 	read(j,"YawInverseKeyMode",a.general.yawInverseKeyMode);
 	read(j,"YawInversed",a.general.yawInversed);
@@ -610,6 +610,20 @@ static void from_json(const json& j, Config::Style& s)
     }
 }
 
+static void from_json(const json& j, Config::profileChanger& p)
+{
+    read(j, "Enabled", p.enabled);
+    read(j, "Friendly", p.friendly);
+    read(j, "Teach", p.teach);
+    read(j, "Leader", p.leader);
+    read(j, "Rank", p.rank);
+    read(j, "Wins", p.wins);
+    read(j, "Level", p.level);
+    read(j, "Exp", p.exp);
+    read(j, "Ban Type", p.ban_type);
+    read(j, "Ban Time", p.ban_time);
+}
+
 static void from_json(const json& j, PurchaseList& pl)
 {
     read(j, "Enabled", pl.enabled);
@@ -720,8 +734,8 @@ void Config::load(size_t id, bool incremental) noexcept
     else
         return;
 
-    if (!incremental)
-        reset();
+
+    reset();
 
     read(j, "Aimbot", aimbot);
     read(j, "Ragebot", ragebot);
@@ -735,6 +749,7 @@ void Config::load(size_t id, bool incremental) noexcept
     read(j, "Skin changer", skinChanger);
     read<value_t::object>(j, "Sound", sound);
     read<value_t::object>(j, "Style", style);
+    read<value_t::object>(j, "Profile changer", profilechanger);
     read<value_t::object>(j, "Misc", misc);
 }
 
@@ -1270,6 +1285,23 @@ static void to_json(json& j, const Config::Style& o)
         colors[ImGui::GetStyleColorName(i)] = style.Colors[i];
 }
 
+static void to_json(json& j, const Config::profileChanger& o)
+{
+    const Config::profileChanger dummy;
+
+    WRITE("Enabled", enabled);
+    WRITE("Friendly", friendly);
+    WRITE("Teach", teach);
+    WRITE("Leader", leader);
+    WRITE("Rank", rank);
+    WRITE("Wins", wins);
+    WRITE("Level", level);
+    WRITE("Exp", exp);
+    WRITE("Ban Type", ban_type);
+    WRITE("Ban Time", ban_time);
+
+}
+
 static void to_json(json& j, const sticker_setting& o)
 {
     const sticker_setting dummy;
@@ -1331,6 +1363,7 @@ void Config::save(size_t id) const noexcept
         j["Misc"] = misc;
         j["Style"] = style;
         j["Skin changer"] = skinChanger;
+        j["Profile changer"] = profilechanger;
 
         removeEmptyObjects(j);
         out << std::setw(2) << j;
@@ -1372,6 +1405,7 @@ void Config::reset() noexcept
     skinChanger = { };
     sound = { };
     style = { };
+    profilechanger = { };
     misc = { };
 }
 
