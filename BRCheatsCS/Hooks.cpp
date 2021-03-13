@@ -123,7 +123,6 @@ static HRESULT __stdcall present(IDirect3DDevice9* device, const RECT* src, cons
     StreamProofESP::render();
     Misc::purchaseList();
     Misc::spectatorList();
-    Misc::StatusBar();
     Misc::noscopeCrosshair(ImGui::GetBackgroundDrawList());
     Misc::recoilCrosshair(ImGui::GetBackgroundDrawList());
 	Misc::drawStartPos(ImGui::GetBackgroundDrawList(), quickPeekVector);

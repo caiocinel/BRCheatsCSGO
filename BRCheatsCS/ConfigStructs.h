@@ -144,13 +144,6 @@ struct ImGuiStruct
 
 };
 
-struct StatusBar : ImGuiStruct
-{
-	bool ShowPlayerRealViewAngles{ false };
-	bool ShowPlayerStatus{ false };
-	bool ShowGameGlobalVars{ false };
-};
-
 struct PreserveKillfeed {
     bool enabled = false;
     bool onlyHeadshots = false;

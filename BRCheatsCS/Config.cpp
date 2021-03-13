@@ -289,14 +289,6 @@ static void from_json(const json& j, ImGuiStruct& i)
     read(j, "No TittleBar",i.noTittleBar);
 }
 
-static void from_json(const json& j, StatusBar& s)
-{
-	from_json(j, static_cast<ImGuiStruct&>(s));
-    read(j, "Show Player Real ViewAngles", s.ShowPlayerRealViewAngles);
-    read(j, "Show Player Status", s.ShowPlayerStatus);
-    read(j, "Show GameGlobalVars", s.ShowGameGlobalVars);
-}
-
 static void from_json(const json& j, ImVec2& v)
 {
     read(j, "X", v.x);
@@ -878,14 +870,6 @@ static void to_json(json& j, const ImGuiStruct& o, const ImGuiStruct& dummy = {}
 	WRITE("Enabled", enabled);
 	WRITE("No BackGround", noBackGround);
 	WRITE("No TittleBar", noTittleBar);
-}
-
-static void to_json(json& j, const StatusBar& o, const StatusBar& dummy = {})
-{
-    to_json(j, static_cast<const ImGuiStruct&>(o), dummy);
-    WRITE("Show Player Real ViewAngles", ShowPlayerRealViewAngles);
-    WRITE("Show Player Status", ShowPlayerStatus);
-    WRITE("Show GameGlobalVars", ShowGameGlobalVars);
 }
 
 static void to_json(json& j, const ImVec2& o, const ImVec2& dummy = {})

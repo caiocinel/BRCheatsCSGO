@@ -631,7 +631,6 @@ public:
         std::string customKillSound;
         std::string customHitSound;
         PurchaseList purchaseList;
-            StatusBar Sbar;
         bool ragdollForce{ false };
         int ragdollForceStrength{ 1 };
 

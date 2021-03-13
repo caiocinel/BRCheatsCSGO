@@ -48,7 +48,6 @@ namespace Misc
     void playHitSound(GameEvent& event) noexcept;
     void killSound(GameEvent& event) noexcept;
     void purchaseList(GameEvent* event = nullptr) noexcept;
-    void StatusBar() noexcept;
 	void fakeDuck(UserCmd* cmd, bool& sendPacket) noexcept;
     float RandomFloat(float min, float max) noexcept;
     void chokePackets(bool& sendPacket, UserCmd* cmd) noexcept;
