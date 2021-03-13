@@ -632,7 +632,6 @@ public:
         std::string customHitSound;
         PurchaseList purchaseList;
             StatusBar Sbar;
-    	      ImGuiStruct ShotsCout;
         bool ragdollForce{ false };
         int ragdollForceStrength{ 1 };
 

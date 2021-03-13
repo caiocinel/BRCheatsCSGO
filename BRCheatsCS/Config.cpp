@@ -701,7 +701,6 @@ static void from_json(const json& j, Config::Misc& m)
     read<value_t::object>(j, "Custom Kill Sound", m.customKillSound);
     read<value_t::object>(j, "Purchase List", m.purchaseList);
     read<value_t::object>(j, "Status Bar", m.Sbar);
-	read<value_t::object>(j, "ShotsCout", m.ShotsCout);
     read<value_t::object>(j, "Reportbot", m.reportbot);
     read<value_t::object>(j, "Preserve Killfeed", m.preserveKillfeed);
     read(j, "Ragdoll force", m.ragdollForce);
@@ -1204,7 +1203,6 @@ static void to_json(json& j, const Config::Misc& o)
     WRITE("Custom Kill Sound", customKillSound);
     WRITE("Purchase List", purchaseList);
     WRITE("Status Bar",Sbar);
-	 WRITE("ShotsCout", ShotsCout);
     WRITE("Reportbot", reportbot);
     WRITE("Preserve Killfeed", preserveKillfeed);
     WRITE("Ragdoll force", ragdollForce);

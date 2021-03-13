@@ -255,7 +255,6 @@ void UpdateLanguage()
 		phrases[XorString("misc_purchaselist")] = XorString("Purchase List");
 		phrases[XorString("misc_onlyduringfreezetime")] = XorString("Only During Freeze Time");
 		phrases[XorString("misc_showprices")] = XorString("Show Prices");
-		phrases[XorString("misc_shotscount")] = XorString("Shots Count");
 		phrases[XorString("misc_statusbar")] = XorString("Status Bar");
 		phrases[XorString("misc_showviewangles")] = XorString("ShowViewAngles");
 		phrases[XorString("misc_showplayerstatus")] = XorString("ShowPlayerStatus");
@@ -534,7 +533,6 @@ void UpdateLanguage()
 	phrases[XorString("misc_purchaselist")] = XorString("Lista de Compras");
 	phrases[XorString("misc_onlyduringfreezetime")] = XorString("Somente no Freezetime");
 	phrases[XorString("misc_showprices")] = XorString("Mostrar Precos");
-	phrases[XorString("misc_shotscount")] = XorString("Indicadores de Tiro");
 	phrases[XorString("misc_statusbar")] = XorString("Barra de Status");
 	phrases[XorString("misc_showviewangles")] = XorString("ShowViewAngles");
 	phrases[XorString("misc_showplayerstatus")] = XorString("ShowPlayerStatus");
