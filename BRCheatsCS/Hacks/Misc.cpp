@@ -501,7 +501,7 @@ void Misc::drawBombTimer() noexcept
     }
 }
 
-void Misc::drawFov() noexcept
+void Misc::drawFov(ImDrawList* drawList) noexcept
 {
     if (!localPlayer || !localPlayer->isAlive())
         return;
@@ -530,7 +530,7 @@ void Misc::drawFov() noexcept
             interfaces->surface->setDrawColor(255, 10, 10, 255);
         else interfaces->surface->setDrawColor(10, 255, 10, 255);
         float radius = std::tan(degreesToRadians(config->aimbot[weaponId].fov / 2.f)) / std::tan(degreesToRadians(config->globals.currentFOV / 2.f)) * width;
-        interfaces->surface->drawOutlinedCircle(width / 2, heigth / 2, radius, 100);
+        drawList->AddCircle(ImGui::GetIO().DisplaySize / 2, radius, ImColor(1.f, 1.f, 1.f, 1.f), 32);
     }
 
 }
