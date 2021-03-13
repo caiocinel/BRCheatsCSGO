@@ -587,29 +587,6 @@ static void from_json(const json& j, Config::Sound& s)
     read(j, "Players", s.players);
 }
 
-static void from_json(const json& j, Config::Style& s)
-{
-    read(j, "Menu style", s.menuStyle);
-    read(j, "Menu colors", s.menuColors);
-
-    if (j.contains("Colors") && j["Colors"].is_object()) {
-        const auto& colors = j["Colors"];
-
-        ImGuiStyle& style = ImGui::GetStyle();
-
-        for (int i = 0; i < ImGuiCol_COUNT; i++) {
-            if (const char* name = ImGui::GetStyleColorName(i); colors.contains(name)) {
-                std::array<float, 4> temp;
-                read(colors, name, temp);
-                style.Colors[i].x = temp[0];
-                style.Colors[i].y = temp[1];
-                style.Colors[i].z = temp[2];
-                style.Colors[i].w = temp[3];
-            }
-        }
-    }
-}
-
 static void from_json(const json& j, Config::profileChanger& p)
 {
     read(j, "Enabled", p.enabled);
@@ -748,7 +725,6 @@ void Config::load(size_t id, bool incremental) noexcept
     read<value_t::object>(j, "Visuals", visuals);
     read(j, "Skin changer", skinChanger);
     read<value_t::object>(j, "Sound", sound);
-    read<value_t::object>(j, "Style", style);
     read<value_t::object>(j, "Profile changer", profilechanger);
     read<value_t::object>(j, "Misc", misc);
 }
@@ -1271,20 +1247,6 @@ static void to_json(json& j, const ImVec4& o)
     j[3] = o.w;
 }
 
-static void to_json(json& j, const Config::Style& o)
-{
-    const Config::Style dummy;
-
-    WRITE("Menu style", menuStyle);
-    WRITE("Menu colors", menuColors);
-
-    auto& colors = j["Colors"];
-    ImGuiStyle& style = ImGui::GetStyle();
-
-    for (int i = 0; i < ImGuiCol_COUNT; i++)
-        colors[ImGui::GetStyleColorName(i)] = style.Colors[i];
-}
-
 static void to_json(json& j, const Config::profileChanger& o)
 {
     const Config::profileChanger dummy;
@@ -1361,7 +1323,6 @@ void Config::save(size_t id) const noexcept
         j["Sound"] = sound;
         j["Visuals"] = visuals;
         j["Misc"] = misc;
-        j["Style"] = style;
         j["Skin changer"] = skinChanger;
         j["Profile changer"] = profilechanger;
 
@@ -1404,7 +1365,6 @@ void Config::reset() noexcept
     visuals = { };
     skinChanger = { };
     sound = { };
-    style = { };
     profilechanger = { };
     misc = { };
 }
