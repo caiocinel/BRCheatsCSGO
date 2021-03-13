@@ -15,6 +15,7 @@ public:
 		ImFont* segoeui = nullptr;
         ImFont* arial = nullptr;
 	} fonts;
+        bool isOpen() noexcept { return open; }
 private:
     static void hotkey(int&) noexcept;
     void updateColors() const noexcept;

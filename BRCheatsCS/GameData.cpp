@@ -68,7 +68,8 @@ void GameData::update() noexcept
             if (entity->isAlive())
                 playerData.emplace_back(entity);
             else if (const auto obs = entity->getObserverTarget())
-                observerData.emplace_back(entity, obs, obs == localPlayer.get());
+                if(!entity->isDormant() && !entity->isAlive())
+                    observerData.emplace_back(entity, obs, obs == localPlayer.get());
         }
         else {
             if (entity->isWeapon()) {
@@ -462,9 +463,4 @@ LootCrateData::LootCrateData(Entity* entity) noexcept : BaseData{ entity }
     }(model->name);
 }
 
-ObserverData::ObserverData(Entity* entity, Entity* obs, bool targetIsLocalPlayer) noexcept
-{
-    entity->getPlayerName(name);
-    obs->getPlayerName(target);
-    this->targetIsLocalPlayer = targetIsLocalPlayer;
-}
+ObserverData::ObserverData(Entity* entity, Entity* obs, bool targetIsLocalPlayer) noexcept : playerHandle{ entity->handle() }, targetHandle{ obs->handle() }, targetIsLocalPlayer{ targetIsLocalPlayer } {}

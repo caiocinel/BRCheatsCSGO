@@ -549,7 +549,16 @@ public:
         bool revealRanks{ false };
         bool revealMoney{ false };
         bool revealSuspect{ false };
-        ColorToggle spectatorList;
+        
+        struct SpectatorList {
+            bool enabled = false;
+            bool noTitleBar = false;
+            ImVec2 pos;
+            ImVec2 size{ 200.0f, 200.0f };
+        };
+
+        SpectatorList spectatorList;
+
         ColorToggle watermark;
         bool fixAnimationLOD{ false };
         bool fixBoneMatrix{ false };

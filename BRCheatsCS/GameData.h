@@ -99,19 +99,34 @@ struct ProjectileData : BaseData {
     std::vector<std::pair<float, Vector>> trajectory;
 };
 
+enum class Team;
+
 struct PlayerData : BaseData {
     PlayerData(Entity* entity) noexcept;
+    PlayerData(const PlayerData&) = delete;
+    PlayerData& operator=(const PlayerData&) = delete;
+    PlayerData(PlayerData&&) = default;
+    PlayerData& operator=(PlayerData&&) = default;
 
+    //void update(Entity* entity) noexcept;
+    //ImTextureID getAvatarTexture() const noexcept;
+
+    bool dormant;
     bool enemy = false;
     bool visible = false;
     bool audible;
     bool spotted;
+    bool inViewFrustum;
+    bool alive;
     float flashDuration;
     int health;
+    int handle;
+    Team team;
     char name[128];
+    Vector headMins, headMaxs;
+    Vector origin;
     std::string activeWeapon;
     std::vector<std::pair<Vector, Vector>> bones;
-    Vector headMins, headMaxs;
 };
 
 struct WeaponData : BaseData {
@@ -133,7 +148,7 @@ struct LootCrateData : BaseData {
 struct ObserverData {
     ObserverData(Entity* entity, Entity* obs, bool targetIsLocalPlayer) noexcept;
 
-    char name[128];
-    char target[128];
+    int playerHandle;
+    int targetHandle;
     bool targetIsLocalPlayer;
 };

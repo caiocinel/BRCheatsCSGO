@@ -1705,12 +1705,23 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     hotkey(config->misc.menuKey);
 
     ImGui::Checkbox(phrases[XorString("misc_radarhack")].c_str(), &config->misc.radarHack);
-    ImGuiCustom::colorPicker(phrases[XorString("misc_spectatorlist")].c_str(), config->misc.spectatorList);
+
+    ImGui::Checkbox(phrases[XorString("misc_spectatorlist")].c_str(), &config->misc.spectatorList.enabled);
+    ImGui::SameLine();
+
+    ImGui::PushID(phrases[XorString("misc_spectatorlist")].c_str());
+    if (ImGui::Button(phrases[XorString("global_threedots")].c_str()))
+        ImGui::OpenPopup("");
+
+    if (ImGui::BeginPopup("")) {
+        ImGui::Checkbox(phrases[XorString("global_notitle")].c_str(), &config->misc.spectatorList.noTitleBar);
+        ImGui::EndPopup();
+    }
+    ImGui::PopID();
 
     ImGui::Checkbox(phrases[XorString("misc_revealranks")].c_str(), &config->misc.revealRanks);
     ImGui::Checkbox(phrases[XorString("misc_revealmoney")].c_str(), &config->misc.revealMoney);
     ImGui::Checkbox(phrases[XorString("misc_revealsuspect")].c_str(), &config->misc.revealSuspect);
-    ImGui::Checkbox(phrases[XorString("misc_fixmovement")].c_str(), &config->misc.fixMovement);
     ImGui::Checkbox(phrases[XorString("misc_disablemodelocclusion")].c_str(), &config->misc.disableModelOcclusion);
     ImGui::Checkbox(phrases[XorString("misc_antiafkkick")].c_str(), &config->misc.antiAfkKick);
     ImGui::Checkbox(phrases[XorString("misc_autostrafe")].c_str(), &config->misc.autoStrafe);
@@ -1726,9 +1737,6 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     ImGui::Checkbox(phrases[XorString("misc_fastplant")].c_str(), &config->misc.fastPlant);
     ImGui::Checkbox(phrases[XorString("misc_faststop")].c_str(), &config->misc.fastStop);
     ImGuiCustom::colorPicker(phrases[XorString("misc_bombtimer")].c_str(), config->misc.bombTimer);
-    ImGui::Checkbox(phrases[XorString("misc_bombdamage")].c_str(), &config->misc.bombDamage);
-    ImGui::Checkbox(phrases[XorString("misc_quickreload")].c_str(), &config->misc.quickReload);
-    ImGui::Checkbox(phrases[XorString("misc_preparerevolver")].c_str(), &config->misc.prepareRevolver);
     ImGui::SameLine();
     hotkey(config->misc.prepareRevolverKey);
 
@@ -1785,10 +1793,13 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
         }
     }
 
-    ImGui::Checkbox(phrases[XorString("misc_grenadeprediction")].c_str(), &config->misc.nadePredict);
     ImGui::SetNextItemWidth(120.0f);
     ImGui::SliderFloat(phrases[XorString("misc_maxangledelta")].c_str(), &config->misc.maxAngleDelta, 0.0f, 255.0f, "%.2f");
     ImGui::SliderFloat(phrases[XorString("misc_aspectratio")].c_str(), &config->misc.aspectratio, 0.0f, 5.0f, "%.2f");
+    ImGui::Checkbox(phrases[XorString("misc_grenadeprediction")].c_str(), &config->misc.nadePredict);
+    ImGui::Checkbox(phrases[XorString("misc_bombdamage")].c_str(), &config->misc.bombDamage);
+    ImGui::Checkbox(phrases[XorString("misc_quickreload")].c_str(), &config->misc.quickReload);
+    ImGui::Checkbox(phrases[XorString("misc_preparerevolver")].c_str(), &config->misc.prepareRevolver);
     ImGui::Checkbox(phrases[XorString("misc_fakeprime")].c_str(), &config->misc.fakePrime);
 
     ImGui::Checkbox(phrases[XorString("misc_fakeduck")].c_str(), &config->misc.fakeDuck);
@@ -1825,37 +1836,6 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
         ImGui::EndPopup();
     }
     ImGui::PopID();
-
-	ImGui::Checkbox(phrases[XorString("misc_shotscount")].c_str(), &config->misc.ShotsCout.enabled);
-    ImGui::PushID(XorString("Shots Cout"));
-    ImGui::SameLine();
-    if (ImGui::Button(phrases[XorString("global_threedots")].c_str()))
-        ImGui::OpenPopup(XorString("A"));
-
-    if (ImGui::BeginPopup(XorString("A"))){
-        ImGui::Checkbox(phrases[XorString("global_nobackground")].c_str(), &config->misc.ShotsCout.noBackGround);
-        ImGui::Checkbox(phrases[XorString("global_notitle")].c_str(), &config->misc.ShotsCout.noTittleBar);
-        ImGui::EndPopup();
-    }
-    ImGui::PopID();
-
-
-	ImGui::Checkbox(phrases[XorString("misc_statusbar")].c_str(), &config->misc.Sbar.enabled);
-	ImGui::SameLine();
-
-	ImGui::PushID(XorString("StatusBar"));
-	if (ImGui::Button(phrases[XorString("global_threedots")].c_str()))
-		ImGui::OpenPopup(XorString("S"));
-
-	if (ImGui::BeginPopup(XorString("S"))) {
-		ImGui::Checkbox(phrases[XorString("global_nobackground")].c_str(), &config->misc.Sbar.noBackGround);
-		ImGui::Checkbox(phrases[XorString("global_notitle")].c_str(), &config->misc.Sbar.noTittleBar);
-		ImGui::Checkbox(phrases[XorString("misc_showviewangles")].c_str(), &config->misc.Sbar.ShowPlayerRealViewAngles);
-		ImGui::Checkbox(phrases[XorString("misc_showplayerstatus")].c_str(), &config->misc.Sbar.ShowPlayerStatus);
-		ImGui::Checkbox(phrases[XorString("misc_showgameglobalvars")].c_str(), &config->misc.Sbar.ShowGameGlobalVars);
-		ImGui::EndPopup();
-	}
-	ImGui::PopID();
 
     ImGui::Checkbox(phrases[XorString("misc_reportbot")].c_str(), &config->misc.reportbot.enabled);
     ImGui::SameLine();
