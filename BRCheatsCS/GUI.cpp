@@ -1737,6 +1737,8 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     ImGui::Checkbox(phrases[XorString("misc_fastplant")].c_str(), &config->misc.fastPlant);
     ImGui::Checkbox(phrases[XorString("misc_faststop")].c_str(), &config->misc.fastStop);
     ImGuiCustom::colorPicker(phrases[XorString("misc_bombtimer")].c_str(), config->misc.bombTimer);
+    ImGui::Checkbox(phrases[XorString("misc_bombdamage")].c_str(), &config->misc.bombDamage);
+    ImGui::Checkbox(phrases[XorString("misc_grenadeprediction")].c_str(), &config->misc.nadePredict);
     ImGui::SameLine();
     hotkey(config->misc.prepareRevolverKey);
 
@@ -1796,8 +1798,6 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     ImGui::SetNextItemWidth(120.0f);
     ImGui::SliderFloat(phrases[XorString("misc_maxangledelta")].c_str(), &config->misc.maxAngleDelta, 0.0f, 255.0f, "%.2f");
     ImGui::SliderFloat(phrases[XorString("misc_aspectratio")].c_str(), &config->misc.aspectratio, 0.0f, 5.0f, "%.2f");
-    ImGui::Checkbox(phrases[XorString("misc_grenadeprediction")].c_str(), &config->misc.nadePredict);
-    ImGui::Checkbox(phrases[XorString("misc_bombdamage")].c_str(), &config->misc.bombDamage);
     ImGui::Checkbox(phrases[XorString("misc_quickreload")].c_str(), &config->misc.quickReload);
     ImGui::Checkbox(phrases[XorString("misc_preparerevolver")].c_str(), &config->misc.prepareRevolver);
     ImGui::Checkbox(phrases[XorString("misc_fakeprime")].c_str(), &config->misc.fakePrime);
