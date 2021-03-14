@@ -685,6 +685,7 @@ static void from_json(const json& j, Config::Misc& m)
     read<value_t::object>(j, "Purchase List", m.purchaseList);
     read<value_t::object>(j, "Reportbot", m.reportbot);
     read<value_t::object>(j, "Preserve Killfeed", m.preserveKillfeed);
+    read<value_t::object>(j, "Chat spammer", m.spam);
     read(j, "Ragdoll force", m.ragdollForce);
     read(j, "Ragdoll force strength", m.ragdollForceStrength);
 }
@@ -700,6 +701,14 @@ static void from_json(const json& j, Config::Misc::Reportbot& r)
     read(j, "Wall Hacking", r.wallhack);
     read(j, "Aim Hacking", r.aimbot);
     read(j, "Other Hacking", r.other);
+}
+
+static void from_json(const json& j, Config::Misc::Spam& s)
+{
+    read<value_t::object>(j, "Text", s.text);
+    read(j, "Chat Picker", s.say);
+    read(j, "Spam Picker", s.spam_picker);
+    read(j, "Team Picker", s.team);
 }
 
 void Config::load(size_t id, bool incremental) noexcept
@@ -1027,6 +1036,14 @@ static void to_json(json& j, const Config::Glow& o, const Config::Glow& dummy = 
     WRITE("Style", style);
 }
 
+static void to_json(json& j, const Config::Misc::Spam& o, const Config::Misc::Spam& dummy = {})
+{
+    WRITE("Text", text);
+    WRITE("Chat Picker", say);
+    WRITE("Spam Picker", spam_picker);
+    WRITE("Team Picker", team);
+}
+
 static void to_json(json& j, const Config::Chams::Material& o)
 {
     const Config::Chams::Material dummy;
@@ -1180,6 +1197,7 @@ static void to_json(json& j, const Config::Misc& o)
     WRITE("Preserve Killfeed", preserveKillfeed);
     WRITE("Ragdoll force", ragdollForce);
     WRITE("Ragdoll force strength", ragdollForceStrength);
+    WRITE("Chat spammer", spam);
 }
 
 static void to_json(json& j, const Config::Visuals::ColorCorrection& o, const Config::Visuals::ColorCorrection& dummy)

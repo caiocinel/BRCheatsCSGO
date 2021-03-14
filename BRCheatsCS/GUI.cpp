@@ -1864,6 +1864,30 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     ImGui::PopID();
     ImGui::Checkbox(phrases[XorString("misc_cheatspam")].c_str(), &config->misc.cheatSpam);
 
+    ImGui::PushID(phrases[XorString("misc_chatspammer")].c_str());
+    ImGui::Combo(phrases[XorString("misc_chatspammer")].c_str(), &config->misc.spam.spam_picker, "Off\0Local\0Custom\0", IM_ARRAYSIZE("Off\0Local\0Custom\0"));
+    ImGui::SameLine();
+    if (ImGui::Button("..."))
+        ImGui::OpenPopup("");
+    if (ImGui::BeginPopup("")) {
+        if (config->misc.spam.spam_picker == 1)
+        {
+
+
+            ImGui::Checkbox("Team Chat (?)###SAY_TEAM2", &config->misc.spam.say);
+
+            ImGui::PushItemWidth(185);
+            ImGui::Combo("###POSITIONSTEAM", &config->misc.spam.team, "Allies\0Enemies\0Both\0", IM_ARRAYSIZE("Allies\0Enemies\0Both\0"));
+            ImGui::PopItemWidth();
+        }
+        if (config->misc.spam.spam_picker == 2)
+        {
+            ImGui::InputText("Text:##", &config->misc.spam.text);
+        }
+        ImGui::EndPopup();
+    }
+    ImGui::PopID();
+
     ImGui::Columns(1);
     if (!contentOnly)
         ImGui::End();

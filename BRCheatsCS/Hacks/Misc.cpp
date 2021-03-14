@@ -104,6 +104,65 @@ void Misc::inverseRagdollGravity() noexcept
     ragdollGravity->setValue(config->visuals.inverseRagdollGravity ? -600 : 600);
 }
 
+void Misc::ChatSpammer() noexcept
+{
+    static uint32_t lastspammed = 0;
+    static int lastId = 1;
+
+    if (GetTickCount64() - lastspammed > 800)
+    {
+
+        if (config->misc.spam.spam_picker == 1) {
+            static int lastId = 1;
+            lastspammed = GetTickCount64();
+            for (int i = lastId; i < interfaces->engine->getMaxClients(); i++)
+            {
+                const auto Player = interfaces->entityList->getEntity(i);
+
+                lastId++;
+                if (lastId == interfaces->engine->getMaxClients())
+                    lastId = 1;
+                if (!Player || !Player->isAlive())
+                    continue;
+
+                if (config->misc.spam.team == 0 && Player->team() != localPlayer->team())
+                    continue;
+
+                if (config->misc.spam.team == 1 && Player->team() == localPlayer->team())
+                    continue;
+
+                PlayerInfo entityInformation;
+                interfaces->engine->getPlayerInfo(i, entityInformation);
+                std::string playerName = std::string(entityInformation.name);
+                playerName.erase(std::remove(playerName.begin(), playerName.end(), ';'), playerName.end());
+                playerName.erase(std::remove(playerName.begin(), playerName.end(), '"'), playerName.end());
+                // Remove end line character
+                playerName.erase(std::remove(playerName.begin(), playerName.end(), '\n'), playerName.end());
+                // Construct a command with our message
+                pstring str;
+                str = config->misc.spam.say ? "say_team" : "say";
+                str << " \"";
+                str << playerName;
+                str << " | ";
+                str << Player->health() << "HP | ";
+                str << Player->lastPlaceName() << " | ";
+                str << Player->account() << "$ | ";
+                str << "\"";
+
+                interfaces->engine->clientCmdUnrestricted(str.c_str());
+                break;
+            }
+        }
+        else if (config->misc.spam.spam_picker == 2) {
+            {
+                lastspammed = GetTickCount64();
+                std::string chatText = "say " + config->misc.spam.text;
+                interfaces->engine->clientCmdUnrestricted(chatText.c_str());
+            }
+        }
+    }
+}
+
 void Misc::updateClanTag(bool tagChanged) noexcept
 {
     static std::string clanTag;

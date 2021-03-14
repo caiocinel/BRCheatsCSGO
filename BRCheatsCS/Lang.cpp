@@ -279,6 +279,7 @@ void UpdateLanguage()
 		phrases[XorString("misc_reportbot_otherhacking")] = XorString("Other Hacking");
 		phrases[XorString("misc_reportbot_reset")] = XorString("Reset");
 		phrases[XorString("misc_cheatspam")] = XorString("Cheat Spam");
+		phrases[XorString("misc_chatspammer")] = XorString("Chat Spammer");
 
 		phrases[XorString("config_reload")] = XorString("Reload configs");
 		phrases[XorString("config_placeholder_configname")] = XorString("Config Name");
@@ -566,7 +567,7 @@ void UpdateLanguage()
 		phrases[XorString("misc_reportbot_otherhacking")] = XorString("Outros Cheats");
 		phrases[XorString("misc_reportbot_reset")] = XorString("Resetar");
 		phrases[XorString("misc_cheatspam")] = XorString("Divulgar Cheat");
-
+		phrases[XorString("misc_chatspammer")] = XorString("Chat Spammer");
 		phrases[XorString("config_reload")] = XorString("Recarregar Configs");
 		phrases[XorString("config_placeholder_configname")] = XorString("Nome da Config");
 		phrases[XorString("config_create")] = XorString("Criar Config");

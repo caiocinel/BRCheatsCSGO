@@ -645,6 +645,14 @@ public:
             int delay = 1;
             int rounds = 1;
         } reportbot;
+
+        struct Spam {
+            bool say = false;
+            int team = 1;
+            int spam_picker = 0;
+            std::string text = "";
+        } spam;
+
    } misc;
 
 
