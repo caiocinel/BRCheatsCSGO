@@ -1366,6 +1366,7 @@ void Config::reset() noexcept
     skinChanger = { };
     sound = { };
     profilechanger = { };
+    antiAim = { };
     misc = { };
 }
 
