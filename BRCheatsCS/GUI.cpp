@@ -1739,8 +1739,6 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     ImGuiCustom::colorPicker(phrases[XorString("misc_bombtimer")].c_str(), config->misc.bombTimer);
     ImGui::Checkbox(phrases[XorString("misc_bombdamage")].c_str(), &config->misc.bombDamage);
     ImGui::Checkbox(phrases[XorString("misc_grenadeprediction")].c_str(), &config->misc.nadePredict);
-    ImGui::SameLine();
-    hotkey(config->misc.prepareRevolverKey);
 
 
     ImGui::NextColumn(); //////////////////////////////////////////////////////////////////////
@@ -1800,6 +1798,8 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     ImGui::SliderFloat(phrases[XorString("misc_aspectratio")].c_str(), &config->misc.aspectratio, 0.0f, 5.0f, "%.2f");
     ImGui::Checkbox(phrases[XorString("misc_quickreload")].c_str(), &config->misc.quickReload);
     ImGui::Checkbox(phrases[XorString("misc_preparerevolver")].c_str(), &config->misc.prepareRevolver);
+    ImGui::SameLine();
+    hotkey(config->misc.prepareRevolverKey);
     ImGui::Checkbox(phrases[XorString("misc_fakeprime")].c_str(), &config->misc.fakePrime);
 
     ImGui::Checkbox(phrases[XorString("misc_fakeduck")].c_str(), &config->misc.fakeDuck);
@@ -2143,70 +2143,123 @@ void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
         ImGui::Begin("Profile Changer | BRCheats", &window.profileChanger, windowFlags);
     }
 
-    static const char* bans_gui[] =
-    {
-        "Off",
-        "You were kicked from the last match (competitive cooldown)",
-        "You killed too many teammates (competitive cooldown)",
-        "You killed a teammate at round start (competitive cooldown)",
-        "You failed to reconnect to the last match (competitive cooldown)",
-        "You abandoned the last match (competitive cooldown)",
-        "You did too much damage to your teammates (competitive cooldown)",
-        "You did too much damage to your teammates at round start (competitive cooldown)",
-        "This account is permanently untrusted (global cooldown)",
-        "You were kicked from too many recent matches (competitive cooldown)",
-        "Convicted by overwatch - majorly disruptive (global cooldown)",
-        "Convicted by overwatch - minorly disruptive (global cooldown)",
-        "Resolving matchmaking state for your account (temporary cooldown)",
-        "Resolving matchmaking state after the last match (temporary cooldown)",
-        "This account is permanently untrusted (global cooldown)",
-        "(global cooldown)",
-        "You failed to connect by match start. (competitive cooldown)",
-        "You have kicked too many teammates in recent matches (competitive cooldown)",
-        "Congratulations on your recent competitive wins! before you play competitive matches further please wait for matchmaking servers to calibrate your skill group placement based on your lastest performance. (temporary cooldown)",
-        "A server using your game server login token has been banned. your account is now permanently banned from operating game servers, and you have a cooldown from connecting to game servers. (global cooldown)"
-    };
-    const char* ranks_gui[] = {
-        "Off",
-        "Silver 1",
-        "Silver 2",
-        "Silver 3",
-        "Silver 4",
-        "Silver elite",
-        "Silver elite master",
-        "Gold nova 1",
-        "Gold nova 2",
-        "Gold nova 3",
-        "Gold nova master",
-        "Master guardian 1",
-        "Master guardian 2",
-        "Master guardian elite",
-        "Distinguished master guardian",
-        "Legendary eagle",
-        "Legendary eagle master",
-        "Supreme master first class",
-        "The global elite"
-    };
+        const char* ranksGUIEN[] = {
+            "Off",
+            "Silver 1",
+            "Silver 2",
+            "Silver 3",
+            "Silver 4",
+            "Silver elite",
+            "Silver elite master",
+            "Gold nova 1",
+            "Gold nova 2",
+            "Gold nova 3",
+            "Gold nova master",
+            "Master guardian 1",
+            "Master guardian 2",
+            "Master guardian elite",
+            "Distinguished master guardian",
+            "Legendary eagle",
+            "Legendary eagle master",
+            "Supreme master first class",
+            "The global elite"
+        };
 
-        ImGui::Checkbox("Enabled##profile", &config->profilechanger.enabled);
-        ImGui::Text("Rank");
-        ImGui::Combo("##Rank", &config->profilechanger.rank, ranks_gui, ARRAYSIZE(ranks_gui));
-        ImGui::Text("Level");
-        ImGui::SliderInt("##Level", &config->profilechanger.level, 0, 40);
-        ImGui::Text("XP");
+        const char* bansGUIEN[] =
+        {
+            "Off",
+            "You were kicked from the last match (competitive cooldown)",
+            "You killed too many teammates (competitive cooldown)",
+            "You killed a teammate at round start (competitive cooldown)",
+            "You failed to reconnect to the last match (competitive cooldown)",
+            "You abandoned the last match (competitive cooldown)",
+            "You did too much damage to your teammates (competitive cooldown)",
+            "You did too much damage to your teammates at round start (competitive cooldown)",
+            "This account is permanently untrusted (global cooldown)",
+            "You were kicked from too many recent matches (competitive cooldown)",
+            "Convicted by overwatch - majorly disruptive (global cooldown)",
+            "Convicted by overwatch - minorly disruptive (global cooldown)",
+            "Resolving matchmaking state for your account (temporary cooldown)",
+            "Resolving matchmaking state after the last match (temporary cooldown)",
+            "This account is permanently untrusted (global cooldown)",
+            "(global cooldown)",
+            "You failed to connect by match start. (competitive cooldown)",
+            "You have kicked too many teammates in recent matches (competitive cooldown)",
+            "Temporary ban from MD10 (temporary cooldown)",
+            "A server using your game server login token has been banned. (global cooldown)"
+        };
+
+        static const char* ranksGUIPT[] = {
+            "Nenhum",
+            "Prata 1",
+            "Prata 2",
+            "Prata 3",
+            "Prata 4",
+            "Prata Elite",
+            "Prata Elite Mestre",
+            "Ouro 1",
+            "Ouro 2",
+            "Ouro 3",
+            "Ouro 4",
+            "AK 1",
+            "AK 2",
+            "AKX",
+            "Xerife",
+            "Aguia",
+            "Aguia 2",
+            "Supremo",
+            "Global"
+        };
+
+        static const char* bansGUIPT[] =
+        {
+            "Nenhum",
+            "Voce foi expulso da ultima partida",
+            "Voce matou muitos aliados",
+            "Voce matou um aliado no inicio da rodada",
+            "Voce nao se reconectou a ultima partida",
+            "Voce abandonou a ultima partida",
+            "Voce causou muito dano aos seus aliados",
+            "Voce causou muito dano aos seus aliados no inicio da rodada",
+            "Conta permanentemente nao confiavel",
+            "Voce foi expulso de muitas partidas recentes",
+            "Condenado pela fiscalizacao : infracao grave",
+            "Condenado pela fiscalizacao : infracao leve",
+            "Resolvendo estado de criacao de partidas da sua conta",
+            "Resolvendo estado de criacao de partidas apos a ultima partida",
+            "Conta permanentemente nao confiavel",
+            "(Suspensao global)",
+            "Voce falhou em se conectar no inicio da partida",
+            "Voce expulsou muitos aliados em partidas recentes",
+            "Suspensao de melhor de dez",
+            "Um servidor usando seu token foi banido"
+        };
+
+        ImGui::Checkbox(phrases[XorString("global_enabled")].c_str(), &config->profilechanger.enabled);
+        ImGui::Text(phrases[XorString("profilechanger_rank")].c_str());
+        if(config->misc.lang == 0)
+            ImGui::Combo("##Rank", &config->profilechanger.rank, ranksGUIEN, ARRAYSIZE(ranksGUIEN));
+        else
+            ImGui::Combo("##Rank", &config->profilechanger.rank, ranksGUIPT, ARRAYSIZE(ranksGUIPT));
+        ImGui::Text(phrases[XorString("profilechanger_level")].c_str());
+        ImGui::InputInt("##Level", &config->profilechanger.level);
+        ImGui::Text(phrases[XorString("profilechanger_exp")].c_str());
         ImGui::InputInt("##Xp##level", &config->profilechanger.exp);
-        ImGui::Text("Wins");
+        ImGui::Text(phrases[XorString("profilechanger_wins")].c_str());
         ImGui::InputInt("##Wins", &config->profilechanger.wins);
-        ImGui::Text("Friend");
+        ImGui::Text(phrases[XorString("profilechanger_friendly")].c_str());
         ImGui::InputInt("##Friend", &config->profilechanger.friendly);
-        ImGui::Text("Teach");
+        ImGui::Text(phrases[XorString("profilechanger_teach")].c_str());
         ImGui::InputInt("##Teach", &config->profilechanger.teach);
-        ImGui::Text("Leader");
+        ImGui::Text(phrases[XorString("profilechanger_leader")].c_str());
         ImGui::InputInt("##Leader", &config->profilechanger.leader);
-        ImGui::Text("Fake ban type");
-        ImGui::Combo("##fake-ban", &config->profilechanger.ban_type, bans_gui, IM_ARRAYSIZE(bans_gui));
-        ImGui::Text("Fake ban time");
-        ImGui::SliderInt("##fake-ban-time", &config->profilechanger.ban_time, 0, 1000, "Seconds: %d");
+        ImGui::Text(phrases[XorString("profilechanger_fakebantype")].c_str());
+        if (config->misc.lang == 0)
+            ImGui::Combo("##fake-ban", &config->profilechanger.ban_type, bansGUIEN, IM_ARRAYSIZE(bansGUIEN));
+        else
+            ImGui::Combo("##fake-ban", &config->profilechanger.ban_type, bansGUIPT, IM_ARRAYSIZE(bansGUIPT));
+        ImGui::Text(phrases[XorString("profilechanger_fakebantime")].c_str());
+        ImGui::SliderInt("##fake-ban-time", &config->profilechanger.ban_time, 0, 1000, "%d s");
         ImGui::SetCursorPosX(ImGui::GetCursorPosX() + (250 / 2) - (190 / 2) - 20.f);
         if (ImGui::Button("Apply", ImVec2(190, 30)))
         {
