@@ -517,6 +517,7 @@ static void from_json(const json& j, Config::Visuals& v)
     read(j, "No bloom", v.noBloom);
     read(j, "No grass", v.noGrass);
     read(j, "No shadows", v.noShadows);
+    read(j, "Draw gray", v.drawgray);
     read(j, "Wireframe smoke", v.wireframeSmoke);
     read(j, "Zoom", v.zoom);
     read(j, "Zoom key", v.zoomKey);
@@ -1231,6 +1232,7 @@ static void to_json(json& j, const Config::Visuals& o)
     WRITE("No scope overlay", noScopeOverlay);
     WRITE("No grass", noGrass);
     WRITE("No shadows", noShadows);
+    WRITE("Draw gray", drawgray);
     WRITE("Wireframe smoke", wireframeSmoke);
     WRITE("Zoom", zoom);
     WRITE("Zoom key", zoomKey);

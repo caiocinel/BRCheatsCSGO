@@ -307,6 +307,15 @@ void Misc::noscopeCrosshair(ImDrawList* drawList) noexcept
     drawCrosshair(drawList, ImGui::GetIO().DisplaySize / 2, Helpers::calculateColor(config->misc.noscopeCrosshair), config->misc.noscopeCrosshair.thickness);
 }
 
+void Misc::hiddenCvar() noexcept
+{
+    if (!config->misc.cvarEnabled)
+        return;
+
+    static auto cvar = interfaces->cvar->findVar(config->misc.cvar.c_str());
+    cvar->setValue(config->misc.cvarValue);
+
+}
 
 static bool worldToScreen(const Vector& in, ImVec2& out) noexcept
 {

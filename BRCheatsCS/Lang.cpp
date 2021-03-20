@@ -295,6 +295,7 @@ void UpdateLanguage()
 		phrases[XorString("ezconfig_fullwall")] = XorString("Full wallhack + visualization aids");
 		phrases[XorString("ezconfig_utilities")] = XorString("Some utilities, like seeing patents, money and some other interesting options");
 		phrases[XorString("ezconfig_bunnyhop")] = XorString("Activates Auto Bunny Hopping (Hold Space)");
+		phrases[XorString("ezconfig_fpsboost")] = XorString("Increases FPS by up to 70% by disabling game effects");
 		phrases[XorString("ezconfig_reset")] = XorString("Reset all cheat settings");
 
 	}
@@ -583,6 +584,7 @@ void UpdateLanguage()
 		phrases[XorString("ezconfig_utilities")] = XorString("Alguns utilitários, como ver patentes, dinheiro e algumas outras opções interessantes");
 		phrases[XorString("ezconfig_bunnyhop")] = XorString("Ativa o Auto Bunny Hopping (segure espaço)");
 		phrases[XorString("ezconfig_reset")] = XorString("Redefine todas as configurações de cheat");
+		phrases[XorString("ezconfig_fpsboost")] = XorString("Aumenta o FPS em até 70% desativando efeitos do jogo");
 
 	}
 }

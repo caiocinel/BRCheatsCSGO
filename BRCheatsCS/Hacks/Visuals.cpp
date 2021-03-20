@@ -240,6 +240,12 @@ void Visuals::removeBloom() noexcept
     bloomCvar->setValue(config->visuals.noBloom);
 }
 
+void Visuals::drawGray() noexcept
+{
+    static ConVar* drawGrayCvar = interfaces->cvar->findVar("mat_drawgray");
+    drawGrayCvar->setValue(config->visuals.drawgray);
+}
+
 void Visuals::updateBrightness() noexcept
 {
     static auto brightness = interfaces->cvar->findVar("mat_force_tonemap_scale");

@@ -198,6 +198,7 @@ static bool __stdcall createMove(float inputSampleTime, UserCmd* cmd) noexcept
     Misc::fastStop(cmd);
     Misc::prepareRevolver(cmd);
     Visuals::removeShadows();
+    Visuals::drawGray();
     Misc::runReportbot();
     Misc::bunnyHop(cmd);
     Misc::autoStrafe(cmd);
@@ -375,6 +376,7 @@ static void __stdcall frameStageNotify(FrameStage stage) noexcept
     if (stage == FrameStage::RENDER_START) {
         Misc::preserveKillfeed();
         Misc::disablePanoramablur();
+        Misc::hiddenCvar();
         Visuals::colorWorld();
         Misc::fakePrime();
         Misc::ragdollForce();

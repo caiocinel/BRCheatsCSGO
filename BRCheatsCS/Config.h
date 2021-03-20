@@ -429,6 +429,7 @@ public:
         bool noScopeOverlay{ false };
         bool noGrass{ false };
         bool noShadows{ false };
+        bool drawgray{ false };
         bool wireframeSmoke{ false };
         bool zoom{ false };
         int zoomKey{ 0 };
@@ -541,6 +542,9 @@ public:
         int slowwalkKey{ 0 };
         ColorToggleThickness noscopeCrosshair;
         ColorToggleThickness recoilCrosshair;
+        int cvarValue{ false };
+        bool cvarEnabled{ false };
+        std::string cvar = "";
         bool doorSpam{ false };
         bool autoPistol{ false };
         bool autoReload{ false };

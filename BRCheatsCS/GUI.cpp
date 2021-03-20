@@ -1739,7 +1739,16 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     ImGuiCustom::colorPicker(phrases[XorString("misc_bombtimer")].c_str(), config->misc.bombTimer);
     ImGui::Checkbox(phrases[XorString("misc_bombdamage")].c_str(), &config->misc.bombDamage);
     ImGui::Checkbox(phrases[XorString("misc_grenadeprediction")].c_str(), &config->misc.nadePredict);
-
+    /*ImGui::PushID("Cvar");
+    ImGui::Checkbox("Cvar Force", &config->misc.cvarEnabled);
+    ImGui::SameLine();
+    if (ImGui::Button("..."))
+        ImGui::OpenPopup("");
+    if (ImGui::BeginPopup("")) {
+        ImGui::InputText("Cvar", &config->misc.cvar); ImGui::SameLine(); ImGui::InputInt("##Valor", &config->misc.cvarValue);
+        ImGui::EndPopup();
+    }
+    ImGui::PopID();*/
 
     ImGui::NextColumn(); //////////////////////////////////////////////////////////////////////
 
@@ -2426,7 +2435,24 @@ void GUI::renderAutoConfigWindow(bool contentOnly) noexcept
     ImGui::Text(phrases[XorString("ezconfig_bunnyhop")].c_str());
 
     ImGui::Separator();
-    if (ImGui::Button("Resetar")) {
+    if (ImGui::Button("FPS Boost")) {
+
+        config->misc.disableModelOcclusion = true;
+        config->visuals.disablePostProcessing = true;
+        config->visuals.noFog = true;
+        config->visuals.noBlur = true;
+        config->visuals.noGrass = true;
+        config->visuals.noShadows = true;
+        config->visuals.drawgray = true;
+        config->visuals.noBloom = true;
+        config->visuals.no3dSky = true;
+
+    };
+    ImGui::SameLine();
+    ImGui::Text(phrases[XorString("ezconfig_fpsboost")].c_str());
+
+    ImGui::Separator();
+    if (ImGui::Button("Reset")) {
 
         config->reset(); Misc::updateClanTag(true); SkinChanger::scheduleHudUpdate();
 
@@ -2434,10 +2460,6 @@ void GUI::renderAutoConfigWindow(bool contentOnly) noexcept
     };
     ImGui::SameLine();
     ImGui::Text(phrases[XorString("ezconfig_reset")].c_str());
-
-
-
-    ImGui::TextUnformatted("AutoConfig by Caillou"); 
 
     if (!contentOnly)
         ImGui::End();
@@ -2664,6 +2686,7 @@ void GUI::renderPerformanceWindow(bool contentOnly) noexcept
     ImGui::Checkbox(phrases[XorString("visuals_nobloom")].c_str(), &config->visuals.noBloom);
     ImGui::Checkbox(phrases[XorString("visuals_nofog")].c_str(), &config->visuals.noFog);
     ImGui::Checkbox(phrases[XorString("visuals_no3dsky")].c_str(), &config->visuals.no3dSky);
+    ImGui::Checkbox("Gray Textures", &config->visuals.drawgray);
     ImGui::Columns(1);
 }
 
