@@ -1871,7 +1871,6 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
         ImGui::EndPopup();
     }
     ImGui::PopID();
-    ImGui::Checkbox(phrases[XorString("misc_cheatspam")].c_str(), &config->misc.cheatSpam);
 
     ImGui::PushID(phrases[XorString("misc_chatspammer")].c_str());
     ImGui::Combo(phrases[XorString("misc_chatspammer")].c_str(), &config->misc.spam.spam_picker, "Off\0Local\0Custom\0", IM_ARRAYSIZE("Off\0Local\0Custom\0"));
