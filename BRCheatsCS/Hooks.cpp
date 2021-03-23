@@ -10,7 +10,9 @@
 #include "imgui/imgui_impl_win32.h"
 
 #include "MinHook/MinHook.h"
+#ifdef _RELEASE
 #include "BRC_UserActivity.h"
+#endif
 
 #include "Config.h"
 #include "EventListener.h"
@@ -859,8 +861,9 @@ void Hooks::install() noexcept
     if constexpr (std::is_same_v<HookType, MinHook>)
         MH_EnableHook(MH_ALL_HOOKS);
 
-  BRC_StartUserActivity(ActivityId_CSGO);
-
+    #ifdef _RELEASE
+      BRC_StartUserActivity(ActivityId_CSGO);
+    #endif
 
 }
 
