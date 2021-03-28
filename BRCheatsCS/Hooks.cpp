@@ -36,7 +36,7 @@
 #include "Hacks/Visuals.h"
 #include "Hacks/Resolver.h"
 #include "Hacks/Tickbase.h"
-#include "Changer/Protobuffs.h"
+#include "Changer/Changer.h"
 
 #include "SDK/Engine.h"
 #include "SDK/Entity.h"
@@ -732,22 +732,9 @@ EGCResult __fastcall hkGCRetrieveMessage(void* ecx, void*, uint32_t* punMsgType,
         auto oldEBP = *reinterpret_cast<void**>((uint32_t)_AddressOfReturnAddress() - 4);
 
         uint32_t messageType = *punMsgType & 0x7FFFFFFF;
-        write.ReceiveMessage(thisPtr, oldEBP, messageType, pubDest, cubDest, pcubMsgSize);
+        profile_changer::receive_message(thisPtr, oldEBP, messageType, pubDest, cubDest, pcubMsgSize);
     }
     return status;
-}
-
-
-
-EGCResult __fastcall hkGCSendMessage(void* ecx, void*, uint32_t unMsgType, const void* pubData, uint32_t cubData)
-{
-    static auto oGCSendMessage = hooks->gc_hook.get_original<GCSendMessage>(0);
-    bool sendMessage = write.PreSendMessage(unMsgType, const_cast<void*>(pubData), cubData);
-
-    if (!sendMessage)
-        return EGCResult::k_EGCResultOK;
-
-    return oGCSendMessage(ecx, unMsgType, const_cast<void*>(pubData), cubData);
 }
 
 static bool __fastcall WriteUsercmdDeltaToBuffer(void* ecx, void* edx, int slot, void* buffer, int from, int to, bool isnewcommand) noexcept
@@ -849,7 +836,6 @@ void Hooks::install() noexcept
     svCheats.hookAt(13, svCheatsGetBool);
     viewRender.hookAt(39, render2dEffectsPreHud);
     viewRender.hookAt(41, renderSmokeOverlay);
-    gc_hook.hook_index(0, hkGCSendMessage);
     gc_hook.hook_index(2, hkGCRetrieveMessage);
 
     if (DWORD oldProtection; VirtualProtect(memory->dispatchSound, 4, PAGE_EXECUTE_READWRITE, &oldProtection)) {
@@ -905,7 +891,6 @@ void Hooks::uninstall() noexcept
     viewRender.restore();
     networkChannel.restore();
     extraHook.restore();
-
     gc_hook.unhook_all();
 
     netvars->restore();

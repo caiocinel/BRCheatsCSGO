@@ -10,7 +10,6 @@
 #include "imgui/imgui_internal.h"
 
 #include "imguiCustom.h"
-#include "Hacks/InventoryChanger.h"
 
 #include "GUI.h"
 #include "XorStr/xorstr.hpp"
@@ -22,9 +21,8 @@
 #include "Hooks.h"
 #include "Interfaces.h"
 #include "SDK/InputSystem.h"
-#include "Changer/Protobuffs.h"
-#include "memory.h"
-#include "SDK/items.h"
+#include "Changer/Changer.h"
+#include "Memory.h"
 #include "Fonts/IconsFontAwesome5.h"
 #include "Fonts/icons.cpp"
 #include "Fonts/font.cpp"
@@ -33,6 +31,7 @@
 constexpr auto windowFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 extern std::map<std::string, std::string> phrases;
 IDirect3DTexture9* skinImage = nullptr;
+
 
 void RightText() {
     std::string text = "xxxxxxxxx";
@@ -994,7 +993,7 @@ void GUI::renderChamsWindow(bool contentOnly) noexcept
     ImGui::Checkbox(phrases[XorString("chams_cover")].c_str(), &chams.cover);
     ImGui::Checkbox(phrases[XorString("chams_ignorez")].c_str(), &chams.ignorez);
     ImGuiCustom::colorPopup(phrases[XorString("global_color")].c_str(), chams.color, &chams.rainbow, &chams.rainbowSpeed);
-
+    ImGui::Columns(1);
     if (!contentOnly) {
         ImGui::End();
     }
@@ -1895,6 +1894,11 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
         ImGui::EndPopup();
     }
     ImGui::PopID();
+     
+#ifdef _DEBUG
+    if (ImGui::Button("Unload"))
+        hooks->uninstall();
+#endif
 
     ImGui::Columns(1);
     if (!contentOnly)
@@ -1996,176 +2000,6 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
             ImGui::End();
 }
 
-void GUI::renderMedalChangerWindow(bool contentOnly) noexcept
-{
-
-    if (!contentOnly) {
-        if (!window.medalChanger)
-            return;
-        ImGui::SetNextWindowSize({ 290.0f, 0.0f });
-        ImGui::Begin("Medal Changer", &window.medalChanger, windowFlags);
-    }
-
-    ImGui::Checkbox("Enable Medal Changer", &config->medalChanger.enabled);
-    static int medal_id = 0;
-    ImGui::InputInt("Medal ID", &config->medalChanger.medals);
-   /* if (ImGui::Button("Add") && medal_id != 0) {
-        config->medalChanger.medals.insert(config->medalChanger.medals.end(), medal_id);
-        medal_id = 0;
-    }
-    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 1));
-    ImGui::ListBoxHeader("Medal List");
-    for (int m = 0; m < config->medalChanger.medals.size(); m++) {
-        if (ImGui::Selectable(std::to_string(config->medalChanger.medals[m]).c_str())) {
-            if (config->medalChanger.equipped_medal == config->medalChanger.medals[m]) {
-                config->medalChanger.equipped_medal = 0;
-                config->medalChanger.equipped_medal_override = false;
-            }
-            config->medalChanger.medals.erase(config->medalChanger.medals.begin() + m);
-        }
-    }
-    ImGui::ListBoxFooter();
-    ImGui::PopStyleColor();
-    
-    ImGui::Checkbox("Equipped Medal Override", &config->medalChanger.equipped_medal_override);
-    if (config->medalChanger.equipped_medal_override) {
-        static int equipped_medal = 0;
-        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 1));
-        if (ImGui::Combo("Equipped Medal", &equipped_medal, [](void* data, int idx, const char** out_text)
-            {
-                *out_text = std::to_string(config->medalChanger.medals[idx]).c_str();
-                return true;
-            }, nullptr, config->medalChanger.medals.size(), 5)) {
-            config->medalChanger.equipped_medal = config->medalChanger.medals[equipped_medal];
-        }
-        ImGui::PopStyleColor();
-    }
-    */
-    if (ImGui::Button("Apply##Medals")) {
-        write.SendClientHello();
-    }
-
-
-    if (!contentOnly)
-        ImGui::End();
-}
-/*
-void GUI::renderInventoryChangerWindow(bool contentOnly) noexcept
-{
-    if (!contentOnly) {
-        if (!window.inventoryChanger)
-            return;
-        ImGui::SetNextWindowSize({ 290.0f, 0.0f });
-        ImGui::Begin("Inventory Changer", &window.inventoryChanger, windowFlags);
-    }
-    ImGui::Columns(2, nullptr, true);
-    
-    ImGui::Checkbox("Enabled##inv-changer", &config->inventory.enabled);
-    static wskin weaponSkin;
-    if (weaponSkin.wId == WEAPON_NONE)
-        weaponSkin.wId = WEAPON_DEAGLE;
-    ImGui::Text("Weapon");
-    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 1.f, 1.f, 1.f));
-    if (ImGui::BeginCombo("##Weapon", k_inventory_names.at(weaponSkin.wId)))
-    {
-        for (const auto& weapon : k_inventory_names)
-        {
-            if (ImGui::Selectable(weapon.second, weaponSkin.wId == weapon.first))
-            {
-                weaponSkin.wId = weapon.first;
-                weaponSkin.paintKit = 0;
-                skinImage = nullptr;
-            }
-        }
-        ImGui::EndCombo();
-    }
-    ImGui::PopStyleColor();
-
-    auto weaponName = weaponnames(weaponSkin.wId);
-    ImGui::Text("Skin");
-    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 1.f, 1.f, 1.f));
-    if (ImGui::BeginCombo("##Paint Kit", weaponSkin.paintKit > 0 ? config->inventory.skinInfo[weaponSkin.paintKit].name.c_str() : ""))
-    {
-        int lastID = ImGui::GetItemID();
-
-        for (auto skin : config->inventory.skinInfo)
-        {
-            for (auto names : skin.second.weaponName)
-            {
-                if (weaponName != names)
-                    continue;
-
-                ImGui::PushID(lastID++);
-
-                if (ImGui::Selectable(skin.second.name.c_str(), skin.first == weaponSkin.paintKit))
-                    weaponSkin.paintKit = skin.first;
-
-                ImGui::PopID();
-            }
-        }
-        ImGui::EndCombo();
-    }
-    ImGui::PopStyleColor();
-    ImGui::Text("Wear");
-    ImGui::SliderFloat("##Wear##new", &weaponSkin.wear, 0.f, 1.f, "%.5f");
-    ImGui::Text("Seed");
-    ImGui::InputInt("##Seed##new", &weaponSkin.seed);
-    ImGui::Text("Name");
-    ImGui::InputText("##Name##new", (char*)weaponSkin.name.c_str(), IM_ARRAYSIZE((char*)weaponSkin.name.c_str()));
-
-    if (ImGui::Button("Add##new"))
-    {
-        g_InventorySkins.insert({ memory->RandomInt(20000, 200000), weaponSkin });
-        config->inventory.itemCount = g_InventorySkins.size();
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Apply"))
-    {
-        write.SendClientHello();
-        write.SendMatchmakingClient2GCHello();
-    }
-
-    ImGui::NextColumn();
-
-    static int selectedId = 0;
-    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 1.f, 1.f, 1.f));
-    if (ImGui::ListBoxHeader("##skins", ImVec2(-1, 0)))
-    {
-        int lastID = ImGui::GetItemID();
-        for (auto weapon : g_InventorySkins)
-        {
-            if (!weapon.second.wId || !weapon.second.paintKit)
-                continue;
-
-            ImGui::PushID(lastID++);
-
-            if (ImGui::Selectable((k_inventory_names.at(weapon.second.wId) + std::string(" | ") + config->inventory.skinInfo[weapon.second.paintKit].name).c_str(), selectedId == weapon.first))
-                selectedId = weapon.first;
-            ImGui::PopID();
-        }
-
-        ImGui::ListBoxFooter();
-    }
-    ImGui::PopStyleColor();
-    if (selectedId != 0)
-    {
-        ImGui::Text("Wear");
-        ImGui::SliderFloat("##Wear##existing", &g_InventorySkins[selectedId].wear, 0.f, 1.f, "%.5f");
-        ImGui::Text("Seed");
-        ImGui::InputInt("##Seed##existing", &g_InventorySkins[selectedId].seed);
-
-        if (ImGui::Button("Delete##existing", ImVec2(-1, 25)))
-        {
-            g_InventorySkins.erase(selectedId);
-            config->inventory.itemCount = g_InventorySkins.size();
-        }
-    }
-
-    ImGui::Columns(1);
-    if (!contentOnly)
-        ImGui::End();
-}
-*/
 void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
 {
     if (!contentOnly) {
@@ -2197,8 +2031,26 @@ void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
             "The global elite"
         };
 
-        const char* bansGUIEN[] =
-        {
+        const char* ranksDZGUIEN[] = {
+            "Nenhum",
+            "Lab Rat 1",
+            "Lab Rat 2",
+            "Sprinting Hare 1",
+            "Sprinting Hare 2",
+            "Wild Scout 1",
+            "Wild Scout 2",
+            "Wild Scout Elite",
+            "Hunter Fox 1",
+            "Hunter Fox 2",
+            "Hunter Fox 3",
+            "Hunter Fox Elite",
+            "Timber Wolf",
+            "Ember Wolf",
+            "Wildfire Wolf",
+            "The Howling Alpha"
+        };
+
+        const char* bansGUIEN[] =  {
             "Off",
             "You were kicked from the last match (competitive cooldown)",
             "You killed too many teammates (competitive cooldown)",
@@ -2221,7 +2073,7 @@ void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
             "A server using your game server login token has been banned. (global cooldown)"
         };
 
-        static const char* ranksGUIPT[] = {
+        static const char* ranksGUIPT[] =  {
             "Nenhum",
             "Prata 1",
             "Prata 2",
@@ -2243,8 +2095,7 @@ void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
             "Global"
         };
 
-        static const char* bansGUIPT[] =
-        {
+        static const char* bansGUIPT[] =  {
             "Nenhum",
             "Voce foi expulso da ultima partida",
             "Voce matou muitos aliados",
@@ -2267,39 +2118,103 @@ void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
             "Um servidor usando seu token foi banido"
         };
 
-        ImGui::Checkbox(phrases[XorString("global_enabled")].c_str(), &config->profilechanger.enabled);
-        ImGui::Text(phrases[XorString("profilechanger_rank")].c_str());
-        if(config->misc.lang == 0)
-            ImGui::Combo("##Rank", &config->profilechanger.rank, ranksGUIEN, ARRAYSIZE(ranksGUIEN));
+        const char* ranksDZGUIPT[] = {
+            "Nenhum",
+            "Rato de Laboratorio 1",
+            "Rato de Laboratorio 2",
+            "Lebre Veloz 1",
+            "Lebre Veloz 2",
+            "Patrulheiro 1",
+            "Patrulheiro 2",
+            "Patrulheiro de Elite",
+            "Raposa de Caça 1",
+            "Raposa de Caça 2",
+            "Raposa de Caça 3",
+            "Raposa de Caça de Elite",
+            "Lobo-cinzento",
+            "Lobo da Brasa",
+            "Lobo do Fogo Selvagem",
+            "Alfa Uivante"
+        };
+
+        ImGui::Separator();
+        ImGui::Columns(3, nullptr);
+        ImGui::TextWrapped("                Matchmaking");
+        ImGui::SetNextItemWidth(-1.0f);
+        if (config->misc.lang == 0)
+            ImGui::Combo("##Rank0", &config->profilechanger.ranking[0].rank_id, ranksGUIEN, ARRAYSIZE(ranksGUIEN));
         else
-            ImGui::Combo("##Rank", &config->profilechanger.rank, ranksGUIPT, ARRAYSIZE(ranksGUIPT));
+            ImGui::Combo("##Rank0", &config->profilechanger.ranking[0].rank_id, ranksGUIPT, ARRAYSIZE(ranksGUIPT));
+        ImGui::Text(phrases[XorString("profilechanger_wins")].c_str());
+        ImGui::SetNextItemWidth(-1.0f);
+        ImGui::InputInt("##Wins0", &config->profilechanger.ranking[0].wins);
+        ImGui::NextColumn();
+        ImGui::TextWrapped("                   Wingman");
+        ImGui::SetNextItemWidth(-1.0f);
+        if (config->misc.lang == 0)
+            ImGui::Combo("##Rank1", &config->profilechanger.ranking[1].rank_id, ranksGUIEN, ARRAYSIZE(ranksGUIEN));
+        else
+            ImGui::Combo("##Rank1", &config->profilechanger.ranking[1].rank_id, ranksGUIPT, ARRAYSIZE(ranksGUIPT));
+        ImGui::Text(phrases[XorString("profilechanger_wins")].c_str());
+        ImGui::SetNextItemWidth(-1.0f);
+        ImGui::InputInt("##Wins1", &config->profilechanger.ranking[1].wins);
+        ImGui::NextColumn();
+        ImGui::TextWrapped("                Dangerzone");
+        ImGui::SetNextItemWidth(-1.0f);
+        if (config->misc.lang == 0)
+            ImGui::Combo("##Rank2", &config->profilechanger.ranking[2].rank_id, ranksDZGUIEN, ARRAYSIZE(ranksDZGUIEN));
+        else
+            ImGui::Combo("##Rank2", &config->profilechanger.ranking[2].rank_id, ranksDZGUIPT, ARRAYSIZE(ranksDZGUIPT));
+        ImGui::Text(phrases[XorString("profilechanger_wins")].c_str());
+        ImGui::SetNextItemWidth(-1.0f);
+        ImGui::InputInt("##Wins2", &config->profilechanger.ranking[2].wins);
+        ImGui::Columns(1);
+        ImGui::Separator();
+        ImGui::Spacing();
+        ImGui::Columns(3, nullptr);
         ImGui::Text(phrases[XorString("profilechanger_level")].c_str());
+        ImGui::SetNextItemWidth(-1.0f);
         ImGui::InputInt("##Level", &config->profilechanger.level);
         ImGui::Text(phrases[XorString("profilechanger_exp")].c_str());
-        ImGui::InputInt("##Xp##level", &config->profilechanger.exp);
-        ImGui::Text(phrases[XorString("profilechanger_wins")].c_str());
-        ImGui::InputInt("##Wins", &config->profilechanger.wins);
-        ImGui::Text(phrases[XorString("profilechanger_friendly")].c_str());
-        ImGui::InputInt("##Friend", &config->profilechanger.friendly);
-        ImGui::Text(phrases[XorString("profilechanger_teach")].c_str());
-        ImGui::InputInt("##Teach", &config->profilechanger.teach);
-        ImGui::Text(phrases[XorString("profilechanger_leader")].c_str());
-        ImGui::InputInt("##Leader", &config->profilechanger.leader);
+        ImGui::SetNextItemWidth(-1.0f);
+        ImGui::InputInt("##Xp", &config->profilechanger.exp);
+        ImGui::NextColumn();
         ImGui::Text(phrases[XorString("profilechanger_fakebantype")].c_str());
+        ImGui::SetNextItemWidth(-1.0f);
         if (config->misc.lang == 0)
             ImGui::Combo("##fake-ban", &config->profilechanger.ban_type, bansGUIEN, IM_ARRAYSIZE(bansGUIEN));
         else
             ImGui::Combo("##fake-ban", &config->profilechanger.ban_type, bansGUIPT, IM_ARRAYSIZE(bansGUIPT));
         ImGui::Text(phrases[XorString("profilechanger_fakebantime")].c_str());
-        ImGui::SliderInt("##fake-ban-time", &config->profilechanger.ban_time, 0, 1000, "%d s");
-        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + (250 / 2) - (190 / 2) - 20.f);
-        if (ImGui::Button("Apply", ImVec2(190, 30)))
-        {
-            write.SendClientHello();
-            write.SendMatchmakingClient2GCHello();
-        }
-
+        ImGui::SetNextItemWidth(-1.0f);
+        ImGui::SliderInt("##fake-ban-time", &config->profilechanger.ban_time, 0, 1000, "%d h");
+        ImGui::NextColumn();
+        ImGui::Text(phrases[XorString("profilechanger_friendly")].c_str());
+        ImGui::SetNextItemWidth(-1.0f);
+        ImGui::InputInt("##Friend", &config->profilechanger.friendly);
+        ImGui::Text(phrases[XorString("profilechanger_teach")].c_str());
+        ImGui::SetNextItemWidth(-1.0f);
+        ImGui::InputInt("##Teach", &config->profilechanger.teach);
+        ImGui::Text(phrases[XorString("profilechanger_leader")].c_str());
+        ImGui::SetNextItemWidth(-1.0f);
+        ImGui::InputInt("##Leader", &config->profilechanger.leader);
+        ImGui::Columns(1);
+        ImGui::Spacing();
+       
             
+        
+            if (ImGui::Button("Apply", ImVec2(-1.0f, 0.0f)))
+            {
+                profile_changer::send_update_messages();
+            }
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::BeginTooltip();
+                ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+                ImGui::TextUnformatted(phrases[XorString("profilechanger_applyTooltip")].c_str());
+                ImGui::PopTextWrapPos();
+                ImGui::EndTooltip();
+            }
    
         if (!contentOnly)
             ImGui::End();

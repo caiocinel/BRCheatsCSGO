@@ -12,8 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Changer.cpp" />
-    <ClCompile Include="Changer\Protobuffs.cpp" />
-    <ClCompile Include="Changer\valve_parser.cpp" />
+    <ClCompile Include="Changer\Changer.cpp" />
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="EventListener.cpp" />
     <ClCompile Include="extraHooks.cpp" />
@@ -29,7 +28,6 @@
     <ClCompile Include="Hacks\Debug.cpp" />
     <ClCompile Include="Hacks\EnginePrediction.cpp" />
     <ClCompile Include="Hacks\Glow.cpp" />
-    <ClCompile Include="Hacks\InventoryChanger.cpp" />
     <ClCompile Include="Hacks\Multipoints.cpp" />
     <ClCompile Include="Hacks\Ragebot.cpp" />
     <ClCompile Include="Hacks\Resolver.cpp" />
@@ -70,7 +68,6 @@
     <ClCompile Include="SDK\AnimState.cpp" />
     <ClCompile Include="SDK\Entity.cpp" />
     <ClCompile Include="SDK\GlobalVars.cpp" />
-    <ClCompile Include="SDK\items.cpp" />
     <ClCompile Include="SDK\KeyValues.cpp" />
     <ClCompile Include="SDK\Utils.cpp" />
   </ItemGroup>
@@ -78,11 +75,10 @@
     <ClInclude Include="Beams.h" />
     <ClInclude Include="BRC_UserActivity.h" />
     <ClInclude Include="Changer.h" />
-    <ClInclude Include="Changer\Messages.h" />
-    <ClInclude Include="Changer\Protobuffs.h" />
-    <ClInclude Include="Changer\ProtoField.h" />
-    <ClInclude Include="Changer\ProtoWriter.h" />
-    <ClInclude Include="Changer\valve_parser.h" />
+    <ClInclude Include="Changer\Changer.h" />
+    <ClInclude Include="Changer\Protobuffs\pbwrap.h" />
+    <ClInclude Include="Changer\Protobuffs\protomessages.h" />
+    <ClInclude Include="Changer\Protobuffs\protoparser.h" />
     <ClInclude Include="Fonts\IconsFontaudio.h" />
     <ClInclude Include="Fonts\IconsFontAwesome4.h" />
     <ClInclude Include="Fonts\IconsFontAwesome5.h" />
@@ -92,7 +88,6 @@
     <ClInclude Include="Fonts\IconsForkAwesome.h" />
     <ClInclude Include="Fonts\IconsKenney.h" />
     <ClInclude Include="Fonts\IconsMaterialDesign.h" />
-    <ClInclude Include="Hacks\InventoryChanger.h" />
     <ClInclude Include="Hooks\vfunc_hook.hpp" />
     <ClInclude Include="Lang.h" />
     <ClInclude Include="Config.h" />
@@ -174,7 +169,6 @@
     <ClInclude Include="SDK\GlowObjectManager.h" />
     <ClInclude Include="SDK\Input.h" />
     <ClInclude Include="SDK\InputSystem.h" />
-    <ClInclude Include="SDK\items.h" />
     <ClInclude Include="SDK\ItemSchema.h" />
     <ClInclude Include="SDK\KeyValues.h" />
     <ClInclude Include="SDK\Localize.h" />

@@ -203,10 +203,11 @@ void UpdateLanguage()
 		phrases[XorString("profilechanger_friendly")] = XorString("Friendly");
 		phrases[XorString("profilechanger_teach")] = XorString("Teacher");
 		phrases[XorString("profilechanger_leader")] = XorString("Leader");
-		phrases[XorString("profilechanger_xp")] = XorString("EXP");
+		phrases[XorString("profilechanger_exp")] = XorString("EXP");
 		phrases[XorString("profilechanger_wins")] = XorString("Wins");
 		phrases[XorString("profilechanger_fakebantype")] = XorString("Ban Type");
 		phrases[XorString("profilechanger_fakebantime")] = XorString("Ban Time");
+		phrases[XorString("profilechanger_applyTooltip")] = XorString("Everyone will be able to see this\nYour rank just will be shown if wins > 10");
 
 		phrases[XorString("misc_menukey")] = XorString("Menu Key");
 		phrases[XorString("misc_radarhack")] = XorString("Radar Hack");
@@ -495,6 +496,7 @@ void UpdateLanguage()
 		phrases[XorString("profilechanger_wins")] = XorString("Vitorias");
 		phrases[XorString("profilechanger_fakebantype")] = XorString("Tipo do Ban");
 		phrases[XorString("profilechanger_fakebantime")] = XorString("Tempo de Ban");
+		phrases[XorString("profilechanger_applyTooltip")] = XorString("Todos podem ver isso\n Ranks sao visiveis somente com +10 Vitorias");
 
 		phrases[XorString("misc_menukey")] = XorString("Tela Menu");
 		phrases[XorString("misc_radarhack")] = XorString("Hack Radar");

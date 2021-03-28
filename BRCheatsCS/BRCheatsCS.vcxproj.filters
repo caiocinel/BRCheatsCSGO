@@ -39,6 +39,9 @@
     <Filter Include="Fonts">
       <UniqueIdentifier>{4075d602-0db8-4d5c-9c76-46f532283969}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Changer\Protobuffs">
+      <UniqueIdentifier>{ab93705f-558c-4f38-abae-515c9273d5d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GUI.cpp">
@@ -206,26 +209,17 @@
     <ClCompile Include="Changer.cpp">
       <Filter>Hacks</Filter>
     </ClCompile>
-    <ClCompile Include="Changer\valve_parser.cpp">
-      <Filter>Changer</Filter>
-    </ClCompile>
-    <ClCompile Include="Changer\Protobuffs.cpp">
-      <Filter>Changer</Filter>
-    </ClCompile>
     <ClCompile Include="Hooks\vfunc_hook.cpp">
       <Filter>Hooks</Filter>
-    </ClCompile>
-    <ClCompile Include="Hacks\InventoryChanger.cpp">
-      <Filter>Hacks</Filter>
-    </ClCompile>
-    <ClCompile Include="SDK\items.cpp">
-      <Filter>SDK</Filter>
     </ClCompile>
     <ClCompile Include="Fonts\icons.cpp">
       <Filter>Fonts</Filter>
     </ClCompile>
     <ClCompile Include="Fonts\font.cpp">
       <Filter>Fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="Changer\Changer.cpp">
+      <Filter>Changer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -583,32 +577,11 @@
     <ClInclude Include="Changer.h">
       <Filter>Hacks</Filter>
     </ClInclude>
-    <ClInclude Include="Changer\ProtoField.h">
-      <Filter>Changer</Filter>
-    </ClInclude>
-    <ClInclude Include="Changer\ProtoWriter.h">
-      <Filter>Changer</Filter>
-    </ClInclude>
-    <ClInclude Include="Changer\valve_parser.h">
-      <Filter>Changer</Filter>
-    </ClInclude>
-    <ClInclude Include="Changer\Protobuffs.h">
-      <Filter>Changer</Filter>
-    </ClInclude>
-    <ClInclude Include="Changer\Messages.h">
-      <Filter>Changer</Filter>
-    </ClInclude>
     <ClInclude Include="SDK\SteamAPI.h">
       <Filter>SDK</Filter>
     </ClInclude>
     <ClInclude Include="Hooks\vfunc_hook.hpp">
       <Filter>Hooks</Filter>
-    </ClInclude>
-    <ClInclude Include="Hacks\InventoryChanger.h">
-      <Filter>Hacks</Filter>
-    </ClInclude>
-    <ClInclude Include="SDK\items.h">
-      <Filter>SDK</Filter>
     </ClInclude>
     <ClInclude Include="Fonts\IconsFontaudio.h">
       <Filter>Fonts</Filter>
@@ -639,6 +612,18 @@
     </ClInclude>
     <ClInclude Include="SDK\FileSystem.h">
       <Filter>SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="Changer\Protobuffs\protomessages.h">
+      <Filter>Changer\Protobuffs</Filter>
+    </ClInclude>
+    <ClInclude Include="Changer\Protobuffs\protoparser.h">
+      <Filter>Changer\Protobuffs</Filter>
+    </ClInclude>
+    <ClInclude Include="Changer\Protobuffs\pbwrap.h">
+      <Filter>Changer\Protobuffs</Filter>
+    </ClInclude>
+    <ClInclude Include="Changer\Changer.h">
+      <Filter>Changer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

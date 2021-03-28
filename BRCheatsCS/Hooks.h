@@ -43,17 +43,11 @@ public:
     HookType viewRender;
     vfunc_hook gc_hook;
 	HookType gameEventManager;
-	VmtSwap networkChannel;
+    HookType networkChannel;
     HookType svCheats;
 private:
     HMODULE moduleHandle;
     HWND window;
 };
-
-namespace indexhooks
-{
-    constexpr auto send_message = 0;
-    constexpr auto retrieve_message = 2;
-}
 
 inline std::unique_ptr<Hooks> hooks;
