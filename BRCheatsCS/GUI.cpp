@@ -1808,7 +1808,6 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     ImGui::Checkbox(phrases[XorString("misc_preparerevolver")].c_str(), &config->misc.prepareRevolver);
     ImGui::SameLine();
     hotkey(config->misc.prepareRevolverKey);
-    ImGui::Checkbox(phrases[XorString("misc_fakeprime")].c_str(), &config->misc.fakePrime);
 
     ImGui::Checkbox(phrases[XorString("misc_fakeduck")].c_str(), &config->misc.fakeDuck);
     ImGui::SameLine();
@@ -2178,6 +2177,7 @@ void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
         ImGui::Text(phrases[XorString("profilechanger_exp")].c_str());
         ImGui::SetNextItemWidth(-1.0f);
         ImGui::InputInt("##Xp", &config->profilechanger.exp);
+        ImGui::Checkbox(phrases[XorString("misc_fakeprime")].c_str(), &config->misc.fakePrime);
         ImGui::NextColumn();
         ImGui::Text(phrases[XorString("profilechanger_fakebantype")].c_str());
         ImGui::SetNextItemWidth(-1.0f);
