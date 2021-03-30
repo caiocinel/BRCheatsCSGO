@@ -513,7 +513,12 @@ public:
         int exp = 0;
         int ban_type = 0;
         int ban_time = 0;
-        std::map<int, ProfileChangerRank> ranking;
+        int winsMatchmaking = 0;
+        int rankMatchmaking = 0;
+        int winsWingman = 0;
+        int rankWingman = 0;
+        int winsDangerzone = 0;
+        int rankDangerzone = 0;
     } profilechanger;
 
     struct Style {

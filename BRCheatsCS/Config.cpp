@@ -597,13 +597,12 @@ static void from_json(const json& j, Config::profileChanger& p)
     read(j, "Exp", p.exp);
     read(j, "Ban Type", p.ban_type);
     read(j, "Ban Time", p.ban_time);
-    read<value_t::object>(j, "Rank", p.ranking);
-}
-
-static void from_json(const json& j, ProfileChangerRank& pc)
-{
-    read(j, "Rank", pc.rank_id);
-    read(j, "Wins", pc.wins);
+    read(j, "Rank MM", p.rankMatchmaking);
+    read(j, "Wins MM", p.winsMatchmaking);
+    read(j, "Rank Wingman", p.rankWingman);
+    read(j, "Wins Wingman", p.winsWingman);
+    read(j, "Rank DZ", p.rankDangerzone);
+    read(j, "Wins DZ", p.winsDangerzone);
 }
 
 static void from_json(const json& j, PurchaseList& pl)
@@ -1280,17 +1279,17 @@ static void to_json(json& j, const Config::profileChanger& o)
     WRITE("Leader", leader);
     WRITE("Level", level);
     WRITE("Exp", exp);
-    //WRITE("Rank", ranking);
     WRITE("Ban Type", ban_type);
     WRITE("Ban Time", ban_time);
+    WRITE("Rank MM", rankMatchmaking);
+    WRITE("Wins MM", winsMatchmaking);
+    WRITE("Rank Wingman", rankWingman);
+    WRITE("Wins Wingman", winsWingman);
+    WRITE("Rank DZ", rankDangerzone);
+    WRITE("Wins DZ", winsDangerzone);
 
 }
 
-static void to_json(json& j, const ProfileChangerRank& o, const ProfileChangerRank& dummy = {})
-{
-    WRITE("Rank", rank_id);
-    WRITE("Wins", wins);
-}
 
 static void to_json(json& j, const sticker_setting& o)
 {

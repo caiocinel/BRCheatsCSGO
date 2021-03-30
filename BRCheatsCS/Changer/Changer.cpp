@@ -21,8 +21,8 @@ std::string change_main(void* pubDest, uint32_t* pcubMsgSize) {
 	matchmaking_client_hello_t::player_ranking_info_t ranking;
 	ranking.rank_type_id().set(rank_type::mm);
 	ranking.account_id().set(memory->SteamUser->GetSteamID().GetAccountID());
-	ranking.rank_id().set(config->profilechanger.ranking[mode_settigns::matchmaking].rank_id);
-	ranking.wins().set(config->profilechanger.ranking[mode_settigns::matchmaking].wins);
+	ranking.rank_id().set(config->profilechanger.rankMatchmaking);
+	ranking.wins().set(config->profilechanger.winsMatchmaking);
 	msg.ranking().set(ranking);
 
 	msg.player_level().set(config->profilechanger.level + 1);
@@ -53,15 +53,15 @@ std::string change_other(void* pubDest, uint32_t* pcubMsgSize) {
 		auto _ranking = ranking[i];
 
 		if (_ranking.rank_type_id().get() == rank_type::wingmans) {
-			_ranking.rank_id().set(config->profilechanger.ranking[mode_settigns::wingman].rank_id);
-			_ranking.wins().set(config->profilechanger.ranking[mode_settigns::wingman].wins);
+			_ranking.rank_id().set(config->profilechanger.rankWingman);
+			_ranking.wins().set(config->profilechanger.winsWingman);
 
 			msg.ranking().set(_ranking, i);
 		}
 
 		if (_ranking.rank_type_id().get() == rank_type::danger_zone) {
-			_ranking.rank_id().set(config->profilechanger.ranking[mode_settigns::dangerzone].rank_id);
-			_ranking.wins().set(config->profilechanger.ranking[mode_settigns::dangerzone].wins);
+			_ranking.rank_id().set(config->profilechanger.rankDangerzone);
+			_ranking.wins().set(config->profilechanger.winsDangerzone);
 
 			msg.ranking().set(_ranking, i);
 		}

@@ -2141,32 +2141,32 @@ void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
         ImGui::TextWrapped("                Matchmaking");
         ImGui::SetNextItemWidth(-1.0f);
         if (config->misc.lang == 0)
-            ImGui::Combo("##Rank0", &config->profilechanger.ranking[0].rank_id, ranksGUIEN, ARRAYSIZE(ranksGUIEN));
+            ImGui::Combo("##Rank0", &config->profilechanger.rankMatchmaking, ranksGUIEN, ARRAYSIZE(ranksGUIEN));
         else
-            ImGui::Combo("##Rank0", &config->profilechanger.ranking[0].rank_id, ranksGUIPT, ARRAYSIZE(ranksGUIPT));
+            ImGui::Combo("##Rank0", &config->profilechanger.rankMatchmaking, ranksGUIPT, ARRAYSIZE(ranksGUIPT));
         ImGui::Text(phrases[XorString("profilechanger_wins")].c_str());
         ImGui::SetNextItemWidth(-1.0f);
-        ImGui::InputInt("##Wins0", &config->profilechanger.ranking[0].wins);
+        ImGui::InputInt("##Wins0", &config->profilechanger.winsMatchmaking);
         ImGui::NextColumn();
         ImGui::TextWrapped("                   Wingman");
         ImGui::SetNextItemWidth(-1.0f);
         if (config->misc.lang == 0)
-            ImGui::Combo("##Rank1", &config->profilechanger.ranking[1].rank_id, ranksGUIEN, ARRAYSIZE(ranksGUIEN));
+            ImGui::Combo("##Rank1", &config->profilechanger.rankWingman, ranksGUIEN, ARRAYSIZE(ranksGUIEN));
         else
-            ImGui::Combo("##Rank1", &config->profilechanger.ranking[1].rank_id, ranksGUIPT, ARRAYSIZE(ranksGUIPT));
+            ImGui::Combo("##Rank1", &config->profilechanger.rankWingman, ranksGUIPT, ARRAYSIZE(ranksGUIPT));
         ImGui::Text(phrases[XorString("profilechanger_wins")].c_str());
         ImGui::SetNextItemWidth(-1.0f);
-        ImGui::InputInt("##Wins1", &config->profilechanger.ranking[1].wins);
+        ImGui::InputInt("##Wins1", &config->profilechanger.winsWingman);
         ImGui::NextColumn();
         ImGui::TextWrapped("                Dangerzone");
         ImGui::SetNextItemWidth(-1.0f);
         if (config->misc.lang == 0)
-            ImGui::Combo("##Rank2", &config->profilechanger.ranking[2].rank_id, ranksDZGUIEN, ARRAYSIZE(ranksDZGUIEN));
+            ImGui::Combo("##Rank2", &config->profilechanger.rankDangerzone, ranksDZGUIEN, ARRAYSIZE(ranksDZGUIEN));
         else
-            ImGui::Combo("##Rank2", &config->profilechanger.ranking[2].rank_id, ranksDZGUIPT, ARRAYSIZE(ranksDZGUIPT));
+            ImGui::Combo("##Rank2", &config->profilechanger.rankDangerzone, ranksDZGUIPT, ARRAYSIZE(ranksDZGUIPT));
         ImGui::Text(phrases[XorString("profilechanger_wins")].c_str());
         ImGui::SetNextItemWidth(-1.0f);
-        ImGui::InputInt("##Wins2", &config->profilechanger.ranking[2].wins);
+        ImGui::InputInt("##Wins2", &config->profilechanger.winsDangerzone);
         ImGui::Columns(1);
         ImGui::Separator();
         ImGui::Spacing();

@@ -106,11 +106,6 @@ struct Trail : ColorToggleThickness {
     float time = 2.0f;
 };
 
-struct ProfileChangerRank {
-    int wins = 0;
-    int rank_id = 0;
-};
-
 struct Trails {
     bool enabled = false;
 
