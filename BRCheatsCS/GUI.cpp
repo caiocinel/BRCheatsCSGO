@@ -3,6 +3,7 @@
 #include <string>
 #include <ShlObj.h>
 #include <Windows.h>
+#include <cstring>
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_win32.h"
@@ -95,6 +96,8 @@ GUI::GUI() noexcept
         fonts.tahoma = io.Fonts->AddFontFromFileTTF((path / XorString("tahoma.ttf")).string().c_str(), 15.0f, &cfg, Helpers::getFontGlyphRanges());
         fonts.arial = io.Fonts->AddFontFromFileTTF((path / "arial.ttf").string().c_str(), 15.0f, &cfg, ranges);
         fonts.segoeui = io.Fonts->AddFontFromFileTTF((path / XorString("segoeui.ttf")).string().c_str(), 15.0f, &cfg, Helpers::getFontGlyphRanges());
+        fonts.segoeuiSized = io.Fonts->AddFontFromFileTTF((path / XorString("segoeui.ttf")).string().c_str(), 25.0f, &cfg, Helpers::getFontGlyphRanges());
+        fonts.iconsSized = io.Fonts->AddFontFromMemoryCompressedTTF(icons_data, icons_size, 25.0f, &icons_config, icons_ranges);
         
     }
 }
@@ -117,14 +120,14 @@ void GUI::render() noexcept
     renderProfileChangerWindow();
     renderPerformanceWindow();
     renderNickWindow();
-    //drawDemo();
+    drawDemo();
     /*renderMedalChangerWindow();
     renderInventoryChangerWindow();
     */
     renderMiscWindow();
-    renderConfigWindow();
     renderAutoConfigWindow();
   //  renderWarningWindow();
+    renderConfigWindow();
 }
 
 void GUI::updateColors() const noexcept
@@ -1567,7 +1570,7 @@ void GUI::renderSkinChangerWindow(bool contentOnly) noexcept
                             ImGui::Image(icon, { 200.0f, 150.0f });
                             ImGui::EndTooltip();
                         }
-                    }
+                    } //
                     ImGui::PopID();
                 }
             }
@@ -1912,45 +1915,77 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
         ImGui::SetNextWindowSize({ 290.0f, 0.0f });
         ImGui::Begin(phrases[XorString("window_config")].c_str(), &window.config, windowFlags);
     }
-
-    ImGui::Columns(2, nullptr, false);
-    ImGui::SetColumnOffset(1, 170.0f);
-
-    static bool incrementalLoad = false;
-    ImGui::PushItemWidth(160.0f);
-
-    if (ImGui::Button(phrases[XorString("config_reload")].c_str(), { 160.0f, 25.0f }))
-        config->listConfigs();
-
-    auto& configItems = config->getConfigs();
+    const auto configItems = config->getConfigs();
     static int currentConfig = -1;
+
+    static std::string buffer;
+    static std::string filter;
+
+    timeToNextConfigRefresh -= ImGui::GetIO().DeltaTime;
+    if (timeToNextConfigRefresh <= 0.0f) {
+        config->listConfigs();
+        if (const auto it = std::find(configItems.begin(), configItems.end(), buffer); it != configItems.end())
+            currentConfig = std::distance(configItems.begin(), it);
+        timeToNextConfigRefresh = 0.1f;
+    }
 
     if (static_cast<std::size_t>(currentConfig) >= configItems.size())
         currentConfig = -1;
 
-    static std::string buffer;
+    ImGui::SetNextItemWidth(-1.0f);
+     if (ImGui::ListBoxHeader("##ConfigList")) {
+         const std::locale original;
+         std::locale::global(std::locale{ "en_US.utf8" });
 
-    if (ImGui::ListBox("", &currentConfig, [](void* data, int idx, const char** out_text) {
-        auto& vector = *static_cast<std::vector<std::string>*>(data);
-        *out_text = vector[idx].c_str();
-        return true;
-        }, &configItems, configItems.size(), 5) && currentConfig != -1)
-            buffer = configItems[currentConfig];
+         const auto& facet = std::use_facet<std::ctype<wchar_t>>(std::locale{});
+         std::wstring filterWide(filter.length(), L'\0');
+         std::locale::global(original);
+            for (std::size_t i = 0; i < configItems.size(); ++i) {
+                if (filter.empty() || strstr(configItems[i].c_str(), filter.c_str())) {
+                    ImGui::PushID(i);
+                    ImGui::BeginGroup();
+                    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.27f, 0.55f, 0.99f, 1.00f));
+                    ImGui::PushFont(fonts.segoeuiSized);
+                    ImGui::Selectable(configItems[i].c_str(), i == currentConfig, ImGuiSelectableFlags_None, ImVec2{ 480.0f, 30.0f });
+                    ImGui::PopFont();
+                    ImGui::SameLine(0.0f,0.0f);
+                    ImGui::PushFont(fonts.iconsSized);
+                    if (ImGui::Button(ICON_FA_CHECK_SQUARE, { 30.0f, 30.0f })) {
+                        config->load(i);
+                        updateColors();
+                        SkinChanger::scheduleHudUpdate();
+                        Misc::updateClanTag(true);
+                    };
+                    ImGui::SameLine(0.0f, 0.0f);
+                    if (ImGui::Button(ICON_FA_SAVE, { 30.0f, 30.0f }))
+                        config->save(i);
+                    ImGui::SameLine(0.0f, 0.0f);
+                    if (ImGui::Button(ICON_FA_TRASH_ALT, { 30.0f, 30.0f })) {
+                        config->remove(i);
+                        if (static_cast<std::size_t>(currentConfig) < configItems.size())
+                            buffer = configItems[currentConfig];
+                        else
+                            buffer.clear();
+                    }
+                    ImGui::PopFont();
+                    ImGui::Separator();
+                    ImGui::PopStyleColor();
+                    ImGui::EndGroup();
+                    ImGui::PopID();
+                }
+            }
+            ImGui::ListBoxFooter();
+        }
 
         ImGui::PushID(0);
-        if (ImGui::InputTextWithHint("", phrases[XorString("config_placeholder_configname")].c_str(), &buffer, ImGuiInputTextFlags_EnterReturnsTrue)) {
-            if (currentConfig != -1)
-                config->rename(currentConfig, buffer.c_str());
-        }
+        ImGui::InputTextWithHint("", phrases[XorString("global_search")].c_str(), &filter);
         ImGui::PopID();
-        ImGui::NextColumn();
+        ImGui::PushItemWidth(50.0f);
 
-        ImGui::PushItemWidth(100.0f);
-
-        if (ImGui::Button(phrases[XorString("config_create")].c_str(), { 100.0f, 25.0f }))
+        if (ImGui::Button(ICON_FA_PLUS, { 50.0f, 25.0f }))
             config->add(buffer.c_str());
 
-        if (ImGui::Button(phrases[XorString("config_reset")].c_str(), { 100.0f, 25.0f }))
+        if (ImGui::Button(ICON_FA_BACKSPACE, { 50.0f, 25.0f }))
             ImGui::OpenPopup(phrases[XorString("config_toreset")].c_str());
 
         if (ImGui::BeginPopup(phrases[XorString("config_toreset")].c_str())) {
@@ -1980,18 +2015,11 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
             ImGui::EndPopup();
         }
         if (currentConfig != -1) {
-            if (ImGui::Button(phrases[XorString("config_load")].c_str(), { 100.0f, 25.0f })) {
-                config->load(currentConfig, incrementalLoad);
+            if (ImGui::Button(ICON_FA_FILE_DOWNLOAD, { 500.0f, 25.0f })) {
+                config->load(currentConfig);
                 updateColors();
                 SkinChanger::scheduleHudUpdate();
                 Misc::updateClanTag(true);
-            }
-            if (ImGui::Button(phrases[XorString("config_save")].c_str(), { 100.0f, 25.0f }))
-                config->save(currentConfig);
-            if (ImGui::Button(phrases[XorString("config_delete")].c_str(), { 100.0f, 25.0f })) {
-                config->remove(currentConfig);
-                currentConfig = -1;
-                buffer.clear();
             }
         }
         ImGui::Columns(1);
