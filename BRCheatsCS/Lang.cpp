@@ -287,9 +287,10 @@ void UpdateLanguage()
 		phrases[XorString("config_create")] = XorString("Create Config");
 		phrases[XorString("config_reset")] = XorString("Reset Config");
 		phrases[XorString("config_toreset")] = XorString("Config to Reset");
-		phrases[XorString("config_load")] = XorString("Load selected");
-		phrases[XorString("config_save")] = XorString("Save selected");
-		phrases[XorString("config_delete")] = XorString("Delete selected");
+		phrases[XorString("config_load")] = XorString("Load ");
+		phrases[XorString("config_save")] = XorString("Save ");
+		phrases[XorString("config_delete")] = XorString("Delete ");
+		phrases[XorString("config_using")] = XorString("Using %s:");
 
 		phrases[XorString("ezconfig_legitaimbot")] = XorString("Almost imperceptible Aimbot");
 		phrases[XorString("ezconfig_simplewall")] = XorString("A basic glow through walls");
@@ -576,9 +577,10 @@ void UpdateLanguage()
 		phrases[XorString("config_create")] = XorString("Criar Config");
 		phrases[XorString("config_reset")] = XorString("Resetar Config");
 		phrases[XorString("config_toreset")] = XorString("Config para resetar");
-		phrases[XorString("config_load")] = XorString("Carregar");
-		phrases[XorString("config_save")] = XorString("Salvar");
-		phrases[XorString("config_delete")] = XorString("Deletar");
+		phrases[XorString("config_using")] = XorString("Usando %s:");
+		phrases[XorString("config_load")] = XorString("Carregar ");
+		phrases[XorString("config_save")] = XorString("Salvar ");
+		phrases[XorString("config_delete")] = XorString("Deletar ");
 
 		phrases[XorString("ezconfig_legitaimbot")] = XorString("Um aimbot quase imperceptivel");
 		phrases[XorString("ezconfig_simplewall")] = XorString("Um contorno basico atraves das paredes");

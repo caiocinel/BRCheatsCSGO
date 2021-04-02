@@ -1919,6 +1919,7 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
     static int currentConfig = -1;
 
     static std::string buffer;
+    static std::string cfgName;
     static std::string filter;
 
     timeToNextConfigRefresh -= ImGui::GetIO().DeltaTime;
@@ -1943,34 +1944,47 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
             for (std::size_t i = 0; i < configItems.size(); ++i) {
                 if (filter.empty() || strstr(configItems[i].c_str(), filter.c_str())) {
                     ImGui::PushID(i);
-                    ImGui::BeginGroup();
-                    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.27f, 0.55f, 0.99f, 1.00f));
                     ImGui::PushFont(fonts.segoeuiSized);
-                    ImGui::Selectable(configItems[i].c_str(), i == currentConfig, ImGuiSelectableFlags_None, ImVec2{ 480.0f, 30.0f });
-                    ImGui::PopFont();
-                    ImGui::SameLine(0.0f,0.0f);
                     ImGui::PushFont(fonts.iconsSized);
-                    if (ImGui::Button(ICON_FA_CHECK_SQUARE, { 30.0f, 30.0f })) {
-                        config->load(i);
-                        updateColors();
-                        SkinChanger::scheduleHudUpdate();
-                        Misc::updateClanTag(true);
-                    };
-                    ImGui::SameLine(0.0f, 0.0f);
-                    if (ImGui::Button(ICON_FA_SAVE, { 30.0f, 30.0f }))
-                        config->save(i);
-                    ImGui::SameLine(0.0f, 0.0f);
-                    if (ImGui::Button(ICON_FA_TRASH_ALT, { 30.0f, 30.0f })) {
-                        config->remove(i);
-                        if (static_cast<std::size_t>(currentConfig) < configItems.size())
-                            buffer = configItems[currentConfig];
-                        else
-                            buffer.clear();
+                    if (ImGui::Selectable(configItems[i].c_str(), i == currentConfig, ImGuiSelectableFlags_SpanAvailWidth, ImVec2{ 470.0f, 30.0f }))
+                        currentConfig = i;
+                    if (ImGui::BeginPopupContextItem(configItems[i].c_str())) {
+                        ImGui::Text(phrases[XorString("config_using")].c_str(), configItems[i].c_str());
+                        ImGui::BeginGroup();
+                            ImGui::Text(ICON_FA_CHECK_SQUARE); ImGui::SameLine();
+                            ImGui::Text(phrases[XorString("config_load")].c_str());
+                        ImGui::EndGroup();
+                        if (ImGui::IsItemClicked()){
+                            config->load(i);
+                            updateColors();
+                            SkinChanger::scheduleHudUpdate();
+                            Misc::updateClanTag(true);
+                        }
+                        ImGui::Separator();
+                        ImGui::BeginGroup();
+                            ImGui::Text(ICON_FA_SAVE); ImGui::SameLine();
+                            ImGui::Text(phrases[XorString("config_save")].c_str());
+                        ImGui::EndGroup();
+                        if(ImGui::IsItemClicked())
+                            config->save(i);
+                        ImGui::Separator();
+                        ImGui::BeginGroup();
+                            ImGui::Text(ICON_FA_TRASH_ALT); ImGui::SameLine();
+                            ImGui::Text(phrases[XorString("config_delete")].c_str());
+                        ImGui::EndGroup();
+                        if(ImGui::IsItemClicked()){
+                            config->remove(i);
+                            if (static_cast<std::size_t>(currentConfig) < configItems.size())
+                                buffer = configItems[currentConfig];
+                            else
+                                buffer.clear();
+                        }
+
+                        ImGui::EndPopup();
                     }
                     ImGui::PopFont();
+                    ImGui::PopFont();
                     ImGui::Separator();
-                    ImGui::PopStyleColor();
-                    ImGui::EndGroup();
                     ImGui::PopID();
                 }
             }
@@ -1978,15 +1992,32 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
         }
 
         ImGui::PushID(0);
-        ImGui::InputTextWithHint("", phrases[XorString("global_search")].c_str(), &filter);
-        ImGui::PopID();
-        ImGui::PushItemWidth(50.0f);
+        ImGui::InputTextWithHint("##Search", phrases[XorString("global_search")].c_str(), &filter);
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_PLUS, { 50.0f, 22.0f }))
+            ImGui::OpenPopup("NewCfg");
 
-        if (ImGui::Button(ICON_FA_PLUS, { 50.0f, 25.0f }))
-            config->add(buffer.c_str());
+        if (ImGui::BeginPopup("NewCfg", ImGuiPopupFlags_MouseButtonLeft)){
+            ImGui::InputTextWithHint("##ConfigName", phrases[XorString("config_placeholder_configname")].c_str(), &cfgName);
+            ImGui::SameLine();
+            if (ImGui::Button(ICON_FA_PLUS_CIRCLE)) {
+                config->add(cfgName.c_str());
+                cfgName.clear();
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
+        ImGui::SameLine();
 
-        if (ImGui::Button(ICON_FA_BACKSPACE, { 50.0f, 25.0f }))
+
+        if (ImGui::Button(ICON_FA_BACKSPACE, { 50.0f, 22.0f }))
             ImGui::OpenPopup(phrases[XorString("config_toreset")].c_str());
+
+        ImGui::SameLine();
+
+        if (ImGui::Button(ICON_FA_FOLDER_OPEN, { 50.0f, 22.0f }))
+            config->openConfigDir();
+
 
         if (ImGui::BeginPopup(phrases[XorString("config_toreset")].c_str())) {
             static constexpr const char* names[]{ "Whole", "Aimbot", "Ragebot" ,"Triggerbot", "Backtrack", "Anti aim", "Glow", "Chams", "ESP", "Visuals", "Skin changer", "Sound", "Style", "Misc" };
@@ -2014,15 +2045,7 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
             }
             ImGui::EndPopup();
         }
-        if (currentConfig != -1) {
-            if (ImGui::Button(ICON_FA_FILE_DOWNLOAD, { 500.0f, 25.0f })) {
-                config->load(currentConfig);
-                updateColors();
-                SkinChanger::scheduleHudUpdate();
-                Misc::updateClanTag(true);
-            }
-        }
-        ImGui::Columns(1);
+        ImGui::PopID();
         if (!contentOnly)
             ImGui::End();
 }
