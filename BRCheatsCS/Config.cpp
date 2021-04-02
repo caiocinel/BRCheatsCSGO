@@ -63,6 +63,12 @@ Config::Config(const char* name) noexcept
     std::sort(std::next(systemFonts.begin()), systemFonts.end());
 }
 
+void Config::openConfigDir() const noexcept
+{
+    createConfigDir();
+    int ret = std::system(("start " + path.string()).c_str());
+}
+
 using json = nlohmann::basic_json<std::map, std::vector, std::string, bool, std::int64_t, std::uint64_t, float>;
 using value_t = json::value_t;
 
@@ -715,7 +721,7 @@ static void from_json(const json& j, Config::Misc::Spam& s)
     read(j, "Team Picker", s.team);
 }
 
-void Config::load(size_t id, bool incremental) noexcept
+void Config::load(size_t id) noexcept
 {
     json j;
 
@@ -1331,10 +1337,15 @@ void removeEmptyObjects(json& j) noexcept
     }
 }
 
+void Config::createConfigDir() const noexcept
+{
+    std::error_code ec; std::filesystem::create_directory(path, ec);
+}
+
 void Config::save(size_t id) const noexcept
 {
     std::error_code ec;
-    std::filesystem::create_directory(path, ec);
+    createConfigDir();
 
     if (std::ofstream out{ path / (const char8_t*)configs[id].c_str() }; out.good()) {
         json j;

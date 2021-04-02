@@ -14,7 +14,10 @@ public:
 		ImFont* tahoma = nullptr;
 		ImFont* segoeui = nullptr;
         ImFont* arial = nullptr;
+        ImFont* segoeuiSized = nullptr;
+        ImFont* iconsSized = nullptr;
 	} fonts;
+        float timeToNextConfigRefresh = 0.1f;
         bool isOpen() noexcept { return open; }
 private:
     static void hotkey(int&) noexcept;
