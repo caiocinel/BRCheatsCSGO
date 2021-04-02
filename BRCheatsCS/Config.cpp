@@ -725,10 +725,16 @@ void Config::load(size_t id) noexcept
 {
     json j;
 
-    if (std::ifstream in{ path / (const char8_t*)configs[id].c_str() }; in.good())
-        in >> j;
-    else
+    if (std::ifstream in{ path / (const char8_t*)configs[id].c_str() }; in.good()) {
+        j = json::parse(in, nullptr, false);
+        if (j.is_discarded())
+            return;
+    }
+    else {
         return;
+    }
+    
+
 
 
     reset();

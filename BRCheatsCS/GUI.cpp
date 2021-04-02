@@ -120,7 +120,7 @@ void GUI::render() noexcept
     renderProfileChangerWindow();
     renderPerformanceWindow();
     renderNickWindow();
-    drawDemo();
+    //drawDemo();
     /*renderMedalChangerWindow();
     renderInventoryChangerWindow();
     */
