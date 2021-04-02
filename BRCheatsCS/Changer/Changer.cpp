@@ -25,7 +25,7 @@ std::string change_main(void* pubDest, uint32_t* pcubMsgSize) {
 	ranking.wins().set(config->profilechanger.winsMatchmaking);
 	msg.ranking().set(ranking);
 
-	msg.player_level().set(config->profilechanger.level + 1);
+	msg.player_level().set(config->profilechanger.level);
 	msg.player_level_xp().set(config->profilechanger.exp);
 
 	if (config->profilechanger.ban_type != 0 && config->profilechanger.ban_time != 0) {
@@ -96,6 +96,9 @@ namespace profile_changer {
 	void receive_message(void* thisPtr, void* oldEBP, uint32_t messageType, void* pubDest, uint32_t cubDest, uint32_t* pcubMsgSize) {
 		static bool standart_upd;
 		static bool other_upd;
+
+		if (!config->profilechanger.level > 1)
+			return;
 
 		switch (messageType)
 		{
