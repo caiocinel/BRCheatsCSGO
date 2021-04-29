@@ -10,9 +10,9 @@
 #include "imgui/imgui_impl_win32.h"
 
 #include "MinHook/MinHook.h"
-#ifdef _RELEASE
-#include "BRC_UserActivity.h"
-#endif
+//#ifdef _RELEASE
+//#include "BRC_UserActivity.h"
+//#endif
 
 #include "Config.h"
 #include "EventListener.h"
@@ -79,7 +79,7 @@ static LRESULT __stdcall wndProc(HWND window, UINT msg, WPARAM wParam, LPARAM lP
     [[maybe_unused]] static const auto once = [](HWND window) noexcept {
         netvars = std::make_unique<Netvars>();
         eventListener = std::make_unique<EventListener>();
-        config = std::make_unique<Config>("BRCheats");
+        config = std::make_unique<Config>("CS_Cheat");
 
         ImGui::CreateContext();
         ImGui_ImplWin32_Init(window);
@@ -847,9 +847,9 @@ void Hooks::install() noexcept
     if constexpr (std::is_same_v<HookType, MinHook>)
         MH_EnableHook(MH_ALL_HOOKS);
 
-    #ifdef _RELEASE
-      BRC_StartUserActivity(ActivityId_CSGO);
-    #endif
+   // #ifdef _RELEASE
+   //   BRC_StartUserActivity(ActivityId_CSGO);
+   // #endif
 
 }
 

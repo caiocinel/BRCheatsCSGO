@@ -66,7 +66,7 @@ private:
             if (void* foundInterface = createInterface(name, nullptr))
                 return foundInterface;
 
-        MessageBoxA(nullptr, ("Startup error in " + std::string{ name } + " !").c_str(), "BRCheats", MB_OK | MB_ICONERROR);
+        MessageBoxA(nullptr, ("Startup error in " + std::string{ name } + " !").c_str(), "Cheat", MB_OK | MB_ICONERROR);
         std::exit(EXIT_FAILURE);
     }
 };

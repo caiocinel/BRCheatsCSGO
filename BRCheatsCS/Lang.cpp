@@ -16,7 +16,7 @@ void UpdateLanguage()
 	if (config->misc.lang == 0)
 	{
 
-		phrases[XorString("main_windowTitle")] = XorString("BRCheats EN");
+		phrases[XorString("main_windowTitle")] = XorString("Cheat EN");
 		phrases[XorString("main_visuals")] = XorString("Visuals");
 		phrases[XorString("main_misc")] = XorString("Misc");
 		phrases[XorString("main_lang")] = XorString("Idioma");
@@ -53,20 +53,20 @@ void UpdateLanguage()
 		phrases[XorString("global_flags")] = XorString("Flags");
 		phrases[XorString("global_mode")] = XorString("Mode");
 
-		phrases[XorString("window_aimbot")] = XorString("Aimbot | BRCheats");
-		phrases[XorString("window_ragebot")] = XorString("Ragebot | BRCheats");
-		phrases[XorString("window_antiaim")] = XorString("Anti Aim | BRCheats");
-		phrases[XorString("window_triggerbot")] = XorString("Triggerbot | BRCheats");
-		phrases[XorString("window_backtrack")] = XorString("Backtrack | BRCheats");
-		phrases[XorString("window_glow")] = XorString("Glow | BRCheats");
-		phrases[XorString("window_chams")] = XorString("Chams | BRCheats");
-		phrases[XorString("window_esp")] = XorString("ESP | BRCheats");
-		phrases[XorString("window_visuals")] = XorString("Visuals | BRCheats");
-		phrases[XorString("window_skinchanger")] = XorString("Skin Changer | BRCheats");
-		phrases[XorString("window_misc")] = XorString("Misc | BRCheats");
-		phrases[XorString("window_config")] = XorString("Config | BRCheats");
-		phrases[XorString("window_ezconfig")] = XorString("EzConfig | BRCheats");
-		phrases[XorString("window_world")] = XorString("World | BRCheats");
+		phrases[XorString("window_aimbot")] = XorString("Aimbot | Cheat");
+		phrases[XorString("window_ragebot")] = XorString("Ragebot | Cheat");
+		phrases[XorString("window_antiaim")] = XorString("Anti Aim | Cheat");
+		phrases[XorString("window_triggerbot")] = XorString("Triggerbot | Cheat");
+		phrases[XorString("window_backtrack")] = XorString("Backtrack | Cheat");
+		phrases[XorString("window_glow")] = XorString("Glow | Cheat");
+		phrases[XorString("window_chams")] = XorString("Chams | Cheat");
+		phrases[XorString("window_esp")] = XorString("ESP | Cheat");
+		phrases[XorString("window_visuals")] = XorString("Visuals | Cheat");
+		phrases[XorString("window_skinchanger")] = XorString("Skin Changer | Cheat");
+		phrases[XorString("window_misc")] = XorString("Misc | Cheat");
+		phrases[XorString("window_config")] = XorString("Config | Cheat");
+		phrases[XorString("window_ezconfig")] = XorString("EzConfig | Cheat");
+		phrases[XorString("window_world")] = XorString("World | Cheat");
 
 		phrases[XorString("aimhacks_friendlyfire")] = XorString("Friendly fire");
 		phrases[XorString("aimhacks_visibleonly")] = XorString("Visible only");
@@ -207,7 +207,7 @@ void UpdateLanguage()
 		phrases[XorString("profilechanger_wins")] = XorString("Wins");
 		phrases[XorString("profilechanger_fakebantype")] = XorString("Ban Type");
 		phrases[XorString("profilechanger_fakebantime")] = XorString("Ban Time");
-		phrases[XorString("profilechanger_applyTooltip")] = XorString("Everyone will be able to see this\nYour rank just will be shown if wins > 10");
+		phrases[XorString("profilechanger_applyTooltip")] = XorString("Everyone will be able to see this\nYour rank just will be shown if wins > 10 and level >2");
 
 		phrases[XorString("misc_menukey")] = XorString("Menu Key");
 		phrases[XorString("misc_radarhack")] = XorString("Radar Hack");
@@ -314,7 +314,7 @@ void UpdateLanguage()
 		phrases[XorString("main_lang")] = XorString("Language");
 		phrases[XorString("main_world")] = XorString("Mundo");
 		phrases[XorString("main_langAlert")] = XorString("O menu foi definido em Portugues");
-		phrases[XorString("main_windowTitle")] = XorString("BRCheats PT");
+		phrases[XorString("main_windowTitle")] = XorString("Cheat PT");
 
 		phrases[XorString("global_enabled")] = XorString("Ativado");
 		phrases[XorString("global_threedots")] = XorString("...");
@@ -346,18 +346,18 @@ void UpdateLanguage()
 		phrases[XorString("global_flags")] = XorString("Flags");
 		phrases[XorString("global_mode")] = XorString("Modo");
 
-		phrases[XorString("window_aimbot")] = XorString("Aimbot | BRCheats");
-		phrases[XorString("window_ragebot")] = XorString("Ragebot | BRCheats");
-		phrases[XorString("window_antiaim")] = XorString("Anti Aim | BRCheats");
-		phrases[XorString("window_triggerbot")] = XorString("Triggerbot | BRCheats");
-		phrases[XorString("window_backtrack")] = XorString("Backtrack | BRCheats");
-		phrases[XorString("window_glow")] = XorString("Glow | BRCheats");
-		phrases[XorString("window_chams")] = XorString("Chams | BRCheats");
-		phrases[XorString("window_esp")] = XorString("ESP | BRCheats");
-		phrases[XorString("window_visuals")] = XorString("Visuais | BRCheats");
-		phrases[XorString("window_skinchanger")] = XorString("Skin Changer | BRCheats");
-		phrases[XorString("window_misc")] = XorString("Outros | BRCheats");
-		phrases[XorString("window_config")] = XorString("Config | BRCheats");
+		phrases[XorString("window_aimbot")] = XorString("Aimbot | Cheat");
+		phrases[XorString("window_ragebot")] = XorString("Ragebot | Cheat");
+		phrases[XorString("window_antiaim")] = XorString("Anti Aim | Cheat");
+		phrases[XorString("window_triggerbot")] = XorString("Triggerbot | Cheat");
+		phrases[XorString("window_backtrack")] = XorString("Backtrack | Cheat");
+		phrases[XorString("window_glow")] = XorString("Glow | Cheat");
+		phrases[XorString("window_chams")] = XorString("Chams | Cheat");
+		phrases[XorString("window_esp")] = XorString("ESP | Cheat");
+		phrases[XorString("window_visuals")] = XorString("Visuais | Cheat");
+		phrases[XorString("window_skinchanger")] = XorString("Skin Changer | Cheat");
+		phrases[XorString("window_misc")] = XorString("Outros | Cheat");
+		phrases[XorString("window_config")] = XorString("Config | Cheat");
 
 		phrases[XorString("aimhacks_friendlyfire")] = XorString("Fogo Amigo");
 		phrases[XorString("aimhacks_visibleonly")] = XorString("Somente Visivel");
@@ -497,7 +497,7 @@ void UpdateLanguage()
 		phrases[XorString("profilechanger_wins")] = XorString("Vitorias");
 		phrases[XorString("profilechanger_fakebantype")] = XorString("Tipo do Ban");
 		phrases[XorString("profilechanger_fakebantime")] = XorString("Tempo de Ban");
-		phrases[XorString("profilechanger_applyTooltip")] = XorString("Todos podem ver isso\n Ranks sao visiveis somente com +10 Vitorias");
+		phrases[XorString("profilechanger_applyTooltip")] = XorString("Todos podem ver isso\n Ranks sao visiveis somente com +10 Vitorias e level +2");
 
 		phrases[XorString("misc_menukey")] = XorString("Tela Menu");
 		phrases[XorString("misc_radarhack")] = XorString("Hack Radar");
@@ -523,7 +523,7 @@ void UpdateLanguage()
 		phrases[XorString("misc_quickreload")] = XorString("Quick Reload");
 		phrases[XorString("misc_quickreload")] = XorString("Prepare Revolver");
 		phrases[XorString("misc_animatedclantag")] = XorString("Tag Clan Animada");
-		phrases[XorString("misc_clocktag")] = XorString("Tag Relógio");
+		phrases[XorString("misc_clocktag")] = XorString("Tag Relogio");
 		phrases[XorString("misc_customclantag")] = XorString("Clan Customizado");
 		phrases[XorString("misc_killmessage")] = XorString("Mensagem de Kill");
 		phrases[XorString("misc_nameexploit")] = XorString("Name Exploit");
@@ -553,7 +553,7 @@ void UpdateLanguage()
 		phrases[XorString("misc_fakeduck")] = XorString("Fake Duck");
 		phrases[XorString("misc_doorspam")] = XorString("Door Spam");
 		phrases[XorString("misc_preservekillfeed")] = XorString("Travar Killfeed");
-		phrases[XorString("misc_onlyheadshots")] = XorString("Só headshots");
+		phrases[XorString("misc_onlyheadshots")] = XorString("So headshots");
 		phrases[XorString("misc_purchaselist")] = XorString("Lista de Compras");
 		phrases[XorString("misc_onlyduringfreezetime")] = XorString("Somente no Freezetime");
 		phrases[XorString("misc_showprices")] = XorString("Mostrar Precos");
@@ -585,10 +585,10 @@ void UpdateLanguage()
 		phrases[XorString("ezconfig_legitaimbot")] = XorString("Um aimbot quase imperceptivel");
 		phrases[XorString("ezconfig_simplewall")] = XorString("Um contorno basico atraves das paredes");
 		phrases[XorString("ezconfig_fullwall")] = XorString("Wallhack completo com auxiliares");
-		phrases[XorString("ezconfig_utilities")] = XorString("Alguns utilitários, como ver patentes, dinheiro e algumas outras opções interessantes");
+		phrases[XorString("ezconfig_utilities")] = XorString("Alguns utilitarios, como ver patentes, dinheiro e algumas outras opçoes interessantes");
 		phrases[XorString("ezconfig_bunnyhop")] = XorString("Ativa o Auto Bunny Hopping (segure espaço)");
-		phrases[XorString("ezconfig_reset")] = XorString("Redefine todas as configurações de cheat");
-		phrases[XorString("ezconfig_fpsboost")] = XorString("Aumenta o FPS em até 70% desativando efeitos do jogo");
+		phrases[XorString("ezconfig_reset")] = XorString("Redefine todas as configuraçoes de cheat");
+		phrases[XorString("ezconfig_fpsboost")] = XorString("Aumenta o FPS em ate 70% desativando efeitos do jogo");
 
 	}
 }

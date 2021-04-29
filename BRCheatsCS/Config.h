@@ -537,7 +537,7 @@ public:
         bool customClanTag{ false };
         bool clocktag{ false };
         char clanTag[16];
-        char cheatName[16] = "BRCheats";
+        char cheatName[16] = "Cheat";
         bool animatedClanTag{ false };
         bool fastDuck{ false };
         bool moonwalk{ false };
@@ -610,7 +610,7 @@ public:
         bool oppositeHandKnife = false;
         PreserveKillfeed preserveKillfeed;
         float aspectratio{ 0 };
-        std::string killMessageString{ "brcheats.net" };
+        std::string killMessageString{ "Cheat.net" };
         int banColor{ 6 };
         ColorToggle bombTimer{ 1.0f, 0.55f, 0.0f };
         int prepareRevolverKey{ 0 };

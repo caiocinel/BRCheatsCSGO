@@ -149,7 +149,7 @@ private:
                     return reinterpret_cast<std::uintptr_t>(start);
             }
         }
-        MessageBoxA(NULL, ("Failed to find pattern #" + std::to_string(id) + '!').c_str(), "BRCheats", MB_OK | MB_ICONWARNING);
+        MessageBoxA(NULL, ("Failed to find pattern #" + std::to_string(id) + '!').c_str(), "Cheat", MB_OK | MB_ICONWARNING);
         return 0;
     }
 };

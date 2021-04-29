@@ -2056,7 +2056,7 @@ void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
         if (!window.profileChanger)
             return;
         ImGui::SetNextWindowSize({ 290.0f, 0.0f });
-        ImGui::Begin("Profile Changer | BRCheats", &window.profileChanger, windowFlags);
+        ImGui::Begin("Profile Changer | Cheat", &window.profileChanger, windowFlags);
     }
 
         const char* ranksGUIEN[] = {
@@ -2705,7 +2705,7 @@ void GUI::renderGuiStyle2() noexcept
    
 
     ImGui::SetNextWindowSize({ 600.0f, 0.0f });
-    ImGui::Begin("BRCheats", nullptr, windowFlags);
+    ImGui::Begin("Cheat", nullptr, windowFlags);
         if (ImGui::Button("      " ICON_FA_CROSSHAIRS "\nAimhacks",ImVec2(97.0f, 0.0f))) {
             window.tab = 0;
         }

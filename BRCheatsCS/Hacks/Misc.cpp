@@ -403,7 +403,7 @@ void Misc::watermark() noexcept
             interfaces->surface->setTextColor(config->misc.watermark.color);
 
         interfaces->surface->setTextPosition(5, 0);
-        interfaces->surface->printText(L"BRCheats");
+        interfaces->surface->printText(L"Cheat");
 
         static auto frameRate = 1.0f;
         frameRate = 0.9f * frameRate + 0.1f * memory->globalVars->absoluteFrameTime;
@@ -1510,7 +1510,7 @@ void Misc::cheatSpam() noexcept
 
         updateClanTag(true);
         std::string cmd = "say \"";
-        cmd += XorString("The most COMPLETE and SAFE cheat on the market at the LOWEST PRICE, https://brcheats.net");
+        cmd += XorString("The most COMPLETE and SAFE cheat on the market at the LOWEST PRICE, https://Cheat.net");
         cmd += '"';
         interfaces->engine->clientCmdUnrestricted(cmd.c_str());
         lastTime = memory->globalVars->realtime;
