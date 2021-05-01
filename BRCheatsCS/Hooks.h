@@ -24,6 +24,7 @@ public:
 
     void install() noexcept;
     void uninstall() noexcept;
+    void hookGC() noexcept;
 
     WNDPROC originalWndProc;
     std::add_pointer_t<HRESULT __stdcall(IDirect3DDevice9*, const RECT*, const RECT*, HWND, const RGNDATA*)> originalPresent;

@@ -198,6 +198,8 @@ void UpdateLanguage()
 		phrases[XorString("skinchanger_scale")] = XorString("Scale");
 		phrases[XorString("skinchanger_rotation")] = XorString("Rotation");
 
+		phrases[XorString("profilechanger_warning")] = XorString("Users reported delay in finding matches using ProfileChanger,\n so it is only available at the user's will");
+		phrases[XorString("profilechanger_hookbutton")] = XorString("Unlock ProfileChanger");
 		phrases[XorString("profilechanger_rank")] = XorString("Rank");
 		phrases[XorString("profilechanger_level")] = XorString("Level");
 		phrases[XorString("profilechanger_friendly")] = XorString("Friendly");
@@ -488,6 +490,8 @@ void UpdateLanguage()
 		phrases[XorString("skinchanger_scale")] = XorString("Tamanho");
 		phrases[XorString("skinchanger_rotation")] = XorString("Rotacao");
 
+		phrases[XorString("profilechanger_warning")] = XorString("Usuarios relataram demora para encontrar partidas \nusando o ProfileChanger, por isso ele somente \nfica disponivel por vontade do usuario");
+		phrases[XorString("profilechanger_hookbutton")] = XorString("Liberar ProfileChanger");
 		phrases[XorString("profilechanger_rank")] = XorString("Patente");
 		phrases[XorString("profilechanger_level")] = XorString("Level");
 		phrases[XorString("profilechanger_friendly")] = XorString("Amigavel");

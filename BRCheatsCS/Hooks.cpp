@@ -788,7 +788,12 @@ static bool __fastcall WriteUsercmdDeltaToBuffer(void* ecx, void* edx, int slot,
     return true;
 }
 
-
+void Hooks::hookGC() noexcept
+{
+    gc_hook.setup(memory->SteamGameCoordinator);
+    gc_hook.hook_index(2, hkGCRetrieveMessage);
+    config->globals.profileChangerHook = true;
+}
 
 void Hooks::install() noexcept
 {
@@ -812,7 +817,6 @@ void Hooks::install() noexcept
     svCheats.init(interfaces->cvar->findVar("sv_cheats"));
     viewRender.init(memory->viewRender);
 	gameEventManager.init(interfaces->gameEventManager);
-    gc_hook.setup(memory->SteamGameCoordinator);
     bspQuery.hookAt(6, listLeavesInBox);
     client.hookAt(24, WriteUsercmdDeltaToBuffer);
     client.hookAt(37, frameStageNotify);
@@ -836,7 +840,6 @@ void Hooks::install() noexcept
     svCheats.hookAt(13, svCheatsGetBool);
     viewRender.hookAt(39, render2dEffectsPreHud);
     viewRender.hookAt(41, renderSmokeOverlay);
-    gc_hook.hook_index(2, hkGCRetrieveMessage);
 
     if (DWORD oldProtection; VirtualProtect(memory->dispatchSound, 4, PAGE_EXECUTE_READWRITE, &oldProtection)) {
         originalDispatchSound = decltype(originalDispatchSound)(uintptr_t(memory->dispatchSound + 1) + *memory->dispatchSound);
@@ -891,8 +894,8 @@ void Hooks::uninstall() noexcept
     viewRender.restore();
     networkChannel.restore();
     extraHook.restore();
-    gc_hook.unhook_all();
-
+    if(config->globals.profileChangerHook)
+        gc_hook.unhook_all();
     netvars->restore();
 
     Glow::clearCustomObjects();

@@ -696,6 +696,7 @@ public:
         bool sendPacket{ false };
 	    Vector lastTickMovements;
         char UsernameBRC;
+        bool profileChangerHook{ false };
     } globals;
 
     struct{

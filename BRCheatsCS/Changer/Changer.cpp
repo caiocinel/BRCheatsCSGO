@@ -97,7 +97,7 @@ namespace profile_changer {
 		static bool standart_upd;
 		static bool other_upd;
 
-		if (!config->profilechanger.level > 1)
+		if (config->profilechanger.level <2)
 			return;
 
 		switch (messageType)

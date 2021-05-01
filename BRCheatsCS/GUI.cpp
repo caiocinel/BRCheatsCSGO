@@ -2058,6 +2058,14 @@ void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
         ImGui::SetNextWindowSize({ 290.0f, 0.0f });
         ImGui::Begin("Profile Changer | Cheat", &window.profileChanger, windowFlags);
     }
+    if (!config->globals.profileChangerHook) {
+        ImGui::PushFont(fonts.segoeuiSized);
+        ImGui::Text(phrases[XorString("profilechanger_warning")].c_str());
+        if (ImGui::Button(phrases[XorString("profilechanger_hookbutton")].c_str()))
+            hooks->hookGC();
+        ImGui::PopFont();
+    }
+    else {
 
         const char* ranksGUIEN[] = {
             "Off",
@@ -2100,7 +2108,7 @@ void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
             "The Howling Alpha"
         };
 
-        const char* bansGUIEN[] =  {
+        const char* bansGUIEN[] = {
             "Off",
             "You were kicked from the last match (competitive cooldown)",
             "You killed too many teammates (competitive cooldown)",
@@ -2123,7 +2131,7 @@ void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
             "A server using your game server login token has been banned. (global cooldown)"
         };
 
-        static const char* ranksGUIPT[] =  {
+        static const char* ranksGUIPT[] = {
             "Nenhum",
             "Prata 1",
             "Prata 2",
@@ -2145,7 +2153,7 @@ void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
             "Global"
         };
 
-        static const char* bansGUIPT[] =  {
+        static const char* bansGUIPT[] = {
             "Nenhum",
             "Voce foi expulso da ultima partida",
             "Voce matou muitos aliados",
@@ -2251,22 +2259,22 @@ void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
         ImGui::InputInt("##Leader", &config->profilechanger.leader);
         ImGui::Columns(1);
         ImGui::Spacing();
-       
-            
-        
-            if (ImGui::Button("Apply", ImVec2(-1.0f, 0.0f)))
-            {
-                profile_changer::send_update_messages();
-            }
-            if (ImGui::IsItemHovered())
-            {
-                ImGui::BeginTooltip();
-                ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-                ImGui::TextUnformatted(phrases[XorString("profilechanger_applyTooltip")].c_str());
-                ImGui::PopTextWrapPos();
-                ImGui::EndTooltip();
-            }
-   
+
+
+
+        if (ImGui::Button("Apply", ImVec2(-1.0f, 0.0f)))
+        {
+            profile_changer::send_update_messages();
+        }
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::BeginTooltip();
+            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+            ImGui::TextUnformatted(phrases[XorString("profilechanger_applyTooltip")].c_str());
+            ImGui::PopTextWrapPos();
+            ImGui::EndTooltip();
+        }
+    }
         if (!contentOnly)
             ImGui::End();
 }
