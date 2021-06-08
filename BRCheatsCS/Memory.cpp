@@ -11,8 +11,9 @@ static constexpr auto relativeToAbsolute(uintptr_t address) noexcept
 
 Memory::Memory() noexcept
 {
-    present = findPattern(L"gameoverlayrenderer", "\xFF\x15????\x8B\xF8\x85\xDB") + 2;
-    reset = findPattern(L"gameoverlayrenderer", "\xC7\x45?????\xFF\x15????\x8B\xF8") + 9;
+
+    present = findPattern(L"gameoverlayrenderer", "\xFF\x15????\x8B\xF0\x85\xFF") + 2;
+    reset = findPattern(L"gameoverlayrenderer", "\xC7\x45?????\xFF\x15????\x8B\xD8") + 9;
 
     clientMode = **reinterpret_cast<ClientMode***>((*reinterpret_cast<uintptr_t**>(interfaces->client))[10] + 5);
     input = *reinterpret_cast<Input**>((*reinterpret_cast<uintptr_t**>(interfaces->client))[16] + 1);
