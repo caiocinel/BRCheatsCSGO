@@ -579,7 +579,6 @@ public:
         bool killMessage{ false };
         bool nadePredict{ false };
         bool fixTabletSignal{ false };
-        bool fakePrime{ false };
         bool bombDamage{ false };
         int nameChangeSelection{ 0 };
         std::string customName;

@@ -35,7 +35,6 @@ namespace Misc
     void quickHealthshot(UserCmd*) noexcept;
     void fixTabletSignal() noexcept;
     void drawBombDamage() noexcept;
-    void fakePrime() noexcept;
     void killMessage(GameEvent& event) noexcept;
     void fixMovement(UserCmd* cmd, float yaw) noexcept;
     void antiAfkKick(UserCmd* cmd) noexcept;

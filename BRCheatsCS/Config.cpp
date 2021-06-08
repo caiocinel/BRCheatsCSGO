@@ -686,7 +686,6 @@ static void from_json(const json& j, Config::Misc& m)
     read(j, "Grenade predict", m.nadePredict);
     read(j, "Fix tablet signal", m.fixTabletSignal);
     read(j, "Max angle delta", m.maxAngleDelta);
-    read(j, "Fake prime", m.fakePrime);
     read(j, "Bomb Damage", m.bombDamage);
     read(j, "Fix tablet signal", m.fixTabletSignal);
     read<value_t::object>(j, "Custom Hit Sound", m.customHitSound);
@@ -1202,7 +1201,6 @@ static void to_json(json& j, const Config::Misc& o)
     WRITE("Grenade predict", nadePredict);
     WRITE("Fix tablet signal", fixTabletSignal);
     WRITE("Max angle delta", maxAngleDelta);
-    WRITE("Fake prime", fakePrime);
     WRITE("Bomb Damage", bombDamage);
     WRITE("Fix tablet signal", fixTabletSignal);
     WRITE("Custom Hit Sound", customHitSound);

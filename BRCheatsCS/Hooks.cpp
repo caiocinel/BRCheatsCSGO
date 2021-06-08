@@ -379,7 +379,6 @@ static void __stdcall frameStageNotify(FrameStage stage) noexcept
         Misc::disablePanoramablur();
         Misc::hiddenCvar();
         Visuals::colorWorld();
-        Misc::fakePrime();
         Misc::ragdollForce();
     	Animations::real();
         /*
