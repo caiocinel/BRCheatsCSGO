@@ -2325,7 +2325,7 @@ void GUI::renderAutoConfigWindow(bool contentOnly) noexcept
         config->aimbot[currentWeapon].aimlock = true;
         config->aimbot[currentWeapon].scopedOnly = false;
         config->aimbot[currentWeapon].visibleOnly = true;
-        config->aimbot[currentWeapon].standaloneRCS = false;
+        config->aimbot[currentWeapon].standaloneRCS = true;
         config->aimbot[currentWeapon].recoilControlX = 0.25f;
         config->aimbot[currentWeapon].recoilControlY = 0.25f;
     };
@@ -2415,7 +2415,6 @@ void GUI::renderAutoConfigWindow(bool contentOnly) noexcept
         config->visuals.noBlur = true;
         config->visuals.noGrass = true;
         config->visuals.noShadows = true;
-        config->visuals.drawgray = true;
         config->visuals.noBloom = true;
         config->visuals.no3dSky = true;
 
@@ -2449,10 +2448,6 @@ void GUI::renderAimHacksWindow(bool contentOnly) noexcept
     if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_NoTooltip)) {
         if (ImGui::BeginTabItem("Aimbot " ICON_FA_LEAF)) {
             renderAimbotWindow(true);
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("Ragebot " ICON_FA_FIRE)) {
-            renderRagebotWindow(true);
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("TriggerBot " ICON_FA_ROBOT)) {

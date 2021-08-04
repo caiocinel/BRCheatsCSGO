@@ -9,6 +9,7 @@ namespace Helpers
 {
     unsigned int calculateColor(ColorA color) noexcept;
     unsigned int calculateColor(int r, int g, int b, int a) noexcept;
+    constexpr auto deg2rad(float degrees) noexcept { return degrees * (std::numbers::pi_v<float> / 180.0f); }
   
     constexpr auto units2meters(float units) noexcept
     {
