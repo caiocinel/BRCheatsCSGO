@@ -120,7 +120,7 @@ void GUI::render() noexcept
     renderProfileChangerWindow();
     renderPerformanceWindow();
     renderNickWindow();
-    //drawDemo();
+   // drawDemo();
     /*renderMedalChangerWindow();
     renderInventoryChangerWindow();
     */
@@ -2774,6 +2774,9 @@ void GUI::renderGuiStyle2() noexcept
     ImGui::SameLine();
     if (ImGui::Button("PT-BR " ICON_FA_GEM))
         config->misc.lang = 1;
+    ImGui::SameLine();
+    if (ImGui::Button("UNLOAD "))
+        hooks->uninstall();
     ImGui::SameLine();
     RightText();
     if(ImGui::Button("Config " ICON_FA_COGS))
