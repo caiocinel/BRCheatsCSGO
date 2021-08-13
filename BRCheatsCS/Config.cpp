@@ -1086,9 +1086,9 @@ static void to_json(json& j, const PreserveKillfeed& o, const PreserveKillfeed& 
     WRITE("Only Headshots", onlyHeadshots);
 }
 
-static void to_json(json& j, const Config::Misc& o)
+static void to_json(json& j, const Config::Misc& o, const Config::Misc& dummy = {})
 {
-    const Config::Misc dummy;
+    to_json(j, static_cast<const Config::Misc&>(o), dummy);
 
     WRITE("Lang", lang);
     WRITE("Menu key", menuKey);
