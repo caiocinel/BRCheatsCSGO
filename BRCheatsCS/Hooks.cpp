@@ -74,18 +74,34 @@ int rageBestChance = 0;
 Vector quickPeekVector = {0, 0, 0};
 Vector wallbangVector = {0, 0, 0};
 
+
 static LRESULT __stdcall wndProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 {
     [[maybe_unused]] static const auto once = [](HWND window) noexcept {
+
         netvars = std::make_unique<Netvars>();
         eventListener = std::make_unique<EventListener>();
-        config = std::make_unique<Config>("CS_Cheat");
 
         ImGui::CreateContext();
         ImGui_ImplWin32_Init(window);
+        config = std::make_unique<Config>("CS_Cheat"); 
         gui = std::make_unique<GUI>();
-
         hooks->install();
+
+      //  const bool loaded = config->load(u8"default", false);
+
+
+        std::ostringstream welcomeMsg;
+        welcomeMsg << "Let's get started!\n";
+        welcomeMsg << "To open/hide HUD press \"";
+        welcomeMsg << interfaces->inputSystem->virtualKeyToString(config->misc.menuKey);
+        welcomeMsg << "\" on your keyboard.\n\n";
+        welcomeMsg << "Configs are stored in Documents/CS_Cheat/ directory.";
+     //   welcomeMsg << "Made by Caillou & MarshallSCPT.\n";
+     //   welcomeMsg << "BRCheatsCSGO tries to load a config named \"default\" on start-up,\nand it appears that it was ";
+       // welcomeMsg << (loaded ? "loaded successfuly." : "not found.");
+
+        interfaces->gameUI->createCommandMsgBox("Welcome to BRCheatsCSGO", welcomeMsg.str().c_str());
 
         return true;
     }(window);
