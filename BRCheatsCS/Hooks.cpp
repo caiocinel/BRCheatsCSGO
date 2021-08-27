@@ -101,7 +101,7 @@ static LRESULT __stdcall wndProc(HWND window, UINT msg, WPARAM wParam, LPARAM lP
      //   welcomeMsg << "BRCheatsCSGO tries to load a config named \"default\" on start-up,\nand it appears that it was ";
        // welcomeMsg << (loaded ? "loaded successfuly." : "not found.");
 
-        interfaces->gameUI->createCommandMsgBox("Welcome to BRCheatsCSGO", welcomeMsg.str().c_str());
+        interfaces->gameUI->createCommandMsgBox("Welcome to CSGO Cheat", welcomeMsg.str().c_str());
 
         return true;
     }(window);
