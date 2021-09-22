@@ -41,7 +41,7 @@ struct WeaponInfo {
     int bullets;
     float penetration;
     PAD(12)
-        float range;
+    float range;
     float rangeModifier;
     PAD(0x10)
         bool silencer;

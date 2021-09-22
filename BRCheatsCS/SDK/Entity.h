@@ -246,8 +246,8 @@ public:
     VIRTUAL_METHOD(float, getSpread, 453, (), (this))
     VIRTUAL_METHOD(WeaponInfo*, getWeaponData, 461, (), (this))
     VIRTUAL_METHOD(float, getInaccuracy, 483, (), (this))
-    VIRTUAL_METHOD(void, UpdateAccuracyPenalty, 483, (), (this))
-    VIRTUAL_METHOD(void, UpdateClientSideAnimation, 224, (), (this))
+    VIRTUAL_METHOD(void, UpdateAccuracyPenalty, 484, (), (this))
+    VIRTUAL_METHOD(void, UpdateClientSideAnimation, 225, (), (this))
 
     auto isPistol() noexcept { return getWeaponType() == WeaponType::Pistol; }
 
