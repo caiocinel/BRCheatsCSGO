@@ -367,14 +367,9 @@ public:
         return reinterpret_cast<VarMap*>(this + 0x24);
     }
 
-    AnimState* getAnimstate() noexcept
-    {
-        return *reinterpret_cast<AnimState**>(this + 0x3914);
-    }
-
     float getMaxDesyncAngle() noexcept
     {
-        const auto animState = getAnimstate();
+        const auto animState = getAnimState();
 
         if (!animState)
             return 0.0f;
@@ -450,7 +445,7 @@ public:
         static auto UpdateAnimState = reinterpret_cast<void(__vectorcall*)(void*, void*, float, float, float, void*)>(memory->UpdateState);
         if (!UpdateAnimState)
             return;
-        UpdateAnimState(state, nullptr, 0.0f, angle.y, angle.x, nullptr);
+        UpdateAnimState(state, nullptr, 0.0f, angle.y, angle.x, nullptr); 
     }
 
     float spawnTime()
@@ -570,6 +565,7 @@ public:
     NETVAR(armor, "CCSPlayer", "m_ArmorValue", int)
     NETVAR(eyeAngles, "CCSPlayer", "m_angEyeAngles", Vector)
     NETVAR(isScoped, "CCSPlayer", "m_bIsScoped", bool)
+    NETVAR_OFFSET(getAnimState, "CCSPlayer", "m_bIsScoped", -20, AnimState*)
     NETVAR(isDefusing, "CCSPlayer", "m_bIsDefusing", bool)
     NETVAR_OFFSET(flashDuration, "CCSPlayer", "m_flFlashMaxAlpha", -8, float)
     NETVAR(flashMaxAlpha, "CCSPlayer", "m_flFlashMaxAlpha", float)

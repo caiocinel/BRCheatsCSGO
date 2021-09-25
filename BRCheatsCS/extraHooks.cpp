@@ -7,8 +7,8 @@ extraHooks extraHook;
 
 void __fastcall DoExtraBoneProcessing(Entity* player, uint32_t, StudioHdr* hdr, Vector* pos, quaternion* q, matrix3x4* matrix, void* bone_list, void* context)
 {
-	const auto entity = reinterpret_cast<Entity*> (player);;
-	auto state = entity->getAnimstate();
+	/*const auto entity = reinterpret_cast<Entity*> (player);;
+	auto state = entity->getAnimState();
 	const auto val = reinterpret_cast<float*> (reinterpret_cast<uintptr_t> (state) + 292);
 	const auto backup = *val;
 	auto backup_onground = false;
@@ -28,24 +28,24 @@ void __fastcall DoExtraBoneProcessing(Entity* player, uint32_t, StudioHdr* hdr, 
 	{
 		*val = backup;
 		state->m_bOnGround = backup_onground;
-	}
+	}*/
 }
 
 void __fastcall StandardBlendingRules(Entity* player, uint32_t edx, StudioHdr* hdr, Vector* pos, quaternion* q, float curTime, int boneMask)
 {
-	auto orig = extraHook.player.vmt.getOriginal<void, StudioHdr*, Vector*, quaternion*, float, int>(205, hdr, pos, q, curTime, boneMask);
+	/*auto orig = extraHook.player.vmt.getOriginal<void, StudioHdr*, Vector*, quaternion*, float, int>(205, hdr, pos, q, curTime, boneMask);
 	uint32_t* effects = (uint32_t*)((uintptr_t)player + 0xF0);
 	*effects |= 8;
 	orig(player, hdr, pos, q, curTime, boneMask);
-	*effects &= ~8;
+	*effects &= ~8;*/
 }
 
 void extraHooks::hookEntity(Entity* ent)
 {
-	player.vmt.init(ent);
-	player.vmt.hookAt(197, DoExtraBoneProcessing);
-	player.vmt.hookAt(205, StandardBlendingRules);
-	player.isHooked = true;
+	//player.vmt.init(ent);
+	//player.vmt.hookAt(197, DoExtraBoneProcessing);
+	//player.vmt.hookAt(205, StandardBlendingRules);
+	//player.isHooked = false;
 }
 
 bool extraHooks::init()

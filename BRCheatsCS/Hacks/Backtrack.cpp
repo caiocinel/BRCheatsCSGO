@@ -59,7 +59,7 @@ void Backtrack::update(FrameStage stage) noexcept
         	record.head = entity->getBonePosition(8);
             record.simulationTime = entity->simulationTime();
         	record.PreviousAct = -1;
-        	auto AnimState = entity->getAnimstate();
+        	auto AnimState = entity->getAnimState();
 
         	if (AnimState) {
                 for (int b = 0; b < entity->getAnimationLayerCount(); b++) {

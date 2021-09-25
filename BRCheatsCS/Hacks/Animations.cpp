@@ -103,7 +103,7 @@ void Animations::real() noexcept
     }
 
     static auto backup_poses = localPlayer.get()->pose_parameters();
-    static auto backup_abs = localPlayer.get()->getAnimstate()->m_flGoalFeetYaw;
+    static auto backup_abs = localPlayer.get()->getAnimState()->m_flGoalFeetYaw;
 
     if (!memory->input->isCameraInThirdPerson) {
         localPlayer.get()->ClientSideAnimation() = true;
@@ -114,8 +114,8 @@ void Animations::real() noexcept
 
     static std::array<AnimationLayer, 15> networked_layers;
 
-    while (localPlayer.get()->getAnimstate()->m_iLastClientSideAnimationUpdateFramecount == memory->globalVars->framecount)
-        localPlayer.get()->getAnimstate()->m_iLastClientSideAnimationUpdateFramecount -= 1;
+    while (localPlayer.get()->getAnimState()->m_iLastClientSideAnimationUpdateFramecount == memory->globalVars->framecount)
+        localPlayer.get()->getAnimState()->m_iLastClientSideAnimationUpdateFramecount -= 1;
 
     static int old_tick = 0;
     if (old_tick != memory->globalVars->tickCount)
@@ -123,18 +123,18 @@ void Animations::real() noexcept
         old_tick = memory->globalVars->tickCount;
         std::memcpy(&networked_layers, localPlayer.get()->animOverlays(), sizeof(AnimationLayer) * localPlayer->getAnimationLayerCount());
         localPlayer.get()->ClientSideAnimation() = true;
-        localPlayer.get()->UpdateState(localPlayer->getAnimstate(), data.viewangles);
+        localPlayer.get()->UpdateState(localPlayer->getAnimState(), data.viewangles);
         localPlayer.get()->UpdateClientSideAnimation();
         localPlayer.get()->ClientSideAnimation() = false;
         if (data.sendPacket)
         {
             backup_poses = localPlayer.get()->pose_parameters();
-            backup_abs = localPlayer.get()->getAnimstate()->m_flGoalFeetYaw;
+            backup_abs = localPlayer.get()->getAnimState()->m_flGoalFeetYaw;
         }
     }
-    localPlayer.get()->getAnimstate()->m_flGoalFeetYaw = 0.f;
+    localPlayer.get()->getAnimState()->m_flGoalFeetYaw = 0.f;
     memory->setAbsAngle(localPlayer.get(), Vector{ 0,backup_abs,0 });
-    localPlayer.get()->getAnimstate()->UnknownFraction = 0.f;
+    localPlayer.get()->getAnimState()->UnknownFraction = 0.f;
     std::memcpy(localPlayer.get()->animOverlays(), &networked_layers, sizeof(AnimationLayer) * localPlayer->getAnimationLayerCount());
     localPlayer.get()->pose_parameters() = backup_poses;
 }
@@ -147,13 +147,13 @@ void Animations::players() noexcept
     for (int i = 1; i <= interfaces->engine->getMaxClients(); i++)
     {
         auto entity = interfaces->entityList->getEntity(i);
-        if (!entity || entity == localPlayer.get() || entity->isDormant() || !entity->isAlive() || !entity->getAnimstate())
+        if (!entity || entity == localPlayer.get() || entity->isDormant() || !entity->isAlive() || !entity->getAnimState())
             continue;
 
         if (!data.player[i].once)
         {
             data.player[i].poses = entity->pose_parameters();
-            data.player[i].abs = entity->getAnimstate()->m_flGoalFeetYaw;
+            data.player[i].abs = entity->getAnimState()->m_flGoalFeetYaw;
             data.player[i].simtime = 0;
             data.player[i].once = true;
         }
@@ -161,8 +161,8 @@ void Animations::players() noexcept
         if(data.player[i].networked_layers.empty())
             std::memcpy(&data.player[i].networked_layers, entity->animOverlays(), sizeof(AnimationLayer) * entity->getAnimationLayerCount());
 
-        while (entity->getAnimstate()->m_iLastClientSideAnimationUpdateFramecount == memory->globalVars->framecount)
-            entity->getAnimstate()->m_iLastClientSideAnimationUpdateFramecount -= 1;
+        while (entity->getAnimState()->m_iLastClientSideAnimationUpdateFramecount == memory->globalVars->framecount)
+            entity->getAnimState()->m_iLastClientSideAnimationUpdateFramecount -= 1;
         entity->InvalidateBoneCache();
         memory->setAbsOrigin(entity, entity->origin());
         *entity->getEffects() &= ~0x1000;
@@ -170,7 +170,7 @@ void Animations::players() noexcept
         std::memcpy(&data.player[i].networked_layers, entity->animOverlays(), sizeof(AnimationLayer) * entity->getAnimationLayerCount());
         entity->ClientSideAnimation() = true;
  /*       if (entity->isOtherEnemy(localPlayer.get()) && config->ragebotExtra.resolver && data.player[i].chokedPackets >= 1 && localPlayer->isAlive())
-            entity->getAnimstate()->GoalFeetYaw = Resolver::CalculateFeet(entity);*/
+            entity->getAnimState()->GoalFeetYaw = Resolver::CalculateFeet(entity);*/
         entity->UpdateClientSideAnimation();
         entity->ClientSideAnimation() = false;
         if (data.player[i].simtime != entity->simulationTime())
@@ -178,9 +178,9 @@ void Animations::players() noexcept
             data.player[i].chokedPackets = static_cast<int>((entity->simulationTime() - data.player[i].simtime) / memory->globalVars->intervalPerTick) - 1;
             data.player[i].simtime = entity->simulationTime();
             data.player[i].poses = entity->pose_parameters();
-            data.player[i].abs = entity->getAnimstate()->m_flGoalFeetYaw;
+            data.player[i].abs = entity->getAnimState()->m_flGoalFeetYaw;
         }
-        entity->getAnimstate()->m_flFeetYawRate = 0.f;
+        entity->getAnimState()->m_flFeetYawRate = 0.f;
         memory->setAbsAngle(entity, Vector{ 0,data.player[i].abs,0 });
         data.player[i].networked_layers[12].weight = std::numeric_limits<float>::epsilon();
         std::memcpy(entity->animOverlays(), &data.player[i].networked_layers, sizeof(AnimationLayer) * entity->getAnimationLayerCount());

@@ -43,9 +43,9 @@ void EventListener::fireGameEvent(GameEvent* event)
 		Visuals::bulletBeams(event);
 		break;
 	case fnv::hash("round_start"):
-
 		GameData::clearProjectileList();
 		Misc::preserveKillfeed(true);
+		SkinChanger::scheduleHudUpdate();
 
 	case fnv::hash("item_purchase"):
 	case fnv::hash("round_freeze_end"):

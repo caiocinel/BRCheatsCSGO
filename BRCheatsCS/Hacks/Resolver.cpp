@@ -112,7 +112,7 @@ void Resolver::BasicResolver(Entity* entity, int missed_shots) {
 
     /*
 
-	auto Animstate = entity->getAnimstate();
+	auto Animstate = entity->getAnimState();
 
 	if (!Animstate)
 		return;
@@ -174,7 +174,7 @@ void Resolver::BasicResolver(Entity* entity, int missed_shots) {
 
     float DesyncAng = 0;
 
-    auto Animstate = entity->getAnimstate();
+    auto Animstate = entity->getAnimState();
 
     if (!Animstate)
         return;

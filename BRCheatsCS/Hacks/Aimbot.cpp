@@ -98,9 +98,11 @@ static bool hitChance(Entity* localPlayer, Entity* entity, Entity* weaponData, c
 static bool traceToExit(const Trace& enterTrace, const Vector& start, const Vector& direction, Vector& end, Trace& exitTrace)
 {
     bool result = false;
-    
     const auto traceToExitFn = memory->traceToExit;
     __asm {
+        push 0
+        push 0
+        push 0
         push exitTrace
         mov eax, direction
         push[eax]Vector.z
@@ -113,10 +115,9 @@ static bool traceToExit(const Trace& enterTrace, const Vector& start, const Vect
         mov edx, enterTrace
         mov ecx, end
         call traceToExitFn
-        add esp, 28
+        add esp, 40
         mov result, al
     }
-    
     return result;
 }
 

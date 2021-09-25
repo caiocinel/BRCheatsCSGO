@@ -183,7 +183,7 @@ void Debug::AnimStateMonitor() noexcept
         if (!entity || entity->isDormant() || !entity->isAlive() || !entity->isPlayer())
             continue;
 
-        auto AnimState = entity->getAnimstate();
+        auto AnimState = entity->getAnimState();
         if (!AnimState)
             continue;
 
@@ -490,7 +490,7 @@ void Debug::AnimStateModifier() noexcept
             if (entity == localPlayer.get())
                 continue;
 
-            auto AnimState = entity->getAnimstate();
+            auto AnimState = entity->getAnimState();
             if (!AnimState)
                 continue;
 
@@ -504,7 +504,7 @@ void Debug::AnimStateModifier() noexcept
                 Resolver::BasicResolver(entity, config->debug.animstatedebug.resolver.missed_shots);
             }
 
-            //AnimState = entity->getAnimstate();
+            //AnimState = entity->getAnimState();
            // if (!AnimState)
             //    continue;
 
