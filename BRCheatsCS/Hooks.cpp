@@ -314,8 +314,8 @@ static bool __stdcall createMove(float inputSampleTime, UserCmd* cmd) noexcept
 
 	  config->globals.sendPacket = sendPacket;
 
-    Animations::update(cmd, sendPacket);
-    Animations::fake();
+    //Animations::update(cmd, sendPacket);
+    //Animations::fake();
 	Tickbase::run(cmd, sendPacket);//run this after ragebot
     return false;
 }
@@ -396,7 +396,7 @@ static void __stdcall frameStageNotify(FrameStage stage) noexcept
         Misc::hiddenCvar();
         Visuals::colorWorld();
         Misc::ragdollForce();
-    	Animations::real();
+    	//Animations::real();
         /*
         Visuals::NightMode();
     	Visuals::transparentWorld();
@@ -413,7 +413,7 @@ static void __stdcall frameStageNotify(FrameStage stage) noexcept
         Visuals::disablePostProcessing(stage);
         Visuals::removeVisualRecoil(stage);
         Visuals::applyZoom(stage);
-        Misc::fixAnimationLOD(stage);
+        //Misc::fixAnimationLOD(stage);
         Backtrack::update(stage);
         SkinChanger::run(stage);
         Visuals::rainbowCrosshair();
