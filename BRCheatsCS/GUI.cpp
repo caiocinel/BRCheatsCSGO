@@ -28,22 +28,20 @@
 #include "Fonts/icons.cpp"
 #include "Fonts/font.cpp"
 
-
 constexpr auto windowFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 extern std::map<std::string, std::string> phrases;
-IDirect3DTexture9* skinImage = nullptr;
+IDirect3DTexture9 *skinImage = nullptr;
 
-
-void RightText() {
+void RightText()
+{
     std::string text = "xxxxxxxxx";
-    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetColumnWidth() - ImGui::CalcTextSize(text.c_str()).x
-        - ImGui::GetScrollX() - 2 * ImGui::GetStyle().ItemSpacing.x / 2);
-
+    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetColumnWidth() - ImGui::CalcTextSize(text.c_str()).x - ImGui::GetScrollX() - 2 * ImGui::GetStyle().ItemSpacing.x / 2);
 }
 
-namespace ImGui {
+namespace ImGui
+{
 
-    void ImGuiStructItem(ImGuiStruct i)noexcept
+    void ImGuiStructItem(ImGuiStruct i) noexcept
     {
         Checkbox(phrases[XorString("global_enabled")].c_str(), &i.enabled);
         SameLine();
@@ -62,7 +60,7 @@ namespace ImGui {
 GUI::GUI() noexcept
 {
     ImGui::StyleColorsDark();
-    ImGuiStyle& style = ImGui::GetStyle();
+    ImGuiStyle &style = ImGui::GetStyle();
 
     ImGui::GetStyle().WindowRounding = 4.0f;
     ImGui::GetStyle().ChildRounding = 0.0f;
@@ -73,23 +71,24 @@ GUI::GUI() noexcept
     ImGui::GetStyle().TabRounding = 0.0f;
     ImGui::GetStyle().ScrollbarSize = 9.0f;
 
-    ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO &io = ImGui::GetIO();
     io.IniFilename = nullptr;
     io.LogFilename = nullptr;
     io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
-    
-    static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
-    ImFontConfig icons_config; 
+
+    static const ImWchar icons_ranges[] = {ICON_MIN_FA, ICON_MAX_FA, 0};
+    ImFontConfig icons_config;
     ImFontConfig font_config;
-    icons_config.MergeMode = true; 
+    icons_config.MergeMode = true;
     io.Fonts->AddFontFromMemoryCompressedTTF(font_data, font_size, 16.0f, &font_config, Helpers::getFontGlyphRanges());
     io.Fonts->AddFontFromMemoryCompressedTTF(icons_data, icons_size, 16.0f, &icons_config, icons_ranges);
     io.Fonts->Build();
-    if (PWSTR pathToFonts; SUCCEEDED(SHGetKnownFolderPath(FOLDERID_Fonts, 0, nullptr, &pathToFonts))) {
-        const std::filesystem::path path{ pathToFonts };
+    if (PWSTR pathToFonts; SUCCEEDED(SHGetKnownFolderPath(FOLDERID_Fonts, 0, nullptr, &pathToFonts)))
+    {
+        const std::filesystem::path path{pathToFonts};
         CoTaskMemFree(pathToFonts);
 
-        static constexpr ImWchar ranges[]{ 0x0020, 0xFFFF, 0 };
+        static constexpr ImWchar ranges[]{0x0020, 0xFFFF, 0};
         ImFontConfig cfg;
         cfg.OversampleV = 3;
 
@@ -98,7 +97,6 @@ GUI::GUI() noexcept
         fonts.segoeui = io.Fonts->AddFontFromFileTTF((path / XorString("segoeui.ttf")).string().c_str(), 15.0f, &cfg, Helpers::getFontGlyphRanges());
         fonts.segoeuiSized = io.Fonts->AddFontFromFileTTF((path / XorString("segoeui.ttf")).string().c_str(), 25.0f, &cfg, Helpers::getFontGlyphRanges());
         fonts.iconsSized = io.Fonts->AddFontFromMemoryCompressedTTF(icons_data, icons_size, 25.0f, &icons_config, icons_ranges);
-        
     }
 }
 
@@ -108,7 +106,6 @@ void GUI::render() noexcept
     renderGuiStyle2();
     renderAimbotWindow();
     renderRagebotWindow();
-    renderAntiAimWindow();
     renderTriggerbotWindow();
     renderBacktrackWindow();
     renderGlowWindow();
@@ -120,36 +117,45 @@ void GUI::render() noexcept
     renderProfileChangerWindow();
     renderPerformanceWindow();
     renderNickWindow();
-   // drawDemo();
+    // drawDemo();
     /*renderMedalChangerWindow();
     renderInventoryChangerWindow();
     */
     renderMiscWindow();
     renderAutoConfigWindow();
-  //  renderWarningWindow();
+    //  renderWarningWindow();
     renderConfigWindow();
 }
 
 void GUI::updateColors() const noexcept
 {
-    switch (config->style.menuColors) {
-    case 0: ImGui::StyleColorsDark(); break;
-    case 1: ImGui::StyleColorsLight(); break;
-    case 2: ImGui::StyleColorsClassic(); break;
+    switch (config->style.menuColors)
+    {
+    case 0:
+        ImGui::StyleColorsDark();
+        break;
+    case 1:
+        ImGui::StyleColorsLight();
+        break;
+    case 2:
+        ImGui::StyleColorsClassic();
+        break;
     }
 }
 
-void DisableItems() {
+void DisableItems()
+{
     ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
     ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
 };
 
-void PopDisableItems() {
+void PopDisableItems()
+{
     ImGui::PopItemFlag();
     ImGui::PopStyleVar();
 };
 
-void GUI::hotkey(int& key) noexcept
+void GUI::hotkey(int &key) noexcept
 {
     key ? ImGui::Text(XorString("[ %s ]"), interfaces->inputSystem->virtualKeyToString(key)) : ImGui::TextUnformatted(phrases[XorString("global_key")].c_str());
 
@@ -157,7 +163,7 @@ void GUI::hotkey(int& key) noexcept
         return;
 
     ImGui::SetTooltip(phrases[XorString("global_keypopup")].c_str());
-    ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO &io = ImGui::GetIO();
     for (int i = 0; i < IM_ARRAYSIZE(io.KeysDown); i++)
         if (ImGui::IsKeyPressed(i) && i != config->misc.menuKey)
             key = i != VK_ESCAPE ? i : 0;
@@ -169,98 +175,124 @@ void GUI::hotkey(int& key) noexcept
 
 void GUI::renderAimbotWindow(bool contentOnly) noexcept
 {
-    if (!contentOnly) {
+    if (!contentOnly)
+    {
         if (!window.aimbot)
             return;
-        ImGui::SetNextWindowSize({ 600.0f, 0.0f });
+        ImGui::SetNextWindowSize({600.0f, 0.0f});
         ImGui::Begin(phrases[XorString("window_aimbot")].c_str(), &window.aimbot, windowFlags);
     }
-    static int currentCategory{ 0 };
+    static int currentCategory{0};
     ImGui::PushItemWidth(110.0f);
     ImGui::PushID(0);
     ImGui::Combo("", &currentCategory, XorString("All\0Pistols\0Heavy\0SMG\0Rifles\0"));
     ImGui::PopID();
     ImGui::SameLine();
-    static int currentWeapon{ 0 };
+    static int currentWeapon{0};
     ImGui::PushID(1);
 
-    switch (currentCategory) {
+    switch (currentCategory)
+    {
     case 0:
         currentWeapon = 0;
         ImGui::NewLine();
         break;
-    case 1: {
-        static int currentPistol{ 0 };
-        static constexpr const char* pistols[]{ "All", "Glock-18", "P2000", "USP-S", "Dual Berettas", "P250", "Tec-9", "Five-Seven", "CZ-75", "Desert Eagle", "Revolver" };
+    case 1:
+    {
+        static int currentPistol{0};
+        static constexpr const char *pistols[]{"All", "Glock-18", "P2000", "USP-S", "Dual Berettas", "P250", "Tec-9", "Five-Seven", "CZ-75", "Desert Eagle", "Revolver"};
 
-        ImGui::Combo("", &currentPistol, [](void* data, int idx, const char** out_text) {
-            if (config->aimbot[idx ? idx : 35].enabled) {
-                static std::string name;
-                name = pistols[idx];
-                *out_text = name.append(" *").c_str();
-            }
-            else {
-                *out_text = pistols[idx];
-            }
-            return true;
-            }, nullptr, IM_ARRAYSIZE(pistols));
+        ImGui::Combo(
+            "", &currentPistol, [](void *data, int idx, const char **out_text)
+            {
+                if (config->aimbot[idx ? idx : 35].enabled)
+                {
+                    static std::string name;
+                    name = pistols[idx];
+                    *out_text = name.append(" *").c_str();
+                }
+                else
+                {
+                    *out_text = pistols[idx];
+                }
+                return true;
+            },
+            nullptr, IM_ARRAYSIZE(pistols));
 
         currentWeapon = currentPistol ? currentPistol : 35;
         break;
     }
-    case 2: {
-        static int currentHeavy{ 0 };
-        static constexpr const char* heavies[]{ "All", "Nova", "XM1014", "Sawed-off", "MAG-7", "M249", "Negev" };
+    case 2:
+    {
+        static int currentHeavy{0};
+        static constexpr const char *heavies[]{"All", "Nova", "XM1014", "Sawed-off", "MAG-7", "M249", "Negev"};
 
-        ImGui::Combo("", &currentHeavy, [](void* data, int idx, const char** out_text) {
-            if (config->aimbot[idx ? idx + 10 : 36].enabled) {
-                static std::string name;
-                name = heavies[idx];
-                *out_text = name.append(" *").c_str();
-            }
-            else {
-                *out_text = heavies[idx];
-            }
-            return true;
-            }, nullptr, IM_ARRAYSIZE(heavies));
+        ImGui::Combo(
+            "", &currentHeavy, [](void *data, int idx, const char **out_text)
+            {
+                if (config->aimbot[idx ? idx + 10 : 36].enabled)
+                {
+                    static std::string name;
+                    name = heavies[idx];
+                    *out_text = name.append(" *").c_str();
+                }
+                else
+                {
+                    *out_text = heavies[idx];
+                }
+                return true;
+            },
+            nullptr, IM_ARRAYSIZE(heavies));
 
         currentWeapon = currentHeavy ? currentHeavy + 10 : 36;
         break;
     }
-    case 3: {
-        static int currentSmg{ 0 };
-        static constexpr const char* smgs[]{ "All", "Mac-10", "MP9", "MP7", "MP5-SD", "UMP-45", "P90", "PP-Bizon" };
+    case 3:
+    {
+        static int currentSmg{0};
+        static constexpr const char *smgs[]{"All", "Mac-10", "MP9", "MP7", "MP5-SD", "UMP-45", "P90", "PP-Bizon"};
 
-        ImGui::Combo("", &currentSmg, [](void* data, int idx, const char** out_text) {
-            if (config->aimbot[idx ? idx + 16 : 37].enabled) {
-                static std::string name;
-                name = smgs[idx];
-                *out_text = name.append(" *").c_str();
-            }
-            else {
-                *out_text = smgs[idx];
-            }
-            return true;
-            }, nullptr, IM_ARRAYSIZE(smgs));
+        ImGui::Combo(
+            "", &currentSmg, [](void *data, int idx, const char **out_text)
+            {
+                if (config->aimbot[idx ? idx + 16 : 37].enabled)
+                {
+                    static std::string name;
+                    name = smgs[idx];
+                    *out_text = name.append(" *").c_str();
+                }
+                else
+                {
+                    *out_text = smgs[idx];
+                }
+                return true;
+            },
+            nullptr, IM_ARRAYSIZE(smgs));
 
         currentWeapon = currentSmg ? currentSmg + 16 : 37;
         break;
     }
-    case 4: {
-        static int currentRifle{ 0 };
-        static constexpr const char* rifles[]{ "All", "Galil AR", "Famas", "AK-47", "M4A4", "M4A1-S", "SSG-08", "SG-553", "AUG", "AWP", "G3SG1", "SCAR-20" };
+    case 4:
+    {
+        static int currentRifle{0};
+        static constexpr const char *rifles[]{"All", "Galil AR", "Famas", "AK-47", "M4A4", "M4A1-S", "SSG-08", "SG-553", "AUG", "AWP", "G3SG1", "SCAR-20"};
 
-        ImGui::Combo("", &currentRifle, [](void* data, int idx, const char** out_text) {
-            if (config->aimbot[idx ? idx + 23 : 38].enabled) {
-                static std::string name;
-                name = rifles[idx];
-                *out_text = name.append(XorString(" *")).c_str();
-            }
-            else {
-                *out_text = rifles[idx];
-            }
-            return true;
-            }, nullptr, IM_ARRAYSIZE(rifles));
+        ImGui::Combo(
+            "", &currentRifle, [](void *data, int idx, const char **out_text)
+            {
+                if (config->aimbot[idx ? idx + 23 : 38].enabled)
+                {
+                    static std::string name;
+                    name = rifles[idx];
+                    *out_text = name.append(XorString(" *")).c_str();
+                }
+                else
+                {
+                    *out_text = rifles[idx];
+                }
+                return true;
+            },
+            nullptr, IM_ARRAYSIZE(rifles));
 
         currentWeapon = currentRifle ? currentRifle + 23 : 38;
         break;
@@ -296,14 +328,14 @@ void GUI::renderAimbotWindow(bool contentOnly) noexcept
     config->aimbot[currentWeapon].shotsFired = std::clamp(config->aimbot[currentWeapon].shotsFired, 0, 150);
     ImGui::Checkbox(phrases[XorString("aimhacks_betweenshots")].c_str(), &config->aimbot[currentWeapon].betweenShots);
     ImGui::NextColumn();
-    ImGui::Combo(phrases[XorString("global_bone")].c_str() , & config->aimbot[currentWeapon].bone, XorString("Nearest\0Best damage\0Head\0Neck\0Sternum\0Chest\0Stomach\0Pelvis\0"));
+    ImGui::Combo(phrases[XorString("global_bone")].c_str(), &config->aimbot[currentWeapon].bone, XorString("Nearest\0Best damage\0Head\0Neck\0Sternum\0Chest\0Stomach\0Pelvis\0"));
     ImGui::PushItemWidth(200.0f);
     ImGui::SliderFloat(phrases[XorString("aimbot_fov")].c_str(), &config->aimbot[currentWeapon].fov, 0.0f, 255.0f, "%.2f", ImGuiSliderFlags_Logarithmic);
     ImGui::SameLine();
     ImGui::PushID(0);
     ImGui::Checkbox(phrases[XorString("aimbot_drawfov")].c_str(), &config->aimbot[currentWeapon].drawFov);
     ImGui::PopID();
-    ImGui::SliderFloat(phrases[XorString("aimbot_smooth")].c_str() , &config->aimbot[currentWeapon].smooth, 1.0f, 100.0f, "%.2f");
+    ImGui::SliderFloat(phrases[XorString("aimbot_smooth")].c_str(), &config->aimbot[currentWeapon].smooth, 1.0f, 100.0f, "%.2f");
     ImGui::SliderInt(phrases[XorString("aimhacks_hitchance")].c_str(), &config->aimbot[currentWeapon].hitchance, 0, 100, "%d");
     ImGui::InputInt(phrases[XorString("aimhacks_mindamage")].c_str(), &config->aimbot[currentWeapon].minDamage);
     config->aimbot[currentWeapon].minDamage = std::clamp(config->aimbot[currentWeapon].minDamage, 0, 250);
@@ -314,7 +346,6 @@ void GUI::renderAimbotWindow(bool contentOnly) noexcept
     if (config->aimbot[currentWeapon].silent)
         PopDisableItems();
 
-    
     if (config->aimbot[currentWeapon].standaloneRCS && !config->aimbot[currentWeapon].silent)
     {
         ImGui::Checkbox(phrases[XorString("global_onkey2")].c_str(), &config->aimbot[currentWeapon].onKeyRCS);
@@ -329,11 +360,8 @@ void GUI::renderAimbotWindow(bool contentOnly) noexcept
         ImGui::InputInt(phrases[XorString("aimbot_ignoreshots")].c_str(), &config->aimbot[currentWeapon].shotsFired);
         ImGui::SliderFloat(phrases[XorString("aimbot_rcs_x")].c_str(), &config->aimbot[currentWeapon].recoilControlX, 0.0f, 1.0f, "%.5f");
         ImGui::SliderFloat(phrases[XorString("aimbot_rcs_y")].c_str(), &config->aimbot[currentWeapon].recoilControlY, 0.0f, 1.0f, "%.5f");
-
     }
-    
 
-    
     ImGui::Columns(1);
     if (!contentOnly)
         ImGui::End();
@@ -341,104 +369,130 @@ void GUI::renderAimbotWindow(bool contentOnly) noexcept
 
 void GUI::renderRagebotWindow(bool contentOnly) noexcept
 {
-	if (!contentOnly) {
-		if (!window.ragebot)
-			return;
-		ImGui::SetNextWindowSize({ 600.0f, 0.0f });
-		ImGui::Begin(phrases[XorString("window_ragebot")].c_str(), &window.ragebot, windowFlags);
-	}
-	static int currentCategory{ 0 };
-	ImGui::PushItemWidth(110.0f);
-	ImGui::PushID(0);
-	ImGui::Combo("", &currentCategory, XorString("All\0Pistols\0Heavy\0SMG\0Rifles\0"));
-	ImGui::PopID();
-	ImGui::SameLine();
-	static int currentWeapon{ 0 };
-	ImGui::PushID(1);
+    if (!contentOnly)
+    {
+        if (!window.ragebot)
+            return;
+        ImGui::SetNextWindowSize({600.0f, 0.0f});
+        ImGui::Begin(phrases[XorString("window_ragebot")].c_str(), &window.ragebot, windowFlags);
+    }
+    static int currentCategory{0};
+    ImGui::PushItemWidth(110.0f);
+    ImGui::PushID(0);
+    ImGui::Combo("", &currentCategory, XorString("All\0Pistols\0Heavy\0SMG\0Rifles\0"));
+    ImGui::PopID();
+    ImGui::SameLine();
+    static int currentWeapon{0};
+    ImGui::PushID(1);
 
-	switch (currentCategory) {
-	case 0:
-		currentWeapon = 0;
-		ImGui::NewLine();
-		break;
-	case 1: {
-		static int currentPistol{ 0 };
-		static constexpr const char* pistols[]{ "All", "Glock-18", "P2000", "USP-S", "Dual Berettas", "P250", "Tec-9", "Five-Seven", "CZ-75", "Desert Eagle", "Revolver" };
+    switch (currentCategory)
+    {
+    case 0:
+        currentWeapon = 0;
+        ImGui::NewLine();
+        break;
+    case 1:
+    {
+        static int currentPistol{0};
+        static constexpr const char *pistols[]{"All", "Glock-18", "P2000", "USP-S", "Dual Berettas", "P250", "Tec-9", "Five-Seven", "CZ-75", "Desert Eagle", "Revolver"};
 
-		ImGui::Combo("", &currentPistol, [](void* data, int idx, const char** out_text) {
-			if (config->aimbot[idx ? idx : 35].enabled) {
-				static std::string name;
-				name = pistols[idx];
-				*out_text = name.append(" *").c_str();
-			}
-			else {
-				*out_text = pistols[idx];
-			}
-			return true;
-			}, nullptr, IM_ARRAYSIZE(pistols));
+        ImGui::Combo(
+            "", &currentPistol, [](void *data, int idx, const char **out_text)
+            {
+                if (config->aimbot[idx ? idx : 35].enabled)
+                {
+                    static std::string name;
+                    name = pistols[idx];
+                    *out_text = name.append(" *").c_str();
+                }
+                else
+                {
+                    *out_text = pistols[idx];
+                }
+                return true;
+            },
+            nullptr, IM_ARRAYSIZE(pistols));
 
-		currentWeapon = currentPistol ? currentPistol : 35;
-		break;
-	}
-	case 2: {
-		static int currentHeavy{ 0 };
-		static constexpr const char* heavies[]{ "All", "Nova", "XM1014", "Sawed-off", "MAG-7", "M249", "Negev" };
+        currentWeapon = currentPistol ? currentPistol : 35;
+        break;
+    }
+    case 2:
+    {
+        static int currentHeavy{0};
+        static constexpr const char *heavies[]{"All", "Nova", "XM1014", "Sawed-off", "MAG-7", "M249", "Negev"};
 
-		ImGui::Combo("", &currentHeavy, [](void* data, int idx, const char** out_text) {
-			if (config->aimbot[idx ? idx + 10 : 36].enabled) {
-				static std::string name;
-				name = heavies[idx];
-				*out_text = name.append(" *").c_str();
-			}
-			else {
-				*out_text = heavies[idx];
-			}
-			return true;
-			}, nullptr, IM_ARRAYSIZE(heavies));
+        ImGui::Combo(
+            "", &currentHeavy, [](void *data, int idx, const char **out_text)
+            {
+                if (config->aimbot[idx ? idx + 10 : 36].enabled)
+                {
+                    static std::string name;
+                    name = heavies[idx];
+                    *out_text = name.append(" *").c_str();
+                }
+                else
+                {
+                    *out_text = heavies[idx];
+                }
+                return true;
+            },
+            nullptr, IM_ARRAYSIZE(heavies));
 
-		currentWeapon = currentHeavy ? currentHeavy + 10 : 36;
-		break;
-	}
-	case 3: {
-		static int currentSmg{ 0 };
-		static constexpr const char* smgs[]{ "All", "Mac-10", "MP9", "MP7", "MP5-SD", "UMP-45", "P90", "PP-Bizon" };
+        currentWeapon = currentHeavy ? currentHeavy + 10 : 36;
+        break;
+    }
+    case 3:
+    {
+        static int currentSmg{0};
+        static constexpr const char *smgs[]{"All", "Mac-10", "MP9", "MP7", "MP5-SD", "UMP-45", "P90", "PP-Bizon"};
 
-		ImGui::Combo("", &currentSmg, [](void* data, int idx, const char** out_text) {
-			if (config->aimbot[idx ? idx + 16 : 37].enabled) {
-				static std::string name;
-				name = smgs[idx];
-				*out_text = name.append(" *").c_str();
-			}
-			else {
-				*out_text = smgs[idx];
-			}
-			return true;
-			}, nullptr, IM_ARRAYSIZE(smgs));
+        ImGui::Combo(
+            "", &currentSmg, [](void *data, int idx, const char **out_text)
+            {
+                if (config->aimbot[idx ? idx + 16 : 37].enabled)
+                {
+                    static std::string name;
+                    name = smgs[idx];
+                    *out_text = name.append(" *").c_str();
+                }
+                else
+                {
+                    *out_text = smgs[idx];
+                }
+                return true;
+            },
+            nullptr, IM_ARRAYSIZE(smgs));
 
-		currentWeapon = currentSmg ? currentSmg + 16 : 37;
-		break;
-	}
-	case 4: {
-		static int currentRifle{ 0 };
-		static constexpr const char* rifles[]{ "All", "Galil AR", "Famas", "AK-47", "M4A4", "M4A1-S", "SSG-08", "SG-553", "AUG", "AWP", "G3SG1", "SCAR-20" };
+        currentWeapon = currentSmg ? currentSmg + 16 : 37;
+        break;
+    }
+    case 4:
+    {
+        static int currentRifle{0};
+        static constexpr const char *rifles[]{"All", "Galil AR", "Famas", "AK-47", "M4A4", "M4A1-S", "SSG-08", "SG-553", "AUG", "AWP", "G3SG1", "SCAR-20"};
 
-		ImGui::Combo("", &currentRifle, [](void* data, int idx, const char** out_text) {
-			if (config->aimbot[idx ? idx + 23 : 38].enabled) {
-				static std::string name;
-				name = rifles[idx];
-				*out_text = name.append(" *").c_str();
-			}
-			else {
-				*out_text = rifles[idx];
-			}
-			return true;
-			}, nullptr, IM_ARRAYSIZE(rifles));
+        ImGui::Combo(
+            "", &currentRifle, [](void *data, int idx, const char **out_text)
+            {
+                if (config->aimbot[idx ? idx + 23 : 38].enabled)
+                {
+                    static std::string name;
+                    name = rifles[idx];
+                    *out_text = name.append(" *").c_str();
+                }
+                else
+                {
+                    *out_text = rifles[idx];
+                }
+                return true;
+            },
+            nullptr, IM_ARRAYSIZE(rifles));
 
-		currentWeapon = currentRifle ? currentRifle + 23 : 38;
-		break;
-	}
-	}
-	ImGui::PopID();
+        currentWeapon = currentRifle ? currentRifle + 23 : 38;
+        break;
+    }
+    }
+    ImGui::PopID();
 
     ImGui::SameLine();
     ImGui::Checkbox(phrases[XorString("global_enabled")].c_str(), &config->ragebot[currentWeapon].enabled);
@@ -475,7 +529,7 @@ void GUI::renderRagebotWindow(bool contentOnly) noexcept
         ImGui::End();
 }
 
-void GUI::renderAntiAimWindow(bool contentOnly) noexcept
+/*void GUI::renderAntiAimWindow(bool contentOnly) noexcept
 {
     if (!contentOnly) {
         if (!window.antiAim)
@@ -747,24 +801,26 @@ void GUI::renderAntiAimWindow(bool contentOnly) noexcept
     if (!contentOnly)
         ImGui::End();
 }
-
+*/
 void GUI::renderTriggerbotWindow(bool contentOnly) noexcept
 {
-    if (!contentOnly) {
+    if (!contentOnly)
+    {
         if (!window.triggerbot)
             return;
-        ImGui::SetNextWindowSize({ 0.0f, 0.0f });
+        ImGui::SetNextWindowSize({0.0f, 0.0f});
         ImGui::Begin(phrases[XorString("window_triggerbot")].c_str(), &window.triggerbot, windowFlags);
     }
-    static int currentCategory{ 0 };
+    static int currentCategory{0};
     ImGui::PushItemWidth(110.0f);
     ImGui::PushID(0);
     ImGui::Combo("", &currentCategory, XorString("All\0Pistols\0Heavy\0SMG\0Rifles\0Zeus x27\0"));
     ImGui::PopID();
     ImGui::SameLine();
-    static int currentWeapon{ 0 };
+    static int currentWeapon{0};
     ImGui::PushID(1);
-    switch (currentCategory) {
+    switch (currentCategory)
+    {
     case 0:
         currentWeapon = 0;
         ImGui::NewLine();
@@ -774,74 +830,102 @@ void GUI::renderTriggerbotWindow(bool contentOnly) noexcept
         ImGui::NewLine();
         break;
 
-    case 1: {
-        static int currentPistol{ 0 };
-        static constexpr const char* pistols[]{ "All", "Glock-18", "P2000", "USP-S", "Dual Berettas", "P250", "Tec-9", "Five-Seven", "CZ-75", "Desert Eagle", "Revolver" };
+    case 1:
+    {
+        static int currentPistol{0};
+        static constexpr const char *pistols[]{"All", "Glock-18", "P2000", "USP-S", "Dual Berettas", "P250", "Tec-9", "Five-Seven", "CZ-75", "Desert Eagle", "Revolver"};
 
-        ImGui::Combo("", &currentPistol, [](void* data, int idx, const char** out_text) {
-            if (config->triggerbot[idx ? idx : 35].enabled) {
-                static std::string name;
-                name = pistols[idx];
-                *out_text = name.append(" *").c_str();
-            } else {
-                *out_text = pistols[idx];
-            }
-            return true;
-            }, nullptr, IM_ARRAYSIZE(pistols));
+        ImGui::Combo(
+            "", &currentPistol, [](void *data, int idx, const char **out_text)
+            {
+                if (config->triggerbot[idx ? idx : 35].enabled)
+                {
+                    static std::string name;
+                    name = pistols[idx];
+                    *out_text = name.append(" *").c_str();
+                }
+                else
+                {
+                    *out_text = pistols[idx];
+                }
+                return true;
+            },
+            nullptr, IM_ARRAYSIZE(pistols));
 
         currentWeapon = currentPistol ? currentPistol : 35;
         break;
     }
-    case 2: {
-        static int currentHeavy{ 0 };
-        static constexpr const char* heavies[]{ "All", "Nova", "XM1014", "Sawed-off", "MAG-7", "M249", "Negev" };
+    case 2:
+    {
+        static int currentHeavy{0};
+        static constexpr const char *heavies[]{"All", "Nova", "XM1014", "Sawed-off", "MAG-7", "M249", "Negev"};
 
-        ImGui::Combo("", &currentHeavy, [](void* data, int idx, const char** out_text) {
-            if (config->triggerbot[idx ? idx + 10 : 36].enabled) {
-                static std::string name;
-                name = heavies[idx];
-                *out_text = name.append(" *").c_str();
-            } else {
-                *out_text = heavies[idx];
-            }
-            return true;
-            }, nullptr, IM_ARRAYSIZE(heavies));
+        ImGui::Combo(
+            "", &currentHeavy, [](void *data, int idx, const char **out_text)
+            {
+                if (config->triggerbot[idx ? idx + 10 : 36].enabled)
+                {
+                    static std::string name;
+                    name = heavies[idx];
+                    *out_text = name.append(" *").c_str();
+                }
+                else
+                {
+                    *out_text = heavies[idx];
+                }
+                return true;
+            },
+            nullptr, IM_ARRAYSIZE(heavies));
 
         currentWeapon = currentHeavy ? currentHeavy + 10 : 36;
         break;
     }
-    case 3: {
-        static int currentSmg{ 0 };
-        static constexpr const char* smgs[]{ "All", "Mac-10", "MP9", "MP7", "MP5-SD", "UMP-45", "P90", "PP-Bizon" };
+    case 3:
+    {
+        static int currentSmg{0};
+        static constexpr const char *smgs[]{"All", "Mac-10", "MP9", "MP7", "MP5-SD", "UMP-45", "P90", "PP-Bizon"};
 
-        ImGui::Combo("", &currentSmg, [](void* data, int idx, const char** out_text) {
-            if (config->triggerbot[idx ? idx + 16 : 37].enabled) {
-                static std::string name;
-                name = smgs[idx];
-                *out_text = name.append(" *").c_str();
-            } else {
-                *out_text = smgs[idx];
-            }
-            return true;
-            }, nullptr, IM_ARRAYSIZE(smgs));
+        ImGui::Combo(
+            "", &currentSmg, [](void *data, int idx, const char **out_text)
+            {
+                if (config->triggerbot[idx ? idx + 16 : 37].enabled)
+                {
+                    static std::string name;
+                    name = smgs[idx];
+                    *out_text = name.append(" *").c_str();
+                }
+                else
+                {
+                    *out_text = smgs[idx];
+                }
+                return true;
+            },
+            nullptr, IM_ARRAYSIZE(smgs));
 
         currentWeapon = currentSmg ? currentSmg + 16 : 37;
         break;
     }
-    case 4: {
-        static int currentRifle{ 0 };
-        static constexpr const char* rifles[]{ "All", "Galil AR", "Famas", "AK-47", "M4A4", "M4A1-S", "SSG-08", "SG-553", "AUG", "AWP", "G3SG1", "SCAR-20" };
+    case 4:
+    {
+        static int currentRifle{0};
+        static constexpr const char *rifles[]{"All", "Galil AR", "Famas", "AK-47", "M4A4", "M4A1-S", "SSG-08", "SG-553", "AUG", "AWP", "G3SG1", "SCAR-20"};
 
-        ImGui::Combo("", &currentRifle, [](void* data, int idx, const char** out_text) {
-            if (config->triggerbot[idx ? idx + 23 : 38].enabled) {
-                static std::string name;
-                name = rifles[idx];
-                *out_text = name.append(" *").c_str();
-            } else {
-                *out_text = rifles[idx];
-            }
-            return true;
-            }, nullptr, IM_ARRAYSIZE(rifles));
+        ImGui::Combo(
+            "", &currentRifle, [](void *data, int idx, const char **out_text)
+            {
+                if (config->triggerbot[idx ? idx + 23 : 38].enabled)
+                {
+                    static std::string name;
+                    name = rifles[idx];
+                    *out_text = name.append(" *").c_str();
+                }
+                else
+                {
+                    *out_text = rifles[idx];
+                }
+                return true;
+            },
+            nullptr, IM_ARRAYSIZE(rifles));
 
         currentWeapon = currentRifle ? currentRifle + 23 : 38;
         break;
@@ -883,10 +967,11 @@ void GUI::renderTriggerbotWindow(bool contentOnly) noexcept
 
 void GUI::renderBacktrackWindow(bool contentOnly) noexcept
 {
-    if (!contentOnly) {
+    if (!contentOnly)
+    {
         if (!window.backtrack)
             return;
-        ImGui::SetNextWindowSize({ 350.0f, 0.0f });
+        ImGui::SetNextWindowSize({350.0f, 0.0f});
         ImGui::Begin(phrases[XorString("window_backtrack")].c_str(), &window.backtrack, windowFlags);
     }
     ImGui::Columns(2, nullptr, true);
@@ -895,36 +980,48 @@ void GUI::renderBacktrackWindow(bool contentOnly) noexcept
     ImGui::NextColumn();
     ImGui::Checkbox(phrases[XorString("backtrack_extend")].c_str(), &config->backtrack.fakeLatency);
     ImGui::Columns(1);
-    if (!config->backtrack.fakeLatency) { if (config->backtrack.timeLimit >= 201) { config->backtrack.timeLimit = 200; } }
-    ImGui::PushItemWidth(220.0f); ImGui::PushID(0);
+    if (!config->backtrack.fakeLatency)
+    {
+        if (config->backtrack.timeLimit >= 201)
+        {
+            config->backtrack.timeLimit = 200;
+        }
+    }
+    ImGui::PushItemWidth(220.0f);
+    ImGui::PushID(0);
     ImGui::SliderInt("", &config->backtrack.timeLimit, 1, config->backtrack.fakeLatency ? 400 : 200, phrases[XorString("backtrack_timelimit")].c_str());
-    ImGui::PopID(); ImGui::PopItemWidth();
+    ImGui::PopID();
+    ImGui::PopItemWidth();
     if (!contentOnly)
         ImGui::End();
 }
 
 void GUI::renderGlowWindow(bool contentOnly) noexcept
 {
-    if (!contentOnly) {
+    if (!contentOnly)
+    {
         if (!window.glow)
             return;
-        ImGui::SetNextWindowSize({ 350.0f, 0.0f });
+        ImGui::SetNextWindowSize({350.0f, 0.0f});
         ImGui::Begin(phrases[XorString("window_glow")].c_str(), &window.glow, windowFlags);
     }
-    static int currentCategory{ 0 };
+    static int currentCategory{0};
     ImGui::PushItemWidth(110.0f);
     ImGui::PushID(0);
     ImGui::Combo("", &currentCategory, XorString("Allies\0Enemies\0Planting\0Defusing\0Local player\0Weapons\0C4\0Planted C4\0Chickens\0Defuse kits\0Projectiles\0Hostages\0Ragdolls\0"));
     ImGui::PopID();
-    static int currentItem{ 0 };
-    if (currentCategory <= 3) {
+    static int currentItem{0};
+    if (currentCategory <= 3)
+    {
         ImGui::SameLine();
-        static int currentType{ 0 };
+        static int currentType{0};
         ImGui::PushID(1);
         ImGui::Combo("", &currentType, XorString("All\0Visible\0Occluded\0"));
         ImGui::PopID();
         currentItem = currentCategory * 3 + currentType;
-    } else {
+    }
+    else
+    {
         currentItem = currentCategory + 8;
     }
 
@@ -944,13 +1041,14 @@ void GUI::renderGlowWindow(bool contentOnly) noexcept
 
 void GUI::renderChamsWindow(bool contentOnly) noexcept
 {
-    if (!contentOnly) {
+    if (!contentOnly)
+    {
         if (!window.chams)
             return;
-        ImGui::SetNextWindowSize({ 0.0f, 0.0f });
+        ImGui::SetNextWindowSize({0.0f, 0.0f});
         ImGui::Begin(phrases[XorString("window_chams")].c_str(), &window.chams, windowFlags);
     }
-    static int currentCategory{ 0 };
+    static int currentCategory{0};
     ImGui::PushItemWidth(110.0f);
     ImGui::PushID(0);
 
@@ -971,7 +1069,7 @@ void GUI::renderChamsWindow(bool contentOnly) noexcept
     ImGui::SameLine();
     ImGui::Text("%d", material);
 
-    constexpr std::array categories{ "Allies", "Enemies", "Planting", "Defusing", "Local player", "Weapons", "Hands", "Backtrack", "Sleeves", "Desync" };
+    constexpr std::array categories{"Allies", "Enemies", "Planting", "Defusing", "Local player", "Weapons", "Hands", "Backtrack", "Sleeves", "Desync"};
 
     ImGui::SameLine();
 
@@ -982,7 +1080,7 @@ void GUI::renderChamsWindow(bool contentOnly) noexcept
 
     ImGui::SameLine();
 
-    auto& chams{ config->chams[categories[currentCategory]].materials[material - 1] };
+    auto &chams{config->chams[categories[currentCategory]].materials[material - 1]};
 
     ImGui::Checkbox(phrases[XorString("global_enabled")].c_str(), &chams.enabled);
     ImGui::Separator();
@@ -997,102 +1095,177 @@ void GUI::renderChamsWindow(bool contentOnly) noexcept
     ImGui::Checkbox(phrases[XorString("chams_ignorez")].c_str(), &chams.ignorez);
     ImGuiCustom::colorPopup(phrases[XorString("global_color")].c_str(), chams.color, &chams.rainbow, &chams.rainbowSpeed);
     ImGui::Columns(1);
-    if (!contentOnly) {
+    if (!contentOnly)
+    {
         ImGui::End();
     }
 }
 
 void GUI::renderStreamProofESPWindow(bool contentOnly) noexcept
 {
-    if (!contentOnly) {
+    if (!contentOnly)
+    {
         if (!window.streamProofESP)
             return;
-        ImGui::SetNextWindowSize({ 0.0f, 400.0f });
+        ImGui::SetNextWindowSize({0.0f, 400.0f});
         ImGui::Begin(phrases[XorString("window_esp")].c_str(), &window.streamProofESP, windowFlags);
     }
 
     static std::size_t currentCategory;
     static auto currentItem = "All";
 
-    constexpr auto getConfigShared = [](std::size_t category, const char* item) noexcept -> Shared& {
-        switch (category) {
-        case 0: default: return config->streamProofESP.enemies[item];
-        case 1: return config->streamProofESP.allies[item];
-        case 2: return config->streamProofESP.weapons[item];
-        case 3: return config->streamProofESP.projectiles[item];
-        case 4: return config->streamProofESP.lootCrates[item];
-        case 5: return config->streamProofESP.otherEntities[item];
+    constexpr auto getConfigShared = [](std::size_t category, const char *item) noexcept -> Shared &
+    {
+        switch (category)
+        {
+        case 0:
+        default:
+            return config->streamProofESP.enemies[item];
+        case 1:
+            return config->streamProofESP.allies[item];
+        case 2:
+            return config->streamProofESP.weapons[item];
+        case 3:
+            return config->streamProofESP.projectiles[item];
+        case 4:
+            return config->streamProofESP.lootCrates[item];
+        case 5:
+            return config->streamProofESP.otherEntities[item];
         }
     };
 
-    constexpr auto getConfigPlayer = [](std::size_t category, const char* item) noexcept -> Player& {
-        switch (category) {
-        case 0: default: return config->streamProofESP.enemies[item];
-        case 1: return config->streamProofESP.allies[item];
+    constexpr auto getConfigPlayer = [](std::size_t category, const char *item) noexcept -> Player &
+    {
+        switch (category)
+        {
+        case 0:
+        default:
+            return config->streamProofESP.enemies[item];
+        case 1:
+            return config->streamProofESP.allies[item];
         }
     };
 
-    if (ImGui::ListBoxHeader("##list", { 170.0f, 300.0f })) {
-        constexpr std::array categories{ "Enemies", "Allies", "Weapons", "Projectiles", "Loot Crates", "Other Entities" };
+    if (ImGui::ListBoxHeader("##list", {170.0f, 300.0f}))
+    {
+        constexpr std::array categories{"Enemies", "Allies", "Weapons", "Projectiles", "Loot Crates", "Other Entities"};
 
-        for (std::size_t i = 0; i < categories.size(); ++i) {
-            if (ImGui::Selectable(categories[i], currentCategory == i && std::string_view{ currentItem } == "All")) {
+        for (std::size_t i = 0; i < categories.size(); ++i)
+        {
+            if (ImGui::Selectable(categories[i], currentCategory == i && std::string_view{currentItem} == "All"))
+            {
                 currentCategory = i;
                 currentItem = "All";
             }
 
-            if (ImGui::BeginDragDropSource()) {
-                switch (i) {
-                case 0: case 1: ImGui::SetDragDropPayload("Player", &getConfigPlayer(i, "All"), sizeof(Player), ImGuiCond_Once); break;
-                case 2: ImGui::SetDragDropPayload("Weapon", &config->streamProofESP.weapons["All"], sizeof(Weapon), ImGuiCond_Once); break;
-                case 3: ImGui::SetDragDropPayload("Projectile", &config->streamProofESP.projectiles["All"], sizeof(Projectile), ImGuiCond_Once); break;
-                default: ImGui::SetDragDropPayload("Entity", &getConfigShared(i, "All"), sizeof(Shared), ImGuiCond_Once); break;
+            if (ImGui::BeginDragDropSource())
+            {
+                switch (i)
+                {
+                case 0:
+                case 1:
+                    ImGui::SetDragDropPayload("Player", &getConfigPlayer(i, "All"), sizeof(Player), ImGuiCond_Once);
+                    break;
+                case 2:
+                    ImGui::SetDragDropPayload("Weapon", &config->streamProofESP.weapons["All"], sizeof(Weapon), ImGuiCond_Once);
+                    break;
+                case 3:
+                    ImGui::SetDragDropPayload("Projectile", &config->streamProofESP.projectiles["All"], sizeof(Projectile), ImGuiCond_Once);
+                    break;
+                default:
+                    ImGui::SetDragDropPayload("Entity", &getConfigShared(i, "All"), sizeof(Shared), ImGuiCond_Once);
+                    break;
                 }
                 ImGui::EndDragDropSource();
             }
 
-            if (ImGui::BeginDragDropTarget()) {
-                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Player")) {
-                    const auto& data = *(Player*)payload->Data;
+            if (ImGui::BeginDragDropTarget())
+            {
+                if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("Player"))
+                {
+                    const auto &data = *(Player *)payload->Data;
 
-                    switch (i) {
-                    case 0: case 1: getConfigPlayer(i, "All") = data; break;
-                    case 2: config->streamProofESP.weapons["All"] = data; break;
-                    case 3: config->streamProofESP.projectiles["All"] = data; break;
-                    default: getConfigShared(i, "All") = data; break;
+                    switch (i)
+                    {
+                    case 0:
+                    case 1:
+                        getConfigPlayer(i, "All") = data;
+                        break;
+                    case 2:
+                        config->streamProofESP.weapons["All"] = data;
+                        break;
+                    case 3:
+                        config->streamProofESP.projectiles["All"] = data;
+                        break;
+                    default:
+                        getConfigShared(i, "All") = data;
+                        break;
                     }
                 }
 
-                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Weapon")) {
-                    const auto& data = *(Weapon*)payload->Data;
+                if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("Weapon"))
+                {
+                    const auto &data = *(Weapon *)payload->Data;
 
-                    switch (i) {
-                    case 0: case 1: getConfigPlayer(i, "All") = data; break;
-                    case 2: config->streamProofESP.weapons["All"] = data; break;
-                    case 3: config->streamProofESP.projectiles["All"] = data; break;
-                    default: getConfigShared(i, "All") = data; break;
+                    switch (i)
+                    {
+                    case 0:
+                    case 1:
+                        getConfigPlayer(i, "All") = data;
+                        break;
+                    case 2:
+                        config->streamProofESP.weapons["All"] = data;
+                        break;
+                    case 3:
+                        config->streamProofESP.projectiles["All"] = data;
+                        break;
+                    default:
+                        getConfigShared(i, "All") = data;
+                        break;
                     }
                 }
 
-                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Projectile")) {
-                    const auto& data = *(Projectile*)payload->Data;
+                if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("Projectile"))
+                {
+                    const auto &data = *(Projectile *)payload->Data;
 
-                    switch (i) {
-                    case 0: case 1: getConfigPlayer(i, "All") = data; break;
-                    case 2: config->streamProofESP.weapons["All"] = data; break;
-                    case 3: config->streamProofESP.projectiles["All"] = data; break;
-                    default: getConfigShared(i, "All") = data; break;
+                    switch (i)
+                    {
+                    case 0:
+                    case 1:
+                        getConfigPlayer(i, "All") = data;
+                        break;
+                    case 2:
+                        config->streamProofESP.weapons["All"] = data;
+                        break;
+                    case 3:
+                        config->streamProofESP.projectiles["All"] = data;
+                        break;
+                    default:
+                        getConfigShared(i, "All") = data;
+                        break;
                     }
                 }
 
-                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Entity")) {
-                    const auto& data = *(Shared*)payload->Data;
+                if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("Entity"))
+                {
+                    const auto &data = *(Shared *)payload->Data;
 
-                    switch (i) {
-                    case 0: case 1: getConfigPlayer(i, "All") = data; break;
-                    case 2: config->streamProofESP.weapons["All"] = data; break;
-                    case 3: config->streamProofESP.projectiles["All"] = data; break;
-                    default: getConfigShared(i, "All") = data; break;
+                    switch (i)
+                    {
+                    case 0:
+                    case 1:
+                        getConfigPlayer(i, "All") = data;
+                        break;
+                    case 2:
+                        config->streamProofESP.weapons["All"] = data;
+                        break;
+                    case 3:
+                        config->streamProofESP.projectiles["All"] = data;
+                        break;
+                    default:
+                        getConfigShared(i, "All") = data;
+                        break;
                     }
                 }
                 ImGui::EndDragDropTarget();
@@ -1101,81 +1274,148 @@ void GUI::renderStreamProofESPWindow(bool contentOnly) noexcept
             ImGui::PushID(i);
             ImGui::Indent();
 
-            const auto items = [](std::size_t category) noexcept -> std::vector<const char*> {
-                switch (category) {
+            const auto items = [](std::size_t category) noexcept -> std::vector<const char *>
+            {
+                switch (category)
+                {
                 case 0:
-                case 1: return { "Visible", "Occluded" };
-                case 2: return { "Pistols", "SMGs", "Rifles", "Sniper Rifles", "Shotguns", "Machineguns", "Grenades", "Melee", "Other" };
-                case 3: return { "Flashbang", "HE Grenade", "Breach Charge", "Bump Mine", "Decoy Grenade", "Molotov", "TA Grenade", "Smoke Grenade", "Snowball" };
-                case 4: return { "Pistol Case", "Light Case", "Heavy Case", "Explosive Case", "Tools Case", "Cash Dufflebag" };
-                case 5: return { "Defuse Kit", "Chicken", "Planted C4", "Hostage", "Sentry", "Cash", "Ammo Box", "Radar Jammer", "Snowball Pile" };
-                default: return { };
+                case 1:
+                    return {"Visible", "Occluded"};
+                case 2:
+                    return {"Pistols", "SMGs", "Rifles", "Sniper Rifles", "Shotguns", "Machineguns", "Grenades", "Melee", "Other"};
+                case 3:
+                    return {"Flashbang", "HE Grenade", "Breach Charge", "Bump Mine", "Decoy Grenade", "Molotov", "TA Grenade", "Smoke Grenade", "Snowball"};
+                case 4:
+                    return {"Pistol Case", "Light Case", "Heavy Case", "Explosive Case", "Tools Case", "Cash Dufflebag"};
+                case 5:
+                    return {"Defuse Kit", "Chicken", "Planted C4", "Hostage", "Sentry", "Cash", "Ammo Box", "Radar Jammer", "Snowball Pile"};
+                default:
+                    return {};
                 }
             }(i);
 
             const auto categoryEnabled = getConfigShared(i, "All").enabled;
 
-            for (std::size_t j = 0; j < items.size(); ++j) {
+            for (std::size_t j = 0; j < items.size(); ++j)
+            {
                 static bool selectedSubItem;
-                if (!categoryEnabled || getConfigShared(i, items[j]).enabled) {
-                    if (ImGui::Selectable(items[j], currentCategory == i && !selectedSubItem && std::string_view{ currentItem } == items[j])) {
+                if (!categoryEnabled || getConfigShared(i, items[j]).enabled)
+                {
+                    if (ImGui::Selectable(items[j], currentCategory == i && !selectedSubItem && std::string_view{currentItem} == items[j]))
+                    {
                         currentCategory = i;
                         currentItem = items[j];
                         selectedSubItem = false;
                     }
 
-                    if (ImGui::BeginDragDropSource()) {
-                        switch (i) {
-                        case 0: case 1: ImGui::SetDragDropPayload("Player", &getConfigPlayer(i, items[j]), sizeof(Player), ImGuiCond_Once); break;
-                        case 2: ImGui::SetDragDropPayload("Weapon", &config->streamProofESP.weapons[items[j]], sizeof(Weapon), ImGuiCond_Once); break;
-                        case 3: ImGui::SetDragDropPayload("Projectile", &config->streamProofESP.projectiles[items[j]], sizeof(Projectile), ImGuiCond_Once); break;
-                        default: ImGui::SetDragDropPayload("Entity", &getConfigShared(i, items[j]), sizeof(Shared), ImGuiCond_Once); break;
+                    if (ImGui::BeginDragDropSource())
+                    {
+                        switch (i)
+                        {
+                        case 0:
+                        case 1:
+                            ImGui::SetDragDropPayload("Player", &getConfigPlayer(i, items[j]), sizeof(Player), ImGuiCond_Once);
+                            break;
+                        case 2:
+                            ImGui::SetDragDropPayload("Weapon", &config->streamProofESP.weapons[items[j]], sizeof(Weapon), ImGuiCond_Once);
+                            break;
+                        case 3:
+                            ImGui::SetDragDropPayload("Projectile", &config->streamProofESP.projectiles[items[j]], sizeof(Projectile), ImGuiCond_Once);
+                            break;
+                        default:
+                            ImGui::SetDragDropPayload("Entity", &getConfigShared(i, items[j]), sizeof(Shared), ImGuiCond_Once);
+                            break;
                         }
                         ImGui::EndDragDropSource();
                     }
 
-                    if (ImGui::BeginDragDropTarget()) {
-                        if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Player")) {
-                            const auto& data = *(Player*)payload->Data;
+                    if (ImGui::BeginDragDropTarget())
+                    {
+                        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("Player"))
+                        {
+                            const auto &data = *(Player *)payload->Data;
 
-                            switch (i) {
-                            case 0: case 1: getConfigPlayer(i, items[j]) = data; break;
-                            case 2: config->streamProofESP.weapons[items[j]] = data; break;
-                            case 3: config->streamProofESP.projectiles[items[j]] = data; break;
-                            default: getConfigShared(i, items[j]) = data; break;
+                            switch (i)
+                            {
+                            case 0:
+                            case 1:
+                                getConfigPlayer(i, items[j]) = data;
+                                break;
+                            case 2:
+                                config->streamProofESP.weapons[items[j]] = data;
+                                break;
+                            case 3:
+                                config->streamProofESP.projectiles[items[j]] = data;
+                                break;
+                            default:
+                                getConfigShared(i, items[j]) = data;
+                                break;
                             }
                         }
 
-                        if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Weapon")) {
-                            const auto& data = *(Weapon*)payload->Data;
+                        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("Weapon"))
+                        {
+                            const auto &data = *(Weapon *)payload->Data;
 
-                            switch (i) {
-                            case 0: case 1: getConfigPlayer(i, items[j]) = data; break;
-                            case 2: config->streamProofESP.weapons[items[j]] = data; break;
-                            case 3: config->streamProofESP.projectiles[items[j]] = data; break;
-                            default: getConfigShared(i, items[j]) = data; break;
+                            switch (i)
+                            {
+                            case 0:
+                            case 1:
+                                getConfigPlayer(i, items[j]) = data;
+                                break;
+                            case 2:
+                                config->streamProofESP.weapons[items[j]] = data;
+                                break;
+                            case 3:
+                                config->streamProofESP.projectiles[items[j]] = data;
+                                break;
+                            default:
+                                getConfigShared(i, items[j]) = data;
+                                break;
                             }
                         }
 
-                        if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Projectile")) {
-                            const auto& data = *(Projectile*)payload->Data;
+                        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("Projectile"))
+                        {
+                            const auto &data = *(Projectile *)payload->Data;
 
-                            switch (i) {
-                            case 0: case 1: getConfigPlayer(i, items[j]) = data; break;
-                            case 2: config->streamProofESP.weapons[items[j]] = data; break;
-                            case 3: config->streamProofESP.projectiles[items[j]] = data; break;
-                            default: getConfigShared(i, items[j]) = data; break;
+                            switch (i)
+                            {
+                            case 0:
+                            case 1:
+                                getConfigPlayer(i, items[j]) = data;
+                                break;
+                            case 2:
+                                config->streamProofESP.weapons[items[j]] = data;
+                                break;
+                            case 3:
+                                config->streamProofESP.projectiles[items[j]] = data;
+                                break;
+                            default:
+                                getConfigShared(i, items[j]) = data;
+                                break;
                             }
                         }
 
-                        if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Entity")) {
-                            const auto& data = *(Shared*)payload->Data;
+                        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("Entity"))
+                        {
+                            const auto &data = *(Shared *)payload->Data;
 
-                            switch (i) {
-                            case 0: case 1: getConfigPlayer(i, items[j]) = data; break;
-                            case 2: config->streamProofESP.weapons[items[j]] = data; break;
-                            case 3: config->streamProofESP.projectiles[items[j]] = data; break;
-                            default: getConfigShared(i, items[j]) = data; break;
+                            switch (i)
+                            {
+                            case 0:
+                            case 1:
+                                getConfigPlayer(i, items[j]) = data;
+                                break;
+                            case 2:
+                                config->streamProofESP.weapons[items[j]] = data;
+                                break;
+                            case 3:
+                                config->streamProofESP.projectiles[items[j]] = data;
+                                break;
+                            default:
+                                getConfigShared(i, items[j]) = data;
+                                break;
                             }
                         }
                         ImGui::EndDragDropTarget();
@@ -1187,57 +1427,77 @@ void GUI::renderStreamProofESPWindow(bool contentOnly) noexcept
 
                 ImGui::Indent();
 
-                const auto subItems = [](std::size_t item) noexcept -> std::vector<const char*> {
-                    switch (item) {
-                    case 0: return { "Glock-18", "P2000", "USP-S", "Dual Berettas", "P250", "Tec-9", "Five-SeveN", "CZ75-Auto", "Desert Eagle", "R8 Revolver" };
-                    case 1: return { "MAC-10", "MP9", "MP7", "MP5-SD", "UMP-45", "P90", "PP-Bizon" };
-                    case 2: return { "Galil AR", "FAMAS", "AK-47", "M4A4", "M4A1-S", "SG 553", "AUG" };
-                    case 3: return { "SSG 08", "AWP", "G3SG1", "SCAR-20" };
-                    case 4: return { "Nova", "XM1014", "Sawed-Off", "MAG-7" };
-                    case 5: return { "M249", "Negev" };
-                    case 6: return { "Flashbang", "HE Grenade", "Smoke Grenade", "Molotov", "Decoy Grenade", "Incendiary", "TA Grenade", "Fire Bomb", "Diversion", "Frag Grenade", "Snowball" };
-                    case 7: return { "Axe", "Hammer", "Wrench" };
-                    case 8: return { "C4", "Healthshot", "Bump Mine", "Zone Repulsor", "Shield" };
-                    default: return { };
+                const auto subItems = [](std::size_t item) noexcept -> std::vector<const char *>
+                {
+                    switch (item)
+                    {
+                    case 0:
+                        return {"Glock-18", "P2000", "USP-S", "Dual Berettas", "P250", "Tec-9", "Five-SeveN", "CZ75-Auto", "Desert Eagle", "R8 Revolver"};
+                    case 1:
+                        return {"MAC-10", "MP9", "MP7", "MP5-SD", "UMP-45", "P90", "PP-Bizon"};
+                    case 2:
+                        return {"Galil AR", "FAMAS", "AK-47", "M4A4", "M4A1-S", "SG 553", "AUG"};
+                    case 3:
+                        return {"SSG 08", "AWP", "G3SG1", "SCAR-20"};
+                    case 4:
+                        return {"Nova", "XM1014", "Sawed-Off", "MAG-7"};
+                    case 5:
+                        return {"M249", "Negev"};
+                    case 6:
+                        return {"Flashbang", "HE Grenade", "Smoke Grenade", "Molotov", "Decoy Grenade", "Incendiary", "TA Grenade", "Fire Bomb", "Diversion", "Frag Grenade", "Snowball"};
+                    case 7:
+                        return {"Axe", "Hammer", "Wrench"};
+                    case 8:
+                        return {"C4", "Healthshot", "Bump Mine", "Zone Repulsor", "Shield"};
+                    default:
+                        return {};
                     }
                 }(j);
 
                 const auto itemEnabled = getConfigShared(i, items[j]).enabled;
 
-                for (const auto subItem : subItems) {
-                    auto& subItemConfig = config->streamProofESP.weapons[subItem];
+                for (const auto subItem : subItems)
+                {
+                    auto &subItemConfig = config->streamProofESP.weapons[subItem];
                     if ((categoryEnabled || itemEnabled) && !subItemConfig.enabled)
                         continue;
 
-                    if (ImGui::Selectable(subItem, currentCategory == i && selectedSubItem && std::string_view{ currentItem } == subItem)) {
+                    if (ImGui::Selectable(subItem, currentCategory == i && selectedSubItem && std::string_view{currentItem} == subItem))
+                    {
                         currentCategory = i;
                         currentItem = subItem;
                         selectedSubItem = true;
                     }
 
-                    if (ImGui::BeginDragDropSource()) {
+                    if (ImGui::BeginDragDropSource())
+                    {
                         ImGui::SetDragDropPayload("Weapon", &subItemConfig, sizeof(Weapon), ImGuiCond_Once);
                         ImGui::EndDragDropSource();
                     }
 
-                    if (ImGui::BeginDragDropTarget()) {
-                        if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Player")) {
-                            const auto& data = *(Player*)payload->Data;
+                    if (ImGui::BeginDragDropTarget())
+                    {
+                        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("Player"))
+                        {
+                            const auto &data = *(Player *)payload->Data;
                             subItemConfig = data;
                         }
 
-                        if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Weapon")) {
-                            const auto& data = *(Weapon*)payload->Data;
+                        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("Weapon"))
+                        {
+                            const auto &data = *(Weapon *)payload->Data;
                             subItemConfig = data;
                         }
 
-                        if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Projectile")) {
-                            const auto& data = *(Projectile*)payload->Data;
+                        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("Projectile"))
+                        {
+                            const auto &data = *(Projectile *)payload->Data;
                             subItemConfig = data;
                         }
 
-                        if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Entity")) {
-                            const auto& data = *(Shared*)payload->Data;
+                        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("Entity"))
+                        {
+                            const auto &data = *(Shared *)payload->Data;
                             subItemConfig = data;
                         }
                         ImGui::EndDragDropTarget();
@@ -1254,16 +1514,20 @@ void GUI::renderStreamProofESPWindow(bool contentOnly) noexcept
 
     ImGui::SameLine();
 
-    if (ImGui::BeginChild("##child", { 400.0f, 300.0f })) {
-        auto& sharedConfig = getConfigShared(currentCategory, currentItem);
+    if (ImGui::BeginChild("##child", {400.0f, 300.0f}))
+    {
+        auto &sharedConfig = getConfigShared(currentCategory, currentItem);
 
         ImGui::Checkbox(phrases[XorString("global_enabled")].c_str(), &sharedConfig.enabled);
         ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - 260.0f);
         ImGui::SetNextItemWidth(220.0f);
-        if (ImGui::BeginCombo(phrases[XorString("esp_font")].c_str(), config->getSystemFonts()[sharedConfig.font.index].c_str())) {
-            for (size_t i = 0; i < config->getSystemFonts().size(); i++) {
+        if (ImGui::BeginCombo(phrases[XorString("esp_font")].c_str(), config->getSystemFonts()[sharedConfig.font.index].c_str()))
+        {
+            for (size_t i = 0; i < config->getSystemFonts().size(); i++)
+            {
                 bool isSelected = config->getSystemFonts()[i] == sharedConfig.font.name;
-                if (ImGui::Selectable(config->getSystemFonts()[i].c_str(), isSelected, 0, { 250.0f, 0.0f })) {
+                if (ImGui::Selectable(config->getSystemFonts()[i].c_str(), isSelected, 0, {250.0f, 0.0f}))
+                {
                     sharedConfig.font.index = i;
                     sharedConfig.font.name = config->getSystemFonts()[i];
                     config->scheduleFontLoad(sharedConfig.font.name);
@@ -1290,12 +1554,16 @@ void GUI::renderStreamProofESPWindow(bool contentOnly) noexcept
         if (ImGui::Button(phrases[XorString("global_threedots")].c_str()))
             ImGui::OpenPopup("");
 
-        if (ImGui::BeginPopup("")) {
+        if (ImGui::BeginPopup(""))
+        {
             ImGui::SetNextItemWidth(95.0f);
-            ImGui::Combo(phrases[XorString("global_type")].c_str(), &sharedConfig.box.type, XorString("2D\0" "2D corners\0" "3D\0" "3D corners\0"));
+            ImGui::Combo(phrases[XorString("global_type")].c_str(), &sharedConfig.box.type, XorString("2D\0"
+                                                                                                      "2D corners\0"
+                                                                                                      "3D\0"
+                                                                                                      "3D corners\0"));
             ImGui::SetNextItemWidth(275.0f);
             ImGui::SliderFloat3(phrases[XorString("global_scale")].c_str(), sharedConfig.box.scale.data(), 0.0f, 0.50f, "%.2f");
-        	ImGuiCustom::colorPicker(phrases[XorString("global_fill")].c_str(), sharedConfig.box.fill);
+            ImGuiCustom::colorPicker(phrases[XorString("global_fill")].c_str(), sharedConfig.box.fill);
             ImGui::EndPopup();
         }
 
@@ -1304,8 +1572,9 @@ void GUI::renderStreamProofESPWindow(bool contentOnly) noexcept
         ImGuiCustom::colorPicker(phrases[XorString("esp_name")].c_str(), sharedConfig.name);
         ImGui::SameLine(spacing);
 
-        if (currentCategory < 2) {
-            auto& playerConfig = getConfigPlayer(currentCategory, currentItem);
+        if (currentCategory < 2)
+        {
+            auto &playerConfig = getConfigPlayer(currentCategory, currentItem);
 
             ImGuiCustom::colorPicker(phrases[XorString("esp_weapon")].c_str(), playerConfig.weapon);
             ImGuiCustom::colorPicker(phrases[XorString("esp_flashduration")].c_str(), playerConfig.flashDuration);
@@ -1323,25 +1592,33 @@ void GUI::renderStreamProofESPWindow(bool contentOnly) noexcept
             if (ImGui::Button(phrases[XorString("global_threedots")].c_str()))
                 ImGui::OpenPopup("");
 
-            if (ImGui::BeginPopup("")) {
+            if (ImGui::BeginPopup(""))
+            {
                 ImGui::SetNextItemWidth(95.0f);
-                ImGui::Combo(phrases[XorString("global_type")].c_str(), &playerConfig.headBox.type, XorString("2D\0" "2D corners\0" "3D\0" "3D corners\0"));
+                ImGui::Combo(phrases[XorString("global_type")].c_str(), &playerConfig.headBox.type, XorString("2D\0"
+                                                                                                              "2D corners\0"
+                                                                                                              "3D\0"
+                                                                                                              "3D corners\0"));
                 ImGui::SetNextItemWidth(275.0f);
                 ImGui::SliderFloat3(phrases[XorString("global_scale")].c_str(), playerConfig.headBox.scale.data(), 0.0f, 0.50f, "%.2f");
-            	ImGuiCustom::colorPicker(phrases[XorString("global_fill")].c_str(), playerConfig.headBox.fill);
+                ImGuiCustom::colorPicker(phrases[XorString("global_fill")].c_str(), playerConfig.headBox.fill);
                 ImGui::EndPopup();
             }
 
             ImGui::PopID();
 
-        	ImGui::SameLine(spacing);
+            ImGui::SameLine(spacing);
 
             ImGui::Checkbox(phrases[XorString("esp_healthbar")].c_str(), &playerConfig.healthBar);
-        } else if (currentCategory == 2) {
-            auto& weaponConfig = config->streamProofESP.weapons[currentItem];
+        }
+        else if (currentCategory == 2)
+        {
+            auto &weaponConfig = config->streamProofESP.weapons[currentItem];
             ImGuiCustom::colorPicker(phrases[XorString("esp_ammo")].c_str(), weaponConfig.ammo);
-        } else if (currentCategory == 3) {
-            auto& trails = config->streamProofESP.projectiles[currentItem].trails;
+        }
+        else if (currentCategory == 3)
+        {
+            auto &trails = config->streamProofESP.projectiles[currentItem].trails;
 
             ImGui::Checkbox(phrases[XorString("esp_trails")].c_str(), &trails.enabled);
             ImGui::SameLine(spacing + 77.0f);
@@ -1350,8 +1627,10 @@ void GUI::renderStreamProofESPWindow(bool contentOnly) noexcept
             if (ImGui::Button(phrases[XorString("global_threedots")].c_str()))
                 ImGui::OpenPopup("");
 
-            if (ImGui::BeginPopup("")) {
-                constexpr auto trailPicker = [](const char* name, Trail& trail) noexcept {
+            if (ImGui::BeginPopup(""))
+            {
+                constexpr auto trailPicker = [](const char *name, Trail &trail) noexcept
+                {
                     ImGui::PushID(name);
                     ImGuiCustom::colorPicker(name, trail);
                     ImGui::SameLine(150.0f);
@@ -1376,10 +1655,9 @@ void GUI::renderStreamProofESPWindow(bool contentOnly) noexcept
         ImGui::SetNextItemWidth(95.0f);
         ImGui::InputFloat(phrases[XorString("esp_textculldistance")].c_str(), &sharedConfig.textCullDistance, 0.4f, 0.8f, "%.1fm");
         sharedConfig.textCullDistance = std::clamp(sharedConfig.textCullDistance, 0.0f, 999.9f);
-}
+    }
 
     ImGui::EndChild();
-
 
     if (!contentOnly)
         ImGui::End();
@@ -1387,10 +1665,11 @@ void GUI::renderStreamProofESPWindow(bool contentOnly) noexcept
 
 void GUI::renderVisualsWindow(bool contentOnly) noexcept
 {
-    if (!contentOnly) {
+    if (!contentOnly)
+    {
         if (!window.visuals)
             return;
-        ImGui::SetNextWindowSize({ 680.0f, 0.0f });
+        ImGui::SetNextWindowSize({680.0f, 0.0f});
         ImGui::Begin(phrases[XorString("window_visuals")].c_str(), &window.visuals, windowFlags);
     }
     ImGui::Columns(2, nullptr, false);
@@ -1416,7 +1695,8 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
     ImGuiCustom::colorPicker(phrases[XorString("visuals_watermark")].c_str(), config->misc.watermark);
 
     ImGui::Checkbox(phrases[XorString("visuals_ragdollforce")].c_str(), &config->misc.ragdollForce);
-    if (config->misc.ragdollForce) {
+    if (config->misc.ragdollForce)
+    {
         ImGui::SetNextItemWidth(90.0f);
         ImGui::InputInt(phrases[XorString("visuals_ragdollforce_strenght")].c_str(), &config->misc.ragdollForceStrength, 1, 3);
         config->misc.ragdollForceStrength = std::clamp(config->misc.ragdollForceStrength, 1, 100);
@@ -1447,7 +1727,7 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
     ImGui::PopItemWidth();
     ImGui::Combo(phrases[XorString("visuals_hitmarker")].c_str(), &config->visuals.hitMarker, XorString("None\0Default (Cross)\0"));
     ImGui::SliderFloat(phrases[XorString("visuals_hitmarker_time")].c_str(), &config->visuals.hitMarkerTime, 0.1f, 1.5f, XorString("%.2fs"));
-	ImGui::Checkbox(phrases[XorString("visuals_indicators")].c_str(), &config->visuals.indicatorsEnabled);
+    ImGui::Checkbox(phrases[XorString("visuals_indicators")].c_str(), &config->visuals.indicatorsEnabled);
     ImGui::SameLine();
     ImGui::PushID(6);
     ImGui::SetNextItemWidth(175.0f);
@@ -1462,8 +1742,6 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
     ImGuiCustom::colorPicker(phrases[XorString("visuals_noscopecrosshair")].c_str(), config->misc.noscopeCrosshair);
     ImGuiCustom::colorPicker(phrases[XorString("visuals_recoilcrosshair")].c_str(), config->misc.recoilCrosshair);
 
-
-
     ImGui::Columns(1);
 
     if (!contentOnly)
@@ -1472,10 +1750,11 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
 
 void GUI::renderWorldWindow(bool contentOnly) noexcept
 {
-    if (!contentOnly) {
+    if (!contentOnly)
+    {
         if (!window.world)
             return;
-        ImGui::SetNextWindowSize({ 700.0f, 0.0f });
+        ImGui::SetNextWindowSize({700.0f, 0.0f});
         ImGui::Begin(phrases[XorString("window_world")].c_str(), &window.world, windowFlags);
     }
     ImGui::Columns(2);
@@ -1494,14 +1773,22 @@ void GUI::renderWorldWindow(bool contentOnly) noexcept
     if (ccPopup)
         ImGui::OpenPopup(XorString("##popup"));
 
-    if (ImGui::BeginPopup(XorString("##popup"))) {
-        ImGui::VSliderFloat(XorString("##1"), { 40.0f, 160.0f }, &config->visuals.colorCorrection.blue, 0.0f, 1.0f, XorString("Blue\n%.3f")); ImGui::SameLine();
-        ImGui::VSliderFloat(XorString("##2"), { 40.0f, 160.0f }, &config->visuals.colorCorrection.red, 0.0f, 1.0f, XorString("Red\n%.3f")); ImGui::SameLine();
-        ImGui::VSliderFloat(XorString("##3"), { 40.0f, 160.0f }, &config->visuals.colorCorrection.mono, 0.0f, 1.0f, XorString("Mono\n%.3f")); ImGui::SameLine();
-        ImGui::VSliderFloat(XorString("##4"), { 40.0f, 160.0f }, &config->visuals.colorCorrection.saturation, 0.0f, 1.0f, XorString("Sat\n%.3f")); ImGui::SameLine();
-        ImGui::VSliderFloat(XorString("##5"), { 40.0f, 160.0f }, &config->visuals.colorCorrection.ghost, 0.0f, 1.0f, XorString("Ghost\n%.3f")); ImGui::SameLine();
-        ImGui::VSliderFloat(XorString("##6"), { 40.0f, 160.0f }, &config->visuals.colorCorrection.green, 0.0f, 1.0f, XorString("Green\n%.3f")); ImGui::SameLine();
-        ImGui::VSliderFloat(XorString("##7"), { 40.0f, 160.0f }, &config->visuals.colorCorrection.yellow, 0.0f, 1.0f, XorString("Yellow\n%.3f")); ImGui::SameLine();
+    if (ImGui::BeginPopup(XorString("##popup")))
+    {
+        ImGui::VSliderFloat(XorString("##1"), {40.0f, 160.0f}, &config->visuals.colorCorrection.blue, 0.0f, 1.0f, XorString("Blue\n%.3f"));
+        ImGui::SameLine();
+        ImGui::VSliderFloat(XorString("##2"), {40.0f, 160.0f}, &config->visuals.colorCorrection.red, 0.0f, 1.0f, XorString("Red\n%.3f"));
+        ImGui::SameLine();
+        ImGui::VSliderFloat(XorString("##3"), {40.0f, 160.0f}, &config->visuals.colorCorrection.mono, 0.0f, 1.0f, XorString("Mono\n%.3f"));
+        ImGui::SameLine();
+        ImGui::VSliderFloat(XorString("##4"), {40.0f, 160.0f}, &config->visuals.colorCorrection.saturation, 0.0f, 1.0f, XorString("Sat\n%.3f"));
+        ImGui::SameLine();
+        ImGui::VSliderFloat(XorString("##5"), {40.0f, 160.0f}, &config->visuals.colorCorrection.ghost, 0.0f, 1.0f, XorString("Ghost\n%.3f"));
+        ImGui::SameLine();
+        ImGui::VSliderFloat(XorString("##6"), {40.0f, 160.0f}, &config->visuals.colorCorrection.green, 0.0f, 1.0f, XorString("Green\n%.3f"));
+        ImGui::SameLine();
+        ImGui::VSliderFloat(XorString("##7"), {40.0f, 160.0f}, &config->visuals.colorCorrection.yellow, 0.0f, 1.0f, XorString("Yellow\n%.3f"));
+        ImGui::SameLine();
         ImGui::EndPopup();
     }
 
@@ -1513,23 +1800,27 @@ void GUI::renderWorldWindow(bool contentOnly) noexcept
 
 void GUI::renderSkinChangerWindow(bool contentOnly) noexcept
 {
-    if (!contentOnly) {
+    if (!contentOnly)
+    {
         if (!window.skinChanger)
             return;
-        ImGui::SetNextWindowSize({ 800.0f, 0.0f });
+        ImGui::SetNextWindowSize({800.0f, 0.0f});
         ImGui::Begin(phrases[XorString("window_skinchanger")].c_str(), &window.skinChanger, windowFlags);
     }
 
     static auto itemIndex = 0;
 
     ImGui::PushItemWidth(110.0f);
-    ImGui::Combo("##1", &itemIndex, [](void* data, int idx, const char** out_text) {
-        *out_text = SkinChanger::weapon_names[idx].name;
-        return true;
-        }, nullptr, SkinChanger::weapon_names.size(), 5);
+    ImGui::Combo(
+        "##1", &itemIndex, [](void *data, int idx, const char **out_text)
+        {
+            *out_text = SkinChanger::weapon_names[idx].name;
+            return true;
+        },
+        nullptr, SkinChanger::weapon_names.size(), 5);
     ImGui::PopItemWidth();
 
-    auto& selected_entry = config->skinChanger[itemIndex];
+    auto &selected_entry = config->skinChanger[itemIndex];
     selected_entry.itemIdIndex = itemIndex;
 
     {
@@ -1543,31 +1834,37 @@ void GUI::renderSkinChangerWindow(bool contentOnly) noexcept
         ImGui::InputTextWithHint("", phrases[XorString("global_search")].c_str(), &filter);
         ImGui::PopID();
 
-        if (ImGui::ListBoxHeader(phrases[XorString("skinchanger_paintkit")].c_str())) {
-            const auto& kits = itemIndex == 1 ? SkinChanger::getGloveKits() : SkinChanger::getSkinKits();
+        if (ImGui::ListBoxHeader(phrases[XorString("skinchanger_paintkit")].c_str()))
+        {
+            const auto &kits = itemIndex == 1 ? SkinChanger::getGloveKits() : SkinChanger::getSkinKits();
 
             const std::locale original;
-            std::locale::global(std::locale{ "en_US.utf8" });
+            std::locale::global(std::locale{"en_US.utf8"});
 
-            const auto& facet = std::use_facet<std::ctype<wchar_t>>(std::locale{});
+            const auto &facet = std::use_facet<std::ctype<wchar_t>>(std::locale{});
             std::wstring filterWide(filter.length(), L'\0');
             const auto newLen = mbstowcs(filterWide.data(), filter.c_str(), filter.length());
             if (newLen != static_cast<std::size_t>(-1))
                 filterWide.resize(newLen);
-            std::transform(filterWide.begin(), filterWide.end(), filterWide.begin(), [&facet](wchar_t w) { return facet.toupper(w); });
+            std::transform(filterWide.begin(), filterWide.end(), filterWide.begin(), [&facet](wchar_t w)
+                           { return facet.toupper(w); });
 
             std::locale::global(original);
 
-            for (std::size_t i = 0; i < kits.size(); ++i) {
-                if (filter.empty() || wcsstr(kits[i].nameUpperCase.c_str(), filterWide.c_str())) {
+            for (std::size_t i = 0; i < kits.size(); ++i)
+            {
+                if (filter.empty() || wcsstr(kits[i].nameUpperCase.c_str(), filterWide.c_str()))
+                {
                     ImGui::PushID(i);
                     if (ImGui::Selectable(kits[i].name.c_str(), i == selected_entry.paint_kit_vector_index))
                         selected_entry.paint_kit_vector_index = i;
 
-                    if (ImGui::IsItemHovered()) {
-                        if (const auto icon = SkinChanger::getItemIconTexture(kits[i].iconPath)) {
+                    if (ImGui::IsItemHovered())
+                    {
+                        if (const auto icon = SkinChanger::getItemIconTexture(kits[i].iconPath))
+                        {
                             ImGui::BeginTooltip();
-                            ImGui::Image(icon, { 200.0f, 150.0f });
+                            ImGui::Image(icon, {200.0f, 150.0f});
                             ImGui::EndTooltip();
                         }
                     } //
@@ -1577,10 +1874,13 @@ void GUI::renderSkinChangerWindow(bool contentOnly) noexcept
             ImGui::ListBoxFooter();
         }
 
-        ImGui::Combo(phrases[XorString("skinchanger_quality")].c_str(), &selected_entry.entity_quality_vector_index, [](void* data, int idx, const char** out_text) {
-            *out_text = SkinChanger::getQualities()[idx].name.c_str(); 
-            return true;
-            }, nullptr, SkinChanger::getQualities().size(), 5);
+        ImGui::Combo(
+            phrases[XorString("skinchanger_quality")].c_str(), &selected_entry.entity_quality_vector_index, [](void *data, int idx, const char **out_text)
+            {
+                *out_text = SkinChanger::getQualities()[idx].name.c_str();
+                return true;
+            },
+            nullptr, SkinChanger::getQualities().size(), 5);
 
         ImGui::InputInt(phrases[XorString("skinchanger_seed")].c_str(), &selected_entry.seed);
 
@@ -1589,16 +1889,25 @@ void GUI::renderSkinChangerWindow(bool contentOnly) noexcept
         selected_entry.stat_trak = (std::max)(selected_entry.stat_trak, -1);
 
         ImGui::SliderFloat(phrases[XorString("skinchanger_wear")].c_str(), &selected_entry.wear, FLT_MIN, 1.f, XorString("%.10f"), ImGuiSliderFlags_Logarithmic);
-        if (itemIndex == 0) {
-            ImGui::Combo(phrases[XorString("skinchanger_knife")].c_str(), &selected_entry.definition_override_vector_index, [](void* data, int idx, const char** out_text) {
-                *out_text = SkinChanger::getKnifeTypes()[idx].name.c_str();
-                return true;
-                }, nullptr, SkinChanger::getKnifeTypes().size(), 5);
-        } else if (itemIndex == 1) {
-            ImGui::Combo(phrases[XorString("skinchanger_glove")].c_str(), &selected_entry.definition_override_vector_index, [](void* data, int idx, const char** out_text) {
-                *out_text = SkinChanger::getGloveTypes()[idx].name.c_str();
-                return true;
-                }, nullptr, SkinChanger::getGloveTypes().size(), 5);
+        if (itemIndex == 0)
+        {
+            ImGui::Combo(
+                phrases[XorString("skinchanger_knife")].c_str(), &selected_entry.definition_override_vector_index, [](void *data, int idx, const char **out_text)
+                {
+                    *out_text = SkinChanger::getKnifeTypes()[idx].name.c_str();
+                    return true;
+                },
+                nullptr, SkinChanger::getKnifeTypes().size(), 5);
+        }
+        else if (itemIndex == 1)
+        {
+            ImGui::Combo(
+                phrases[XorString("skinchanger_glove")].c_str(), &selected_entry.definition_override_vector_index, [](void *data, int idx, const char **out_text)
+                {
+                    *out_text = SkinChanger::getGloveTypes()[idx].name.c_str();
+                    return true;
+                },
+                nullptr, SkinChanger::getGloveTypes().size(), 5);
         }
 
         ImGui::InputText(phrases[XorString("skinchanger_nametag")].c_str(), selected_entry.custom_name, 32);
@@ -1613,8 +1922,10 @@ void GUI::renderSkinChangerWindow(bool contentOnly) noexcept
 
         ImGui::PushItemWidth(-1);
 
-        if (ImGui::ListBoxHeader("", 5)) {
-            for (int i = 0; i < 5; ++i) {
+        if (ImGui::ListBoxHeader("", 5))
+        {
+            for (int i = 0; i < 5; ++i)
+            {
                 ImGui::PushID(i);
 
                 const auto kit_vector_index = config->skinChanger[itemIndex].stickers[i].kit_vector_index;
@@ -1630,38 +1941,44 @@ void GUI::renderSkinChangerWindow(bool contentOnly) noexcept
 
         ImGui::PopItemWidth();
 
-        auto& selected_sticker = selected_entry.stickers[selectedStickerSlot];
+        auto &selected_sticker = selected_entry.stickers[selectedStickerSlot];
 
         static std::string filter;
         ImGui::PushID(XorString("Search"));
         ImGui::InputTextWithHint("", phrases[XorString("global_search")].c_str(), &filter);
         ImGui::PopID();
 
-        if (ImGui::ListBoxHeader(phrases[XorString("skinchanger_sticker")].c_str())) {
-            const auto& kits = SkinChanger::getStickerKits();
+        if (ImGui::ListBoxHeader(phrases[XorString("skinchanger_sticker")].c_str()))
+        {
+            const auto &kits = SkinChanger::getStickerKits();
 
             const std::locale original;
-            std::locale::global(std::locale{ "en_US.utf8" });
+            std::locale::global(std::locale{"en_US.utf8"});
 
-            const auto& facet = std::use_facet<std::ctype<wchar_t>>(std::locale{});
+            const auto &facet = std::use_facet<std::ctype<wchar_t>>(std::locale{});
             std::wstring filterWide(filter.length(), L'\0');
             const auto newLen = mbstowcs(filterWide.data(), filter.c_str(), filter.length());
             if (newLen != static_cast<std::size_t>(-1))
                 filterWide.resize(newLen);
-            std::transform(filterWide.begin(), filterWide.end(), filterWide.begin(), [&facet](wchar_t w) { return facet.toupper(w); });
+            std::transform(filterWide.begin(), filterWide.end(), filterWide.begin(), [&facet](wchar_t w)
+                           { return facet.toupper(w); });
 
             std::locale::global(original);
 
-            for (std::size_t i = 0; i < kits.size(); ++i) {
-                if (filter.empty() || wcsstr(kits[i].nameUpperCase.c_str(), filterWide.c_str())) {
+            for (std::size_t i = 0; i < kits.size(); ++i)
+            {
+                if (filter.empty() || wcsstr(kits[i].nameUpperCase.c_str(), filterWide.c_str()))
+                {
                     ImGui::PushID(i);
                     if (ImGui::Selectable(kits[i].name.c_str(), i == selected_sticker.kit_vector_index))
                         selected_sticker.kit_vector_index = i;
 
-                    if (ImGui::IsItemHovered()) {
-                        if (const auto icon = SkinChanger::getItemIconTexture(kits[i].iconPath)) {
+                    if (ImGui::IsItemHovered())
+                    {
+                        if (const auto icon = SkinChanger::getItemIconTexture(kits[i].iconPath))
+                        {
                             ImGui::BeginTooltip();
-                            ImGui::Image(icon, { 200.0f, 150.0f });
+                            ImGui::Image(icon, {200.0f, 150.0f});
                             ImGui::EndTooltip();
                         }
                     }
@@ -1684,9 +2001,8 @@ void GUI::renderSkinChangerWindow(bool contentOnly) noexcept
 
     ImGui::Separator();
 
-    if (ImGui::Button(phrases[XorString("global_update")].c_str(), { 130.0f, 30.0f }))
+    if (ImGui::Button(phrases[XorString("global_update")].c_str(), {130.0f, 30.0f}))
         SkinChanger::scheduleHudUpdate();
-
 
     if (!contentOnly)
         ImGui::End();
@@ -1694,10 +2010,11 @@ void GUI::renderSkinChangerWindow(bool contentOnly) noexcept
 
 void GUI::renderMiscWindow(bool contentOnly) noexcept
 {
-    if (!contentOnly) {
+    if (!contentOnly)
+    {
         if (!window.misc)
             return;
-        ImGui::SetNextWindowSize({ 580.0f, 0.0f });
+        ImGui::SetNextWindowSize({580.0f, 0.0f});
         ImGui::Begin(phrases[XorString("window_misc")].c_str(), &window.misc, windowFlags);
     }
     ImGui::Columns(2, nullptr, false);
@@ -1715,7 +2032,8 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     if (ImGui::Button(phrases[XorString("global_threedots")].c_str()))
         ImGui::OpenPopup("");
 
-    if (ImGui::BeginPopup("")) {
+    if (ImGui::BeginPopup(""))
+    {
         ImGui::Checkbox(phrases[XorString("global_notitle")].c_str(), &config->misc.spectatorList.noTitleBar);
         ImGui::EndPopup();
     }
@@ -1770,16 +2088,18 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     ImGui::PushID(1);
     ImGui::InputText("", &config->misc.killMessageString);
     ImGui::PopID();
-    
+
     ImGui::Combo(phrases[XorString("misc_hitsound")].c_str(), &config->misc.hitSound, XorString("None\0Metal\0Gamesense\0Bell\0Glass\0Custom\0"));
-    if (config->misc.hitSound == 5) {
+    if (config->misc.hitSound == 5)
+    {
         ImGui::InputText(phrases[XorString("misc_hitsound_filename")].c_str(), &config->misc.customHitSound);
         if (ImGui::IsItemHovered())
             ImGui::SetTooltip(XorString("audio file must be put in csgo/sound/ directory"));
     }
     ImGui::PushID(5);
     ImGui::Combo(phrases[XorString("misc_killsound")].c_str(), &config->misc.killSound, XorString("None\0Metal\0Gamesense\0Bell\0Glass\0Custom\0"));
-    if (config->misc.killSound == 5) {
+    if (config->misc.killSound == 5)
+    {
         ImGui::InputText(phrases[XorString("misc_killsound_filename")].c_str(), &config->misc.customKillSound);
         if (ImGui::IsItemHovered())
             ImGui::SetTooltip(XorString("audio file must be put in csgo/sound/ directory"));
@@ -1788,8 +2108,8 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
 
     ImGui::Combo(phrases[XorString("misc_fakelag")].c_str(), &config->misc.fakeLagMode, XorString("Off\0Normal\0Adaptive\0Random\0Switch\0"));
     ImGui::SameLine();
-	 hotkey(config->misc.fakeLagKey);
-    if (!(config->misc.fakeLagMode == 0))   
+    hotkey(config->misc.fakeLagKey);
+    if (!(config->misc.fakeLagMode == 0))
     {
         ImGuiCustom::MultiCombo(phrases[XorString("global_flags")].c_str(), config->misc.fakeLagFlags, config->misc.fakeLagSelectedFlags, 4);
         if (config->misc.fakeLagMode == 3)
@@ -1824,7 +2144,8 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     if (ImGui::Button(phrases[XorString("global_threedots")].c_str()))
         ImGui::OpenPopup("");
 
-    if (ImGui::BeginPopup("")) {
+    if (ImGui::BeginPopup(""))
+    {
         ImGui::Checkbox(phrases[XorString("misc_onlyheadshots")].c_str(), &config->misc.preserveKillfeed.onlyHeadshots);
         ImGui::EndPopup();
     }
@@ -1837,7 +2158,8 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     if (ImGui::Button(phrases[XorString("global_threedots")].c_str()))
         ImGui::OpenPopup("");
 
-    if (ImGui::BeginPopup("")) {
+    if (ImGui::BeginPopup(""))
+    {
         ImGui::SetNextItemWidth(75.0f);
         ImGui::Combo(phrases[XorString("global_mode")].c_str(), &config->misc.purchaseList.mode, XorString("Details\0Summary\0"));
         ImGui::Checkbox(phrases[XorString("misc_onlyduringfreezetime")].c_str(), &config->misc.purchaseList.onlyDuringFreezeTime);
@@ -1854,7 +2176,8 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     if (ImGui::Button(phrases[XorString("global_threedots")].c_str()))
         ImGui::OpenPopup("");
 
-    if (ImGui::BeginPopup("")) {
+    if (ImGui::BeginPopup(""))
+    {
         ImGui::PushItemWidth(80.0f);
         ImGui::Combo(phrases[XorString("misc_reportbot_target")].c_str(), &config->misc.reportbot.target, XorString("Enemies\0Allies\0All\0"));
         ImGui::InputInt(phrases[XorString("misc_reportbot_delay")].c_str(), &config->misc.reportbot.delay);
@@ -1878,10 +2201,10 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     ImGui::SameLine();
     if (ImGui::Button("..."))
         ImGui::OpenPopup("");
-    if (ImGui::BeginPopup("")) {
+    if (ImGui::BeginPopup(""))
+    {
         if (config->misc.spam.spam_picker == 1)
         {
-
 
             ImGui::Checkbox("Team Chat (?)###SAY_TEAM2", &config->misc.spam.say);
 
@@ -1896,7 +2219,7 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
         ImGui::EndPopup();
     }
     ImGui::PopID();
-     
+
 #ifdef _DEBUG
     if (ImGui::Button("Unload"))
         hooks->uninstall();
@@ -1909,10 +2232,11 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
 
 void GUI::renderConfigWindow(bool contentOnly) noexcept
 {
-    if (!contentOnly) {
+    if (!contentOnly)
+    {
         if (!window.config)
             return;
-        ImGui::SetNextWindowSize({ 290.0f, 0.0f });
+        ImGui::SetNextWindowSize({290.0f, 0.0f});
         ImGui::Begin(phrases[XorString("window_config")].c_str(), &window.config, windowFlags);
     }
     const auto configItems = config->getConfigs();
@@ -1923,7 +2247,8 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
     static std::string filter;
 
     timeToNextConfigRefresh -= ImGui::GetIO().DeltaTime;
-    if (timeToNextConfigRefresh <= 0.0f) {
+    if (timeToNextConfigRefresh <= 0.0f)
+    {
         config->listConfigs();
         if (const auto it = std::find(configItems.begin(), configItems.end(), buffer); it != configItems.end())
             currentConfig = std::distance(configItems.begin(), it);
@@ -1934,140 +2259,191 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
         currentConfig = -1;
 
     ImGui::SetNextItemWidth(-1.0f);
-     if (ImGui::ListBoxHeader("##ConfigList")) {
-         const std::locale original;
-         std::locale::global(std::locale{ "en_US.utf8" });
+    if (ImGui::ListBoxHeader("##ConfigList"))
+    {
+        const std::locale original;
+        std::locale::global(std::locale{"en_US.utf8"});
 
-         const auto& facet = std::use_facet<std::ctype<wchar_t>>(std::locale{});
-         std::wstring filterWide(filter.length(), L'\0');
-         std::locale::global(original);
-            for (std::size_t i = 0; i < configItems.size(); ++i) {
-                if (filter.empty() || strstr(configItems[i].c_str(), filter.c_str())) {
-                    ImGui::PushID(i);
-                    ImGui::PushFont(fonts.segoeuiSized);
-                    ImGui::PushFont(fonts.iconsSized);
-                    if (ImGui::Selectable(configItems[i].c_str(), i == currentConfig, ImGuiSelectableFlags_SpanAvailWidth, ImVec2{ 470.0f, 30.0f }))
-                        currentConfig = i;
-                    if (ImGui::BeginPopupContextItem(configItems[i].c_str())) {
-                        ImGui::Text(phrases[XorString("config_using")].c_str(), configItems[i].c_str());
-                        ImGui::BeginGroup();
-                            ImGui::Text(ICON_FA_CHECK_SQUARE); ImGui::SameLine();
-                            ImGui::Text(phrases[XorString("config_load")].c_str());
-                        ImGui::EndGroup();
-                        if (ImGui::IsItemClicked()){
-                            config->load(i);
-                            updateColors();
-                            SkinChanger::scheduleHudUpdate();
-                            Misc::updateClanTag(true);
-                        }
-                        ImGui::Separator();
-                        ImGui::BeginGroup();
-                            ImGui::Text(ICON_FA_SAVE); ImGui::SameLine();
-                            ImGui::Text(phrases[XorString("config_save")].c_str());
-                        ImGui::EndGroup();
-                        if(ImGui::IsItemClicked())
-                            config->save(i);
-                        ImGui::Separator();
-                        ImGui::BeginGroup();
-                            ImGui::Text(ICON_FA_TRASH_ALT); ImGui::SameLine();
-                            ImGui::Text(phrases[XorString("config_delete")].c_str());
-                        ImGui::EndGroup();
-                        if(ImGui::IsItemClicked()){
-                            config->remove(i);
-                            if (static_cast<std::size_t>(currentConfig) < configItems.size())
-                                buffer = configItems[currentConfig];
-                            else
-                                buffer.clear();
-                        }
-
-                        ImGui::EndPopup();
+        const auto &facet = std::use_facet<std::ctype<wchar_t>>(std::locale{});
+        std::wstring filterWide(filter.length(), L'\0');
+        std::locale::global(original);
+        for (std::size_t i = 0; i < configItems.size(); ++i)
+        {
+            if (filter.empty() || strstr(configItems[i].c_str(), filter.c_str()))
+            {
+                ImGui::PushID(i);
+                ImGui::PushFont(fonts.segoeuiSized);
+                ImGui::PushFont(fonts.iconsSized);
+                if (ImGui::Selectable(configItems[i].c_str(), i == currentConfig, ImGuiSelectableFlags_SpanAvailWidth, ImVec2{470.0f, 30.0f}))
+                    currentConfig = i;
+                if (ImGui::BeginPopupContextItem(configItems[i].c_str()))
+                {
+                    ImGui::Text(phrases[XorString("config_using")].c_str(), configItems[i].c_str());
+                    ImGui::BeginGroup();
+                    ImGui::Text(ICON_FA_CHECK_SQUARE);
+                    ImGui::SameLine();
+                    ImGui::Text(phrases[XorString("config_load")].c_str());
+                    ImGui::EndGroup();
+                    if (ImGui::IsItemClicked())
+                    {
+                        config->load(i);
+                        updateColors();
+                        SkinChanger::scheduleHudUpdate();
+                        Misc::updateClanTag(true);
                     }
-                    ImGui::PopFont();
-                    ImGui::PopFont();
                     ImGui::Separator();
-                    ImGui::PopID();
-                }
-            }
-            ImGui::ListBoxFooter();
-        }
-
-        ImGui::PushID(0);
-        ImGui::InputTextWithHint("##Search", phrases[XorString("global_search")].c_str(), &filter);
-        ImGui::SameLine();
-        if (ImGui::Button(ICON_FA_PLUS, { 50.0f, 22.0f }))
-            ImGui::OpenPopup("NewCfg");
-
-        if (ImGui::BeginPopup("NewCfg", ImGuiPopupFlags_MouseButtonLeft)){
-            ImGui::InputTextWithHint("##ConfigName", phrases[XorString("config_placeholder_configname")].c_str(), &cfgName);
-            ImGui::SameLine();
-            if (ImGui::Button(ICON_FA_PLUS_CIRCLE)) {
-                config->add(cfgName.c_str());
-                cfgName.clear();
-                ImGui::CloseCurrentPopup();
-            }
-            ImGui::EndPopup();
-        }
-        ImGui::SameLine();
-
-
-        if (ImGui::Button(ICON_FA_BACKSPACE, { 50.0f, 22.0f }))
-            ImGui::OpenPopup(phrases[XorString("config_toreset")].c_str());
-
-        ImGui::SameLine();
-
-        if (ImGui::Button(ICON_FA_FOLDER_OPEN, { 50.0f, 22.0f }))
-            config->openConfigDir();
-
-
-        if (ImGui::BeginPopup(phrases[XorString("config_toreset")].c_str())) {
-            static constexpr const char* names[]{ "Whole", "Aimbot", "Ragebot" ,"Triggerbot", "Backtrack", "Anti aim", "Glow", "Chams", "ESP", "Visuals", "Skin changer", "Sound", "Style", "Misc" };
-            for (int i = 0; i < IM_ARRAYSIZE(names); i++) {
-                if (i == 1) ImGui::Separator();
-
-                if (ImGui::Selectable(names[i])) {
-                    switch (i) {
-                    case 0: config->reset(); updateColors(); Misc::updateClanTag(true); SkinChanger::scheduleHudUpdate(); break;
-                    case 1: config->aimbot = { }; break;
-                    case 2: config->ragebot = { }; break;
-                    case 3: config->triggerbot = { }; break;
-                    case 4: config->backtrack = { }; break;
-                    case 5: config->antiAim = { }; break;
-                    case 6: config->glow = { }; break;
-                    case 7: config->chams = { }; break;
-                    case 8: config->streamProofESP = { }; break;
-                    case 9: config->visuals = { }; break;
-                    case 10: config->skinChanger = { }; SkinChanger::scheduleHudUpdate(); break;
-                    case 11: config->sound = { }; break;
-                    case 12: config->style = { }; updateColors(); break;
-                    case 13: config->misc = { };  Misc::updateClanTag(true); break;
+                    ImGui::BeginGroup();
+                    ImGui::Text(ICON_FA_SAVE);
+                    ImGui::SameLine();
+                    ImGui::Text(phrases[XorString("config_save")].c_str());
+                    ImGui::EndGroup();
+                    if (ImGui::IsItemClicked())
+                        config->save(i);
+                    ImGui::Separator();
+                    ImGui::BeginGroup();
+                    ImGui::Text(ICON_FA_TRASH_ALT);
+                    ImGui::SameLine();
+                    ImGui::Text(phrases[XorString("config_delete")].c_str());
+                    ImGui::EndGroup();
+                    if (ImGui::IsItemClicked())
+                    {
+                        config->remove(i);
+                        if (static_cast<std::size_t>(currentConfig) < configItems.size())
+                            buffer = configItems[currentConfig];
+                        else
+                            buffer.clear();
                     }
+
+                    ImGui::EndPopup();
+                }
+                ImGui::PopFont();
+                ImGui::PopFont();
+                ImGui::Separator();
+                ImGui::PopID();
+            }
+        }
+        ImGui::ListBoxFooter();
+    }
+
+    ImGui::PushID(0);
+    ImGui::InputTextWithHint("##Search", phrases[XorString("global_search")].c_str(), &filter);
+    ImGui::SameLine();
+    if (ImGui::Button(ICON_FA_PLUS, {50.0f, 22.0f}))
+        ImGui::OpenPopup("NewCfg");
+
+    if (ImGui::BeginPopup("NewCfg", ImGuiPopupFlags_MouseButtonLeft))
+    {
+        ImGui::InputTextWithHint("##ConfigName", phrases[XorString("config_placeholder_configname")].c_str(), &cfgName);
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_PLUS_CIRCLE))
+        {
+            config->add(cfgName.c_str());
+            cfgName.clear();
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::EndPopup();
+    }
+    ImGui::SameLine();
+
+    if (ImGui::Button(ICON_FA_BACKSPACE, {50.0f, 22.0f}))
+        ImGui::OpenPopup(phrases[XorString("config_toreset")].c_str());
+
+    ImGui::SameLine();
+
+    if (ImGui::Button(ICON_FA_FOLDER_OPEN, {50.0f, 22.0f}))
+        config->openConfigDir();
+
+    if (ImGui::BeginPopup(phrases[XorString("config_toreset")].c_str()))
+    {
+        static constexpr const char *names[]{"Whole", "Aimbot", "Ragebot", "Triggerbot", "Backtrack", "Anti aim", "Glow", "Chams", "ESP", "Visuals", "Skin changer", "Sound", "Style", "Misc"};
+        for (int i = 0; i < IM_ARRAYSIZE(names); i++)
+        {
+            if (i == 1)
+                ImGui::Separator();
+
+            if (ImGui::Selectable(names[i]))
+            {
+                switch (i)
+                {
+                case 0:
+                    config->reset();
+                    updateColors();
+                    Misc::updateClanTag(true);
+                    SkinChanger::scheduleHudUpdate();
+                    break;
+                case 1:
+                    config->aimbot = {};
+                    break;
+                case 2:
+                    config->ragebot = {};
+                    break;
+                case 3:
+                    config->triggerbot = {};
+                    break;
+                case 4:
+                    config->backtrack = {};
+                    break;
+                case 5:
+                    config->antiAim = {};
+                    break;
+                case 6:
+                    config->glow = {};
+                    break;
+                case 7:
+                    config->chams = {};
+                    break;
+                case 8:
+                    config->streamProofESP = {};
+                    break;
+                case 9:
+                    config->visuals = {};
+                    break;
+                case 10:
+                    config->skinChanger = {};
+                    SkinChanger::scheduleHudUpdate();
+                    break;
+                case 11:
+                    config->sound = {};
+                    break;
+                case 12:
+                    config->style = {};
+                    updateColors();
+                    break;
+                case 13:
+                    config->misc = {};
+                    Misc::updateClanTag(true);
+                    break;
                 }
             }
-            ImGui::EndPopup();
         }
-        ImGui::PopID();
-        if (!contentOnly)
-            ImGui::End();
+        ImGui::EndPopup();
+    }
+    ImGui::PopID();
+    if (!contentOnly)
+        ImGui::End();
 }
 
 void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
 {
-    if (!contentOnly) {
+    if (!contentOnly)
+    {
         if (!window.profileChanger)
             return;
-        ImGui::SetNextWindowSize({ 290.0f, 0.0f });
+        ImGui::SetNextWindowSize({290.0f, 0.0f});
         ImGui::Begin("Profile Changer | Cheat", &window.profileChanger, windowFlags);
     }
-    if (!config->globals.profileChangerHook) {
+    if (!config->globals.profileChangerHook)
+    {
         ImGui::PushFont(fonts.segoeuiSized);
         ImGui::Text(phrases[XorString("profilechanger_warning")].c_str());
         if (ImGui::Button(phrases[XorString("profilechanger_hookbutton")].c_str()))
             hooks->hookGC();
         ImGui::PopFont();
     }
-    else {
+    else
+    {
 
-        const char* ranksGUIEN[] = {
+        const char *ranksGUIEN[] = {
             "Off",
             "Silver 1",
             "Silver 2",
@@ -2086,10 +2462,9 @@ void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
             "Legendary eagle",
             "Legendary eagle master",
             "Supreme master first class",
-            "The global elite"
-        };
+            "The global elite"};
 
-        const char* ranksDZGUIEN[] = {
+        const char *ranksDZGUIEN[] = {
             "Nenhum",
             "Lab Rat 1",
             "Lab Rat 2",
@@ -2105,10 +2480,9 @@ void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
             "Timber Wolf",
             "Ember Wolf",
             "Wildfire Wolf",
-            "The Howling Alpha"
-        };
+            "The Howling Alpha"};
 
-        const char* bansGUIEN[] = {
+        const char *bansGUIEN[] = {
             "Off",
             "You were kicked from the last match (competitive cooldown)",
             "You killed too many teammates (competitive cooldown)",
@@ -2128,10 +2502,9 @@ void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
             "You failed to connect by match start. (competitive cooldown)",
             "You have kicked too many teammates in recent matches (competitive cooldown)",
             "Temporary ban from MD10 (temporary cooldown)",
-            "A server using your game server login token has been banned. (global cooldown)"
-        };
+            "A server using your game server login token has been banned. (global cooldown)"};
 
-        static const char* ranksGUIPT[] = {
+        static const char *ranksGUIPT[] = {
             "Nenhum",
             "Prata 1",
             "Prata 2",
@@ -2150,10 +2523,9 @@ void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
             "Aguia",
             "Aguia 2",
             "Supremo",
-            "Global"
-        };
+            "Global"};
 
-        static const char* bansGUIPT[] = {
+        static const char *bansGUIPT[] = {
             "Nenhum",
             "Voce foi expulso da ultima partida",
             "Voce matou muitos aliados",
@@ -2173,10 +2545,9 @@ void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
             "Voce falhou em se conectar no inicio da partida",
             "Voce expulsou muitos aliados em partidas recentes",
             "Suspensao de melhor de dez",
-            "Um servidor usando seu token foi banido"
-        };
+            "Um servidor usando seu token foi banido"};
 
-        const char* ranksDZGUIPT[] = {
+        const char *ranksDZGUIPT[] = {
             "Nenhum",
             "Rato de Laboratorio 1",
             "Rato de Laboratorio 2",
@@ -2192,8 +2563,7 @@ void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
             "Lobo-cinzento",
             "Lobo da Brasa",
             "Lobo do Fogo Selvagem",
-            "Alfa Uivante"
-        };
+            "Alfa Uivante"};
 
         ImGui::Separator();
         ImGui::Columns(3, nullptr);
@@ -2259,8 +2629,6 @@ void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
         ImGui::Columns(1);
         ImGui::Spacing();
 
-
-
         if (ImGui::Button("Apply", ImVec2(-1.0f, 0.0f)))
         {
             profile_changer::send_update_messages();
@@ -2274,25 +2642,25 @@ void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
             ImGui::EndTooltip();
         }
     }
-        if (!contentOnly)
-            ImGui::End();
+    if (!contentOnly)
+        ImGui::End();
 }
 
 void GUI::renderAutoConfigWindow(bool contentOnly) noexcept
 {
 
-    if (!contentOnly) {
+    if (!contentOnly)
+    {
         if (!window.autoconfig)
             return;
-        ImGui::SetNextWindowSize({ 0.0f, 0.0f });
+        ImGui::SetNextWindowSize({0.0f, 0.0f});
         ImGui::Begin(phrases[XorString("window_ezconfig")].c_str(), &window.autoconfig, windowFlags);
     }
-    static int currentCategory{ 0 };
-    static int currentWeapon{ 0 };
-    
+    static int currentCategory{0};
+    static int currentWeapon{0};
 
-
-    if (ImGui::Button("Legit Aimbot")) {
+    if (ImGui::Button("Legit Aimbot"))
+    {
 
         //Desativando conflitos
         config->aimbot[currentWeapon].onKey = false;
@@ -2315,7 +2683,6 @@ void GUI::renderAutoConfigWindow(bool contentOnly) noexcept
         config->aimbot[currentWeapon].maxShotInaccuracy = 1;
         config->aimbot[currentWeapon].maxAimInaccuracy = 1;
 
-
         //Ativando Legit
         config->aimbot[currentWeapon].onKey = true;
         config->aimbot[currentWeapon].key = 1;
@@ -2334,19 +2701,21 @@ void GUI::renderAutoConfigWindow(bool contentOnly) noexcept
 
     ImGui::Separator();
 
-    if (ImGui::Button("Simple Wall")) {
+    if (ImGui::Button("Simple Wall"))
+    {
         static int currentCategory = 1;
         static int currentType = 0;
 
         static int currentItem = currentCategory * 3 + currentType;
         config->glow[currentItem].enabled = true;
         config->glow[currentItem].healthBased = true;
-    }; 
-    ImGui::SameLine(); 
+    };
+    ImGui::SameLine();
     ImGui::Text(phrases[XorString("ezconfig_simplewall")].c_str());
 
     ImGui::Separator();
-    if (ImGui::Button("Advanced Visual")) {
+    if (ImGui::Button("Advanced Visual"))
+    {
         config->glow[3].enabled = true;
         config->glow[3].healthBased = true;
         config->glow[6].enabled = true;
@@ -2366,14 +2735,13 @@ void GUI::renderAutoConfigWindow(bool contentOnly) noexcept
         config->visuals.noGrass = true;
         config->visuals.noShadows = true;
         config->visuals.flashReduction = 30;
-
-
     };
     ImGui::SameLine();
     ImGui::Text(phrases[XorString("ezconfig_fullwall")].c_str());
 
     ImGui::Separator();
-    if (ImGui::Button("Utilities")) {
+    if (ImGui::Button("Utilities"))
+    {
 
         config->misc.revealRanks = true;
         config->misc.antiAfkKick = true;
@@ -2389,25 +2757,23 @@ void GUI::renderAutoConfigWindow(bool contentOnly) noexcept
         config->misc.quickHealthshotKey = true;
         config->misc.nadePredict = true;
         config->misc.fixTabletSignal = true;
-
-
-
     };
     ImGui::SameLine();
     ImGui::Text(phrases[XorString("ezconfig_utilities")].c_str());
 
     ImGui::Separator();
-    if (ImGui::Button("BunnyHopping")) {
+    if (ImGui::Button("BunnyHopping"))
+    {
 
         config->misc.bunnyHop = true;
         config->misc.autoStrafe = true;
-
     };
     ImGui::SameLine();
     ImGui::Text(phrases[XorString("ezconfig_bunnyhop")].c_str());
 
     ImGui::Separator();
-    if (ImGui::Button("FPS Boost")) {
+    if (ImGui::Button("FPS Boost"))
+    {
 
         config->misc.disableModelOcclusion = true;
         config->visuals.disablePostProcessing = true;
@@ -2417,17 +2783,17 @@ void GUI::renderAutoConfigWindow(bool contentOnly) noexcept
         config->visuals.noShadows = true;
         config->visuals.noBloom = true;
         config->visuals.no3dSky = true;
-
     };
     ImGui::SameLine();
     ImGui::Text(phrases[XorString("ezconfig_fpsboost")].c_str());
 
     ImGui::Separator();
-    if (ImGui::Button("Reset")) {
+    if (ImGui::Button("Reset"))
+    {
 
-        config->reset(); Misc::updateClanTag(true); SkinChanger::scheduleHudUpdate();
-
-
+        config->reset();
+        Misc::updateClanTag(true);
+        SkinChanger::scheduleHudUpdate();
     };
     ImGui::SameLine();
     ImGui::Text(phrases[XorString("ezconfig_reset")].c_str());
@@ -2438,23 +2804,28 @@ void GUI::renderAutoConfigWindow(bool contentOnly) noexcept
 
 void GUI::renderAimHacksWindow(bool contentOnly) noexcept
 {
-    if (!contentOnly) {
+    if (!contentOnly)
+    {
         if (!window.aimhacks)
             return;
-        ImGui::SetNextWindowSize({ 0.0f, 0.0f });
+        ImGui::SetNextWindowSize({0.0f, 0.0f});
         ImGui::Begin("AimHacks", &window.aimhacks, windowFlags);
     }
 
-    if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_NoTooltip)) {
-        if (ImGui::BeginTabItem("Aimbot " ICON_FA_LEAF)) {
+    if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_NoTooltip))
+    {
+        if (ImGui::BeginTabItem("Aimbot " ICON_FA_LEAF))
+        {
             renderAimbotWindow(true);
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("TriggerBot " ICON_FA_ROBOT)) {
+        if (ImGui::BeginTabItem("TriggerBot " ICON_FA_ROBOT))
+        {
             renderTriggerbotWindow(true);
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Backtrack " ICON_FA_BACKWARD)) {
+        if (ImGui::BeginTabItem("Backtrack " ICON_FA_BACKWARD))
+        {
             renderBacktrackWindow(true);
             ImGui::EndTabItem();
         }
@@ -2468,23 +2839,28 @@ void GUI::renderAimHacksWindow(bool contentOnly) noexcept
 
 void GUI::renderWallhacksWindow(bool contentOnly) noexcept
 {
-    if (!contentOnly) {
+    if (!contentOnly)
+    {
         if (!window.wallhacks)
             return;
-        ImGui::SetNextWindowSize({ 0.0f, 0.0f });
+        ImGui::SetNextWindowSize({0.0f, 0.0f});
         ImGui::Begin("Wallhacks", &window.wallhacks, windowFlags);
     }
 
-    if (ImGui::BeginTabBar("Wallhacks", ImGuiTabBarFlags_NoTooltip)) {
-        if (ImGui::BeginTabItem("ESP " ICON_FA_CODE_BRANCH)) {
+    if (ImGui::BeginTabBar("Wallhacks", ImGuiTabBarFlags_NoTooltip))
+    {
+        if (ImGui::BeginTabItem("ESP " ICON_FA_CODE_BRANCH))
+        {
             renderStreamProofESPWindow(true);
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Glow " ICON_FA_BLIND)) {
+        if (ImGui::BeginTabItem("Glow " ICON_FA_BLIND))
+        {
             renderGlowWindow(true);
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Chams " ICON_FA_CHILD)) {
+        if (ImGui::BeginTabItem("Chams " ICON_FA_CHILD))
+        {
             renderChamsWindow(true);
             ImGui::EndTabItem();
         }
@@ -2492,26 +2868,29 @@ void GUI::renderWallhacksWindow(bool contentOnly) noexcept
         ImGui::EndTabBar();
     }
 
-
     if (!contentOnly)
         ImGui::End();
 }
 
 void GUI::renderChangersWindow(bool contentOnly) noexcept
 {
-    if (!contentOnly) {
+    if (!contentOnly)
+    {
         if (!window.changers)
             return;
-        ImGui::SetNextWindowSize({ 0.0f, 0.0f });
+        ImGui::SetNextWindowSize({0.0f, 0.0f});
         ImGui::Begin("Changers", &window.changers, windowFlags | ImGuiWindowFlags_AlwaysAutoResize);
     }
 
-    if (ImGui::BeginTabBar("Changers", ImGuiTabBarFlags_NoTooltip)) {
-        if (ImGui::BeginTabItem("Skins " ICON_FA_BRIEFCASE)) {
+    if (ImGui::BeginTabBar("Changers", ImGuiTabBarFlags_NoTooltip))
+    {
+        if (ImGui::BeginTabItem("Skins " ICON_FA_BRIEFCASE))
+        {
             renderSkinChangerWindow(true);
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Profile " ICON_FA_USER)) {
+        if (ImGui::BeginTabItem("Profile " ICON_FA_USER))
+        {
             renderProfileChangerWindow(true);
             ImGui::EndTabItem();
         }
@@ -2528,32 +2907,34 @@ void GUI::renderChangersWindow(bool contentOnly) noexcept
         ImGui::EndTabBar();
     }
 
-
     if (!contentOnly)
         ImGui::End();
 }
 
 void GUI::renderConfigsWindow(bool contentOnly) noexcept
 {
-    if (!contentOnly) {
+    if (!contentOnly)
+    {
         if (!window.configs)
             return;
-        ImGui::SetNextWindowSize({ 0.0f, 0.0f });
+        ImGui::SetNextWindowSize({0.0f, 0.0f});
         ImGui::Begin("Configs", &window.configs, windowFlags);
     }
 
-    if (ImGui::BeginTabBar("Configs", ImGuiTabBarFlags_NoTooltip)) {
-        if (ImGui::BeginTabItem("Config " ICON_FA_COG)) {
+    if (ImGui::BeginTabBar("Configs", ImGuiTabBarFlags_NoTooltip))
+    {
+        if (ImGui::BeginTabItem("Config " ICON_FA_COG))
+        {
             renderConfigWindow(true);
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("EzConfig " ICON_FA_USERS_COG)) {
+        if (ImGui::BeginTabItem("EzConfig " ICON_FA_USERS_COG))
+        {
             renderAutoConfigWindow(true);
             ImGui::EndTabItem();
         }
         ImGui::EndTabBar();
     }
-
 
     if (!contentOnly)
         ImGui::End();
@@ -2561,37 +2942,42 @@ void GUI::renderConfigsWindow(bool contentOnly) noexcept
 
 void GUI::renderVisualhacksWindow(bool contentOnly) noexcept
 {
-    if (!contentOnly) {
+    if (!contentOnly)
+    {
         if (!window.visualhacks)
             return;
-        ImGui::SetNextWindowSize({ 0.0f, 0.0f });
+        ImGui::SetNextWindowSize({0.0f, 0.0f});
         ImGui::Begin("Visualhacks", &window.visualhacks, windowFlags);
     }
 
-    if (ImGui::BeginTabBar("Visualhacks", ImGuiTabBarFlags_NoTooltip)) {
-        if (ImGui::BeginTabItem("Visuals " ICON_FA_MAGIC)) {
+    if (ImGui::BeginTabBar("Visualhacks", ImGuiTabBarFlags_NoTooltip))
+    {
+        if (ImGui::BeginTabItem("Visuals " ICON_FA_MAGIC))
+        {
             renderVisualsWindow(true);
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("World " ICON_FA_GLOBE_AMERICAS)) {
+        if (ImGui::BeginTabItem("World " ICON_FA_GLOBE_AMERICAS))
+        {
             renderWorldWindow(true);
             ImGui::EndTabItem();
-        }           
-        if (ImGui::BeginTabItem("Performance " ICON_FA_BURN)) {
+        }
+        if (ImGui::BeginTabItem("Performance " ICON_FA_BURN))
+        {
             renderPerformanceWindow(true);
             ImGui::EndTabItem();
         }
         ImGui::EndTabBar();
     }
-
 }
 
 void GUI::renderNickWindow(bool contentOnly) noexcept
 {
-    if (!contentOnly) {
+    if (!contentOnly)
+    {
         if (!window.nick)
             return;
-        ImGui::SetNextWindowSize({ 0.0f, 0.0f });
+        ImGui::SetNextWindowSize({0.0f, 0.0f});
         ImGui::Begin("nickexploit", &window.nick, windowFlags);
     }
     ImGui::Combo(phrases[XorString("misc_nameexploit")].c_str(), &config->misc.nameChangeSelection, XorString("Off\0Fake Ban\0Fake Item\0Custom Name\0"));
@@ -2638,10 +3024,11 @@ void GUI::renderNickWindow(bool contentOnly) noexcept
 
 void GUI::renderPerformanceWindow(bool contentOnly) noexcept
 {
-    if (!contentOnly) {
+    if (!contentOnly)
+    {
         if (!window.performance)
             return;
-        ImGui::SetNextWindowSize({ 0.0f, 0.0f });
+        ImGui::SetNextWindowSize({0.0f, 0.0f});
         ImGui::Begin("Performance", &window.performance, windowFlags);
     }
     ImGui::Columns(2, nullptr, true);
@@ -2659,39 +3046,38 @@ void GUI::renderPerformanceWindow(bool contentOnly) noexcept
 
 void GUI::renderMiscsWindow(bool contentOnly) noexcept
 {
-    if (!contentOnly) {
+    if (!contentOnly)
+    {
         if (!window.miscs)
             return;
-        ImGui::SetNextWindowSize({ 0.0f, 0.0f });
+        ImGui::SetNextWindowSize({0.0f, 0.0f});
         ImGui::Begin("Miscs", &window.miscs, windowFlags);
     }
-    if (ImGui::BeginTabBar("Miscs", ImGuiTabBarFlags_NoTooltip)) {
-        if (ImGui::BeginTabItem("Misc " ICON_FA_CHESS_PAWN)) {
+    if (ImGui::BeginTabBar("Miscs", ImGuiTabBarFlags_NoTooltip))
+    {
+        if (ImGui::BeginTabItem("Misc " ICON_FA_CHESS_PAWN))
+        {
             renderMiscWindow(true);
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Nick " ICON_FA_SIGNATURE)) {
+        if (ImGui::BeginTabItem("Nick " ICON_FA_SIGNATURE))
+        {
             renderNickWindow(true);
             ImGui::EndTabItem();
         }
         ImGui::EndTabBar();
     }
-
-
 }
 
 void GUI::renderWarningWindow() noexcept
 {
 
-        if (!window.warning)
-            return;
+    if (!window.warning)
+        return;
 
-        ImGui::Begin("Warning Modal", &window.warning, windowFlags);
-        ImGui::Text("Pra ser usado se precisar de novo");
+    ImGui::Begin("Warning Modal", &window.warning, windowFlags);
+    ImGui::Text("Pra ser usado se precisar de novo");
 
-
-
-    
     ImGui::End();
 }
 
@@ -2699,75 +3085,81 @@ void GUI::drawDemo() noexcept
 {
 
     ImGui::ShowDemoWindow();
-
 }
 
 void GUI::renderGuiStyle2() noexcept
 {
-   
 
-    ImGui::SetNextWindowSize({ 600.0f, 0.0f });
+    ImGui::SetNextWindowSize({600.0f, 0.0f});
     ImGui::Begin("Cheat", nullptr, windowFlags);
-        if (ImGui::Button("      " ICON_FA_CROSSHAIRS "\nAimhacks",ImVec2(97.0f, 0.0f))) {
-            window.tab = 0;
-        }
-        ImGui::SameLine(0,0);
-        if (ImGui::Button("       " ICON_FA_EYE  "\nWallhacks", ImVec2(97.0f, 0.0f))) {
-            window.tab = 1;
-        }
-        ImGui::SameLine(0,0);
-        if (ImGui::Button("      " ICON_FA_ATOM "\nAnti Aim", ImVec2(97.0f, 0.0f))) {
-            window.tab = 2;
-        }
-        ImGui::SameLine(0, 0);
-        if (ImGui::Button("    " ICON_FA_PALETTE  "\nVisuals", ImVec2(97.0f, 0.0f))) {
-            window.tab = 3;
-        }
-        ImGui::SameLine(0, 0);
-        if (ImGui::Button("      " ICON_FA_PENCIL_ALT "\nChangers", ImVec2(97.0f, 0.0f))) {
-            window.tab = 4;
-        }
-        ImGui::SameLine(0, 0);
-        if (ImGui::Button("     " ICON_FA_ASTERISK "\n  Miscs  ", ImVec2(97.0f, 0.0f))) {
-            window.tab = 5;
-        }
+    if (ImGui::Button("      " ICON_FA_CROSSHAIRS "\nAimhacks", ImVec2(97.0f, 0.0f)))
+    {
+        window.tab = 0;
+    }
+    ImGui::SameLine(0, 0);
+    if (ImGui::Button("       " ICON_FA_EYE "\nWallhacks", ImVec2(97.0f, 0.0f)))
+    {
+        window.tab = 1;
+    }
+    /* ImGui::SameLine(0, 0);
+    if (ImGui::Button("      " ICON_FA_ATOM "\nEzConfig", ImVec2(97.0f, 0.0f)))
+    {
+        window.tab = 2;
+    } */
+    ImGui::SameLine(0, 0);
+    if (ImGui::Button("    " ICON_FA_PALETTE "\nVisuals", ImVec2(97.0f, 0.0f)))
+    {
+        window.tab = 3;
+    }
+    ImGui::SameLine(0, 0);
+    if (ImGui::Button("      " ICON_FA_PENCIL_ALT "\nChangers", ImVec2(97.0f, 0.0f)))
+    {
+        window.tab = 4;
+    }
+    ImGui::SameLine(0, 0);
+    if (ImGui::Button("     " ICON_FA_ASTERISK "\n  Miscs  ", ImVec2(97.0f, 0.0f)))
+    {
+        window.tab = 5;
+    }
+    ImGui::SameLine(0, 0);
+    if (ImGui::Button("      " ICON_FA_ATOM "\nEzConfig", ImVec2(97.0f, 0.0f)))
+    {
+        window.tab = 7;
+    }
 
-        switch (window.tab) {
+    switch (window.tab)
+    {
 
-            case 0:
-                renderAimHacksWindow(true);
-                break;
+    case 0:
+        renderAimHacksWindow(true);
+        break;
 
-            case 1:
-                renderWallhacksWindow(true);
-                break;
+    case 1:
+        renderWallhacksWindow(true);
+        break;
 
+    case 3:
+        renderVisualhacksWindow(true);
+        break;
 
-            case 2:
-                renderAntiAimWindow(true);
-                break;
-            
-            case 3:
-                renderVisualhacksWindow(true);
-                break;
+    case 4:
+        renderChangersWindow(true);
+        break;
 
-            case 4:
-                renderChangersWindow(true);
-                break;
+    case 5:
+        renderMiscsWindow(true);
+        break;
 
-            case 5:
-                renderMiscsWindow(true);
-                break;
+    case 6:
+        renderConfigsWindow(true);
+        break;
 
-            case 6:
-                renderConfigsWindow(true);
-                break;
-        }
+    case 7:
+        renderAutoConfigWindow(true);
+        break;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Language precisa arrumar um lugar melhor    /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    }
 
-    
-    
     ImGui::Separator();
     if (ImGui::Button("EN-US " ICON_FA_FLAG_USA))
         config->misc.lang = 0;
@@ -2779,7 +3171,7 @@ void GUI::renderGuiStyle2() noexcept
         hooks->uninstall();
     ImGui::SameLine();
     RightText();
-    if(ImGui::Button("Config " ICON_FA_COGS))
+    if (ImGui::Button("Config " ICON_FA_COGS))
         window.tab = 6;
     ImGui::End();
 }

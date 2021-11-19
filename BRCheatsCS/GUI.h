@@ -25,7 +25,7 @@ private:
 	void drawLuaItems(int tab, int column);
     void renderAimbotWindow(bool contentOnly = false) noexcept;
     void renderRagebotWindow(bool contentOnly = false) noexcept;
-    void renderAntiAimWindow(bool contentOnly = false) noexcept;
+//    void renderAntiAimWindow(bool contentOnly = false) noexcept;
     void renderTriggerbotWindow(bool contentOnly = false) noexcept;
     void renderBacktrackWindow(bool contentOnly = false) noexcept;
     void renderGlowWindow(bool contentOnly = false) noexcept;
