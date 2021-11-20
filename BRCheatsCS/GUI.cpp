@@ -31,6 +31,7 @@
 constexpr auto windowFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 extern std::map<std::string, std::string> phrases;
 IDirect3DTexture9 *skinImage = nullptr;
+const char* ezConfigPage = "";
 
 void RightText()
 {
@@ -123,6 +124,7 @@ void GUI::render() noexcept
     */
     renderMiscWindow();
     renderAutoConfigWindow();
+    renderEzConfigModal();
     //  renderWarningWindow();
     renderConfigWindow();
 }
@@ -2661,7 +2663,8 @@ void GUI::renderAutoConfigWindow(bool contentOnly) noexcept
 
     if (ImGui::Button("Legit Aimbot"))
     {
-
+        ezConfigPage = "aimbot";
+        /*
         //Desativando conflitos
         config->aimbot[currentWeapon].onKey = false;
         config->aimbot[currentWeapon].enabled = false;
@@ -2695,6 +2698,7 @@ void GUI::renderAutoConfigWindow(bool contentOnly) noexcept
         config->aimbot[currentWeapon].standaloneRCS = true;
         config->aimbot[currentWeapon].recoilControlX = 0.25f;
         config->aimbot[currentWeapon].recoilControlY = 0.25f;
+        */
     };
     ImGui::SameLine();
     ImGui::Text(phrases[XorString("ezconfig_legitaimbot")].c_str());
@@ -3075,8 +3079,26 @@ void GUI::renderWarningWindow() noexcept
     if (!window.warning)
         return;
 
-    ImGui::Begin("Warning Modal", &window.warning, windowFlags);
+    ImGui::Begin("Warning Modal", NULL, windowFlags);
     ImGui::Text("Pra ser usado se precisar de novo");
+
+    ImGui::End();
+}
+
+void GUI::renderEzConfigModal(bool contentOnly) noexcept
+{
+    if (ezConfigPage == "")
+        return;
+
+    ImGui::SetNextWindowSize({650.0f, 0.0f});
+    ImGui::SetNextWindowPos({300.0f, 150.0f}, ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+    ImGui::Begin("##EzConfigModal", &window.ezConfigModal, windowFlags | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
+    ImGui::Columns(2, nullptr, true);
+    ImGui::Text(ezConfigPage.c_str());
+    ImGui::NextColumn();
+    ImGui::Columns(1);
+    if (ImGui::Button(XorString("Apply")))
+        ezConfigPage = "";
 
     ImGui::End();
 }

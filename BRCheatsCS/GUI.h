@@ -48,6 +48,7 @@ private:
     void renderPerformanceWindow(bool contentOnly = false) noexcept;
     void renderMiscsWindow(bool contentOnly = false) noexcept;
     void renderNickWindow(bool coententOnly = false) noexcept;
+    void renderEzConfigModal(bool contentOnly = false) noexcept;
     void renderGuiStyle2() noexcept;
     void drawDemo() noexcept;
     void renderWarningWindow() noexcept;
@@ -82,6 +83,7 @@ private:
         bool performance = false;
         bool miscs = false;
         bool nick = false;
+        bool ezConfigModal = false;
         int tab = 0;
     } window;
 };
