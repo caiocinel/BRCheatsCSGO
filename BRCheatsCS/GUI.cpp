@@ -41,7 +41,6 @@ void RightText()
 
 namespace ImGui
 {
-
     void ImGuiStructItem(ImGuiStruct i) noexcept
     {
         Checkbox(phrases[XorString("global_enabled")].c_str(), &i.enabled);
@@ -71,6 +70,57 @@ GUI::GUI() noexcept
     ImGui::GetStyle().ScrollbarRounding = 0.0f;
     ImGui::GetStyle().TabRounding = 0.0f;
     ImGui::GetStyle().ScrollbarSize = 9.0f;
+
+    // Style
+    style.WindowRounding = 4.f;
+    style.FrameRounding = 1.f;
+    style.WindowTitleAlign.x = 0.50f;
+    style.WindowTitleAlign.y = 0.50f;
+    style.GrabRounding = 3.f;
+    style.GrabMinSize = 15.f;
+
+    ImVec4* colors = ImGui::GetStyle().Colors;
+    colors[ImGuiCol_TextDisabled] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+    colors[ImGuiCol_WindowBg] = ImVec4(0.11f, 0.11f, 0.15f, 0.98f);
+    colors[ImGuiCol_PopupBg] = ImVec4(0.10f, 0.07f, 0.14f, 1.00f);
+    colors[ImGuiCol_FrameBg] = ImVec4(0.14f, 0.15f, 0.20f, 0.69f);
+    colors[ImGuiCol_FrameBgHovered] = ImVec4(1.00f, 1.00f, 1.00f, 0.41f);
+    colors[ImGuiCol_FrameBgActive] = ImVec4(0.24f, 0.20f, 0.31f, 0.96f);
+    colors[ImGuiCol_TitleBg] = ImVec4(0.14f, 0.15f, 0.20f, 1.00f);
+    colors[ImGuiCol_TitleBgActive] = ImVec4(0.14f, 0.15f, 0.20f, 1.00f);
+    colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.15f, 0.13f, 0.19f, 0.96f);
+    colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.15f, 0.13f, 0.19f, 0.96f);
+    colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.15f, 0.13f, 0.19f, 0.96f);
+    colors[ImGuiCol_CheckMark] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+    colors[ImGuiCol_SliderGrab] = ImVec4(0.15f, 0.13f, 0.19f, 0.96f);
+    colors[ImGuiCol_SliderGrabActive] = ImVec4(0.15f, 0.13f, 0.19f, 0.96f);
+    colors[ImGuiCol_Button] = ImVec4(0.14f, 0.15f, 0.20f, 0.96f);
+    colors[ImGuiCol_ButtonHovered] = ImVec4(0.15f, 0.13f, 0.19f, 0.96f);
+    colors[ImGuiCol_ButtonActive] = ImVec4(0.15f, 0.13f, 0.19f, 0.96f);
+    colors[ImGuiCol_Header] = ImVec4(0.24f, 0.20f, 0.31f, 0.54f);
+    colors[ImGuiCol_HeaderHovered] = ImVec4(0.15f, 0.13f, 0.19f, 0.96f);
+    colors[ImGuiCol_HeaderActive] = ImVec4(0.15f, 0.13f, 0.19f, 0.96f);
+    colors[ImGuiCol_Separator] = ImVec4(0.14f, 0.15f, 0.20f, 0.50f);
+    colors[ImGuiCol_SeparatorHovered] = ImVec4(0.14f, 0.15f, 0.20f, 0.96f);
+    colors[ImGuiCol_SeparatorActive] = ImVec4(0.14f, 0.15f, 0.20f, 0.96f);
+    colors[ImGuiCol_ResizeGrip] = ImVec4(0.24f, 0.20f, 0.31f, 0.54f);
+    colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.24f, 0.20f, 0.31f, 0.54f);
+    colors[ImGuiCol_ResizeGripActive] = ImVec4(0.15f, 0.13f, 0.19f, 0.96f);
+    colors[ImGuiCol_Tab] = ImVec4(0.14f, 0.15f, 0.20f, 0.96f);
+    colors[ImGuiCol_TabHovered] = ImVec4(0.10f, 0.11f, 0.15f, 0.96f);
+    colors[ImGuiCol_TabActive] = ImVec4(0.14f, 0.15f, 0.20f, 0.50f);
+    colors[ImGuiCol_TabUnfocused] = ImVec4(0.15f, 0.13f, 0.19f, 0.96f);
+    colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.15f, 0.13f, 0.19f, 0.96f);
+    colors[ImGuiCol_ChildBg] = ImVec4(0.14f, 0.15f, 0.20f, 0.69f);
+    colors[ImGuiCol_PlotLines] = ImVec4(0.15f, 0.13f, 0.19f, 0.96f);
+    colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.15f, 0.13f, 0.19f, 0.96f);
+    colors[ImGuiCol_PlotHistogram] = ImVec4(0.15f, 0.13f, 0.19f, 0.96f);
+    colors[ImGuiCol_PlotHistogramHovered] = ImVec4(0.15f, 0.13f, 0.19f, 0.96f);
+    colors[ImGuiCol_TextSelectedBg] = ImVec4(0.15f, 0.13f, 0.19f, 0.96f);
+    colors[ImGuiCol_DragDropTarget] = ImVec4(0.15f, 0.13f, 0.19f, 0.96f);
+    colors[ImGuiCol_NavHighlight] = ImVec4(0.15f, 0.13f, 0.19f, 0.96f);
+    colors[ImGuiCol_NavWindowingHighlight] = ImVec4(0.15f, 0.13f, 0.19f, 0.96f);
+    colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.15f, 0.13f, 0.19f, 0.96f);
 
     ImGuiIO &io = ImGui::GetIO();
     io.IniFilename = nullptr;
@@ -118,10 +168,10 @@ void GUI::render() noexcept
     renderProfileChangerWindow();
     renderPerformanceWindow();
     renderNickWindow();
-    // drawDemo();
-    /*renderMedalChangerWindow();
-    renderInventoryChangerWindow();
-    */
+    //drawDemo();
+    ///*renderMedalChangerWindow();
+    //renderInventoryChangerWindow();
+    //*/
     renderMiscWindow();
     renderAutoConfigWindow();
     renderEzConfigModal();
@@ -2021,9 +2071,6 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
     }
     ImGui::Columns(2, nullptr, false);
     ImGui::SetColumnOffset(1, 230.0f);
-    ImGui::TextUnformatted(phrases[XorString("misc_menukey")].c_str());
-    ImGui::SameLine();
-    hotkey(config->misc.menuKey);
 
     ImGui::Checkbox(phrases[XorString("misc_radarhack")].c_str(), &config->misc.radarHack);
 
@@ -2221,10 +2268,13 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
         ImGui::EndPopup();
     }
     ImGui::PopID();
+    ImGui::TextUnformatted(phrases[XorString("misc_menukey")].c_str());
+    ImGui::SameLine();
+    hotkey(config->misc.menuKey);
 
 #ifdef _DEBUG
-    if (ImGui::Button("Unload"))
-        hooks->uninstall();
+    //if (ImGui::Button("Unload"))
+    //    hooks->uninstall();
 #endif
 
     ImGui::Columns(1);
@@ -3094,7 +3144,7 @@ void GUI::renderEzConfigModal(bool contentOnly) noexcept
     ImGui::SetNextWindowPos({300.0f, 150.0f}, ImGuiCond_Always, ImVec2(0.5f, 0.5f));
     ImGui::Begin("##EzConfigModal", &window.ezConfigModal, windowFlags | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
     ImGui::Columns(2, nullptr, true);
-    ImGui::Text(ezConfigPage.c_str());
+    ImGui::Text(ezConfigPage);
     ImGui::NextColumn();
     ImGui::Columns(1);
     if (ImGui::Button(XorString("Apply")))
@@ -3113,7 +3163,7 @@ void GUI::renderGuiStyle2() noexcept
 {
 
     ImGui::SetNextWindowSize({600.0f, 0.0f});
-    ImGui::Begin("Cheat", nullptr, windowFlags);
+    ImGui::Begin("Counter Strike: Global Offensive", nullptr, windowFlags);
     if (ImGui::Button("      " ICON_FA_CROSSHAIRS "\nAimhacks", ImVec2(97.0f, 0.0f)))
     {
         window.tab = 0;
@@ -3189,9 +3239,10 @@ void GUI::renderGuiStyle2() noexcept
     if (ImGui::Button("PT-BR " ICON_FA_GEM))
         config->misc.lang = 1;
     ImGui::SameLine();
-    if (ImGui::Button("UNLOAD "))
+    if (ImGui::Button("Unload " ICON_FA_WINDOW_CLOSE))
         hooks->uninstall();
     ImGui::SameLine();
+
     RightText();
     if (ImGui::Button("Config " ICON_FA_COGS))
         window.tab = 6;
