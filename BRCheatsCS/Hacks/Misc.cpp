@@ -667,7 +667,7 @@ void Misc::drawFov(ImDrawList* drawList) noexcept
             interfaces->surface->setDrawColor(255, 10, 10, 255);
         else interfaces->surface->setDrawColor(10, 255, 10, 255);
         float radius = std::tan(degreesToRadians(config->aimbot[weaponId].fov / 2.f)) / std::tan(degreesToRadians(config->globals.currentFOV / 2.f)) * width;
-        drawList->AddCircle(ImGui::GetIO().DisplaySize / 2, radius, ImColor(1.f, 1.f, 1.f, 1.f), 32);
+        drawList->AddCircle(ImGui::GetIO().DisplaySize / 2, radius, ImColor(1.f, 1.f, 1.f, 1.f), 128);
     }
 
 }
