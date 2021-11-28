@@ -456,6 +456,9 @@ public:
         bool rainbowCrosshair{ false };
         float rainbowCrosshairSpeed{ 1.0f };
 
+        bool drawFps{ false };
+        bool drawPing{ false };
+
         struct ColorCorrection {
             bool enabled = false;
             float blue = 0.0f;
@@ -609,7 +612,8 @@ public:
         bool oppositeHandKnife = false;
         PreserveKillfeed preserveKillfeed;
         float aspectratio{ 0 };
-        std::string killMessageString{ "Cheat.net" };
+        std::string killMessageString{ "Cheat" };
+        std::string waterMarkString{ "Cheat" };
         int banColor{ 6 };
         ColorToggle bombTimer{ 1.0f, 0.55f, 0.0f };
         int prepareRevolverKey{ 0 };

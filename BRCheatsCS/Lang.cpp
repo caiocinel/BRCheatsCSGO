@@ -185,6 +185,8 @@ void UpdateLanguage()
 		phrases[XorString("visuals_colorcorrection")] = XorString("Color Correction");
 		phrases[XorString("visuals_ragdollforce")] = XorString("Ragdoll Force");
 		phrases[XorString("visuals_ragdollforce_strenght")] = XorString("Ragdoll Force Strenght");
+		phrases[XorString("visuals_drawFps")] = XorString("Draw Fps");
+		phrases[XorString("visuals_drawPing")] = XorString("Draw Ping");
 
 		phrases[XorString("skinchanger_paintkit")] = XorString("Paint Kit");
 		phrases[XorString("skinchanger_quality")] = XorString("Quality");
@@ -301,16 +303,9 @@ void UpdateLanguage()
 		phrases[XorString("ezconfig_bunnyhop")] = XorString("Activates Auto Bunny Hopping (Hold Space)");
 		phrases[XorString("ezconfig_fpsboost")] = XorString("Increases FPS by up to 70% by disabling game effects");
 		phrases[XorString("ezconfig_reset")] = XorString("Reset all cheat settings");
-
 	}
 	else if (config->misc.lang == 1)
 	{
-
-
-
-
-
-
 		phrases[XorString("main_visuals")] = XorString("Visuais");
 		phrases[XorString("main_misc")] = XorString("Outros");
 		phrases[XorString("main_lang")] = XorString("Language");
@@ -478,6 +473,9 @@ void UpdateLanguage()
 		phrases[XorString("visuals_colorcorrection")] = XorString("Correcao Cor");
 		phrases[XorString("visuals_ragdollforce")] = XorString("Forca de Ragdoll");
 		phrases[XorString("visuals_ragdollforce_strenght")] = XorString("Nivel de Forca do Ragdoll");
+		phrases[XorString("visuals_drawFps")] = XorString("Desenhar Fps");
+		phrases[XorString("visuals_drawPing")] = XorString("Desenhar Ping");
+
 		phrases[XorString("skinchanger_paintkit")] = XorString("Skin");
 		phrases[XorString("skinchanger_quality")] = XorString("Qualidade");
 		phrases[XorString("skinchanger_seed")] = XorString("Seed");

@@ -1745,6 +1745,8 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
     ImGui::Combo(phrases[XorString("visuals_t_model")].c_str(), &config->visuals.playerModelT, playerModels);
     ImGui::Combo(phrases[XorString("visuals_ct_model")].c_str(), &config->visuals.playerModelCT, playerModels);
     ImGuiCustom::colorPicker(phrases[XorString("visuals_watermark")].c_str(), config->misc.watermark);
+    ImGui::SameLine();
+    ImGui::InputText("", &config->misc.waterMarkString);
 
     ImGui::Checkbox(phrases[XorString("visuals_ragdollforce")].c_str(), &config->misc.ragdollForce);
     if (config->misc.ragdollForce)
@@ -3095,11 +3097,15 @@ void GUI::renderPerformanceWindow(bool contentOnly) noexcept
     ImGui::Checkbox(phrases[XorString("visuals_disablepostprocessing")].c_str(), &config->visuals.disablePostProcessing);
     ImGui::Checkbox(phrases[XorString("visuals_nograss")].c_str(), &config->visuals.noGrass);
     ImGui::Checkbox(phrases[XorString("visuals_noshadows")].c_str(), &config->visuals.noShadows);
+    ImGui::Checkbox(phrases[XorString("visuals_drawFps")].c_str(), &config->visuals.drawFps);
     ImGui::NextColumn();
     ImGui::Checkbox(phrases[XorString("visuals_nobloom")].c_str(), &config->visuals.noBloom);
     ImGui::Checkbox(phrases[XorString("visuals_nofog")].c_str(), &config->visuals.noFog);
     ImGui::Checkbox(phrases[XorString("visuals_no3dsky")].c_str(), &config->visuals.no3dSky);
     ImGui::Checkbox("Gray Textures", &config->visuals.drawgray);
+    if (config->visuals.drawFps) {
+        ImGui::Checkbox(phrases[XorString("visuals_drawPing")].c_str(), &config->visuals.drawPing);
+    }
     ImGui::Columns(1);
 }
 

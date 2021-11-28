@@ -394,17 +394,19 @@ void Misc::recoilCrosshair(ImDrawList* drawList) noexcept
 
 void Misc::watermark() noexcept
 {
-    if (config->misc.watermark.enabled) {
-        interfaces->surface->setTextFont(Surface::font);
+    interfaces->surface->setTextFont(Surface::font);
+    interfaces->surface->setTextPosition(5, 0);
 
+    if (config->misc.watermark.enabled) {
         if (config->misc.watermark.rainbow)
             interfaces->surface->setTextColor(rainbowColor(config->misc.watermark.rainbowSpeed));
         else
             interfaces->surface->setTextColor(config->misc.watermark.color);
 
-        interfaces->surface->setTextPosition(5, 0);
-        interfaces->surface->printText(L"Cheat");
+        interfaces->surface->printText(config->misc.waterMarkString);
+    }
 
+    if (config->visuals.drawFps) {
         static auto frameRate = 1.0f;
         frameRate = 0.9f * frameRate + 0.1f * memory->globalVars->absoluteFrameTime;
         const auto [screenWidth, screenHeight] = interfaces->surface->getScreenSize();
@@ -413,14 +415,24 @@ void Misc::watermark() noexcept
         interfaces->surface->setTextPosition(screenWidth - fpsWidth - 5, 0);
         interfaces->surface->printText(fps.c_str());
 
-        float latency = 0.0f;
-        if (auto networkChannel = interfaces->engine->getNetworkChannel(); networkChannel && networkChannel->getLatency(0) > 0.0f)
-            latency = networkChannel->getLatency(0);
+        if (config->visuals.drawPing) {
+            float latency = 0.0f;
+            if (auto networkChannel = interfaces->engine->getNetworkChannel(); networkChannel && networkChannel->getLatency(0) > 0.0f)
+                latency = networkChannel->getLatency(0);
 
-        std::wstring ping{ L"PING: " + std::to_wstring(static_cast<int>(latency * 1000)) + L" ms" };
-        const auto pingWidth = interfaces->surface->getTextSize(Surface::font, ping.c_str()).first;
-        interfaces->surface->setTextPosition(screenWidth - pingWidth - 5, fpsHeight);
-        interfaces->surface->printText(ping.c_str());
+            if (interfaces->engine->isInGame()) {
+                std::wstring ping{ std::to_wstring(static_cast<int>(latency * 1000)) + L" ms" };
+                const auto pingWidth = interfaces->surface->getTextSize(Surface::font, ping.c_str()).first;
+                interfaces->surface->setTextPosition(screenWidth - pingWidth - 5, fpsHeight);
+                interfaces->surface->printText(ping.c_str());
+            }
+            else {
+                std::wstring ping = L"- Not in game -";
+                const auto pingWidth = interfaces->surface->getTextSize(Surface::font, ping.c_str()).first;
+                interfaces->surface->setTextPosition(screenWidth - pingWidth - 5, fpsHeight);
+                interfaces->surface->printText(ping.c_str());
+            }
+        }
     }
 }
 
