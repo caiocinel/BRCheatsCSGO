@@ -2121,16 +2121,19 @@ void GUI::renderMiscWindow(bool contentOnly) noexcept
 
     ImGui::NextColumn(); //////////////////////////////////////////////////////////////////////
 
-    ImGui::Checkbox(phrases[XorString("misc_animatedclantag")].c_str(), &config->misc.animatedClanTag);
-    ImGui::Checkbox(phrases[XorString("misc_clocktag")].c_str(), &config->misc.clocktag);
     ImGui::Checkbox(phrases[XorString("misc_customclantag")].c_str(), &config->misc.customClanTag);
     ImGui::SameLine();
     ImGui::PushItemWidth(120.0f);
     ImGui::PushID(0);
-
     if (ImGui::InputText("", config->misc.clanTag, sizeof(config->misc.clanTag)))
         Misc::updateClanTag(true);
     ImGui::PopID();
+
+    if (config->misc.customClanTag) {
+        ImGui::Checkbox(phrases[XorString("misc_animatedclantag")].c_str(), &config->misc.animatedClanTag);
+    }
+
+    ImGui::Checkbox(phrases[XorString("misc_clocktag")].c_str(), &config->misc.clocktag);
     ImGui::Checkbox(phrases[XorString("misc_killmessage")].c_str(), &config->misc.killMessage);
     ImGui::SameLine();
     ImGui::PushItemWidth(120.0f);
