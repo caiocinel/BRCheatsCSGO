@@ -394,7 +394,7 @@ void Misc::recoilCrosshair(ImDrawList* drawList) noexcept
 
 void Misc::watermark(ImDrawList* drawList) noexcept
 {
-    if (config->misc.watermark or config->visuals.drawFps or config->visuals.drawPing or config->visuals.drawTick) {
+    if (config->misc.watermark or config->visuals.drawFps or config->visuals.drawPing or config->visuals.drawTick or config->visuals.drawTime) {
         float latency = 0.0f;
         if (auto networkChannel = interfaces->engine->getNetworkChannel(); networkChannel && networkChannel->getLatency(0) > 0.0f)
             latency = networkChannel->getLatency(0);
