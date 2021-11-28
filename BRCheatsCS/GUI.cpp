@@ -1759,7 +1759,9 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
     hotkey(config->visuals.thirdpersonKey);
     ImGui::PushItemWidth(290.0f);
     ImGui::PushID(0);
-    ImGui::SliderInt("", &config->visuals.thirdpersonDistance, 0, 1000, phrases[XorString("visuals_thirdperson_distance")].c_str());
+    if (config->visuals.thirdperson) {
+        ImGui::SliderInt("", &config->visuals.thirdpersonDistance, 0, 1000, phrases[XorString("visuals_thirdperson_distance")].c_str());
+    }
     ImGui::PopID();
     ImGui::PushID(1);
     ImGui::SliderInt("", &config->visuals.viewmodelFov, -60, 60, phrases[XorString("visuals_viewmodelfov")].c_str());
