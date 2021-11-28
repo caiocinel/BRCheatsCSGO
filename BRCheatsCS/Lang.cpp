@@ -162,8 +162,8 @@ void UpdateLanguage()
 		phrases[XorString("visuals_deaglespinner")] = XorString("Deagle Spinner");
 		phrases[XorString("visuals_bullettracers")] = XorString("Bullet Tracers");
 		phrases[XorString("visuals_zoom")] = XorString("Zoom");
-		phrases[XorString("visuals_t_model")] = XorString("T Player Model");
-		phrases[XorString("visuals_ct_model")] = XorString("CT Player Model");
+		phrases[XorString("visuals_t_model")] = XorString("TR Model");
+		phrases[XorString("visuals_ct_model")] = XorString("CT Model");
 		phrases[XorString("visuals_thirdperson")] = XorString("Thirdperson");
 		phrases[XorString("visuals_thirdperson_distance")] = XorString("Thirdperson distance: %d");
 		phrases[XorString("visuals_viewmodelfov")] = XorString("Viewmodel FOV: %d");
@@ -184,7 +184,7 @@ void UpdateLanguage()
 		phrases[XorString("visuals_watermark")] = XorString("Watermark");
 		phrases[XorString("visuals_colorcorrection")] = XorString("Color Correction");
 		phrases[XorString("visuals_ragdollforce")] = XorString("Ragdoll Force");
-		phrases[XorString("visuals_ragdollforce_strenght")] = XorString("Ragdoll Force Strenght");
+		phrases[XorString("visuals_ragdollforce_strenght")] = XorString("Strenght");
 		phrases[XorString("visuals_drawFps")] = XorString("Draw Fps");
 		phrases[XorString("visuals_drawPing")] = XorString("Draw Ping");
 		phrases[XorString("visuals_drawTick")] = XorString("Draw Tick");
@@ -474,7 +474,7 @@ void UpdateLanguage()
 		phrases[XorString("visuals_watermark")] = XorString("Marca d'agua");
 		phrases[XorString("visuals_colorcorrection")] = XorString("Correcao Cor");
 		phrases[XorString("visuals_ragdollforce")] = XorString("Forca de Ragdoll");
-		phrases[XorString("visuals_ragdollforce_strenght")] = XorString("Nivel de Forca do Ragdoll");
+		phrases[XorString("visuals_ragdollforce_strenght")] = XorString("Nivel");
 		phrases[XorString("visuals_drawFps")] = XorString("Desenhar Fps");
 		phrases[XorString("visuals_drawPing")] = XorString("Desenhar Ping");
 		phrases[XorString("visuals_drawTick")] = XorString("Desenhar Tick");

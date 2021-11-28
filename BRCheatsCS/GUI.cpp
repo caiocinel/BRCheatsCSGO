@@ -1738,12 +1738,9 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
     ImGui::Checkbox(phrases[XorString("visuals_nosleeves")].c_str(), &config->visuals.noSleeves);
     ImGui::Checkbox(phrases[XorString("visuals_wireframesmoke")].c_str(), &config->visuals.wireframeSmoke);
     ImGui::Checkbox(phrases[XorString("visuals_deaglespinner")].c_str(), &config->visuals.deagleSpinner);
-    ImGuiCustom::colorPicker(phrases[XorString("visuals_bullettracers")].c_str(), config->visuals.bulletTracers);
     ImGui::Checkbox(phrases[XorString("visuals_zoom")].c_str(), &config->visuals.zoom);
     ImGui::SameLine();
     hotkey(config->visuals.zoomKey);
-    ImGui::Combo(phrases[XorString("visuals_t_model")].c_str(), &config->visuals.playerModelT, playerModels);
-    ImGui::Combo(phrases[XorString("visuals_ct_model")].c_str(), &config->visuals.playerModelCT, playerModels);
 
     ImGui::Checkbox(phrases[XorString("visuals_watermark")].c_str(), &config->misc.watermark);
     if (config->misc.watermark) {
@@ -1754,10 +1751,15 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
     }
 
     ImGui::Checkbox(phrases[XorString("visuals_ragdollforce")].c_str(), &config->misc.ragdollForce);
-    if (config->misc.ragdollForce)
-        ImGui::SetNextItemWidth(90.0f);
+    if (config->misc.ragdollForce) {
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(75.0f);
         ImGui::InputInt(phrases[XorString("visuals_ragdollforce_strenght")].c_str(), &config->misc.ragdollForceStrength, 1, 3);
-        config->misc.ragdollForceStrength = std::clamp(config->misc.ragdollForceStrength, 1, 100);
+        config->misc.ragdollForceStrength = std::clamp(config->misc.ragdollForceStrength, 1, 10);
+    }
+    ImGuiCustom::colorPicker(phrases[XorString("visuals_noscopecrosshair")].c_str(), config->misc.noscopeCrosshair);
+    ImGuiCustom::colorPicker(phrases[XorString("visuals_recoilcrosshair")].c_str(), config->misc.recoilCrosshair);
+    ImGuiCustom::colorPicker(phrases[XorString("visuals_bullettracers")].c_str(), config->visuals.bulletTracers);
     
     ImGui::NextColumn();
     ImGui::Checkbox(phrases[XorString("visuals_thirdperson")].c_str(), &config->visuals.thirdperson);
@@ -1777,7 +1779,7 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
     ImGui::SliderInt("", &config->visuals.fov, -60, 60, phrases[XorString("visuals_fov")].c_str());
     ImGui::PopID();
     ImGui::PushID(3);
-    ImGui::SliderInt("", &config->visuals.farZ, 0, 2000, phrases[XorString("visuals_farz")].c_str());
+    /*ImGui::SliderInt("", &config->visuals.farZ, 0, 2000, phrases[XorString("visuals_farz")].c_str());*/ // Não está funcionando.
     ImGui::PopID();
     ImGui::PushID(4);
     ImGui::SliderInt("", &config->visuals.flashReduction, 0, 100, phrases[XorString("visuals_flashreduction")].c_str());
@@ -1785,12 +1787,22 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
     ImGui::PushID(5);
     ImGui::SliderFloat("", &config->visuals.brightness, 0.0f, 1.0f, phrases[XorString("visuals_brightness")].c_str());
     ImGui::PopID();
+    ImGui::PushID(6);
+    ImGui::Text(phrases[XorString("visuals_t_model")].c_str());
+    ImGui::SameLine();
+    ImGui::Combo("", &config->visuals.playerModelT, playerModels);
+    ImGui::PopID();
+    ImGui::PushID(7);
+    ImGui::Text(phrases[XorString("visuals_ct_model")].c_str());
+    ImGui::SameLine();
+    ImGui::Combo("", &config->visuals.playerModelCT, playerModels);
+    ImGui::PopID();
     ImGui::PopItemWidth();
     ImGui::Combo(phrases[XorString("visuals_hitmarker")].c_str(), &config->visuals.hitMarker, XorString("None\0Default (Cross)\0"));
     ImGui::SliderFloat(phrases[XorString("visuals_hitmarker_time")].c_str(), &config->visuals.hitMarkerTime, 0.1f, 1.5f, XorString("%.2fs"));
     ImGui::Checkbox(phrases[XorString("visuals_indicators")].c_str(), &config->visuals.indicatorsEnabled);
     ImGui::SameLine();
-    ImGui::PushID(6);
+    ImGui::PushID(8);
     ImGui::SetNextItemWidth(175.0f);
     ImGuiCustom::MultiCombo("", config->visuals.indicators, config->visuals.selectedIndicators, 5);
     ImGui::PopID();
@@ -1800,8 +1812,6 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
     config->visuals.rainbowCrosshairSpeed = std::clamp(config->visuals.rainbowCrosshairSpeed, 0.0f, 25.0f);
     ImGui::InputFloat(phrases[XorString("global_speed")].c_str(), &config->visuals.rainbowCrosshairSpeed, 0.1f, 0.15f, "%.2f");
     ImGui::PopItemWidth();
-    ImGuiCustom::colorPicker(phrases[XorString("visuals_noscopecrosshair")].c_str(), config->misc.noscopeCrosshair);
-    ImGuiCustom::colorPicker(phrases[XorString("visuals_recoilcrosshair")].c_str(), config->misc.recoilCrosshair);
 
     ImGui::Columns(1);
 
