@@ -1744,26 +1744,31 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
     hotkey(config->visuals.zoomKey);
     ImGui::Combo(phrases[XorString("visuals_t_model")].c_str(), &config->visuals.playerModelT, playerModels);
     ImGui::Combo(phrases[XorString("visuals_ct_model")].c_str(), &config->visuals.playerModelCT, playerModels);
-    ImGuiCustom::colorPicker(phrases[XorString("visuals_watermark")].c_str(), config->misc.watermark);
-    ImGui::SameLine();
-    ImGui::InputText("", &config->misc.waterMarkString);
+
+    ImGui::Checkbox(phrases[XorString("visuals_watermark")].c_str(), &config->misc.watermark);
+    if (config->misc.watermark) {
+        ImGui::SameLine();
+        ImGui::PushID(0);
+        ImGui::InputText("", &config->misc.watermarkString);
+        ImGui::PopID();
+    }
 
     ImGui::Checkbox(phrases[XorString("visuals_ragdollforce")].c_str(), &config->misc.ragdollForce);
     if (config->misc.ragdollForce)
-    {
         ImGui::SetNextItemWidth(90.0f);
         ImGui::InputInt(phrases[XorString("visuals_ragdollforce_strenght")].c_str(), &config->misc.ragdollForceStrength, 1, 3);
         config->misc.ragdollForceStrength = std::clamp(config->misc.ragdollForceStrength, 1, 100);
-    };
+    
     ImGui::NextColumn();
     ImGui::Checkbox(phrases[XorString("visuals_thirdperson")].c_str(), &config->visuals.thirdperson);
     ImGui::SameLine();
     hotkey(config->visuals.thirdpersonKey);
     ImGui::PushItemWidth(290.0f);
     ImGui::PushID(0);
-    if (config->visuals.thirdperson) {
+
+    if (config->visuals.thirdperson)
         ImGui::SliderInt("", &config->visuals.thirdpersonDistance, 0, 1000, phrases[XorString("visuals_thirdperson_distance")].c_str());
-    }
+ 
     ImGui::PopID();
     ImGui::PushID(1);
     ImGui::SliderInt("", &config->visuals.viewmodelFov, -60, 60, phrases[XorString("visuals_viewmodelfov")].c_str());
@@ -3098,14 +3103,14 @@ void GUI::renderPerformanceWindow(bool contentOnly) noexcept
     ImGui::Checkbox(phrases[XorString("visuals_nograss")].c_str(), &config->visuals.noGrass);
     ImGui::Checkbox(phrases[XorString("visuals_noshadows")].c_str(), &config->visuals.noShadows);
     ImGui::Checkbox(phrases[XorString("visuals_drawFps")].c_str(), &config->visuals.drawFps);
+    ImGui::Checkbox(phrases[XorString("visuals_drawTick")].c_str(), &config->visuals.drawTick);
     ImGui::NextColumn();
     ImGui::Checkbox(phrases[XorString("visuals_nobloom")].c_str(), &config->visuals.noBloom);
     ImGui::Checkbox(phrases[XorString("visuals_nofog")].c_str(), &config->visuals.noFog);
     ImGui::Checkbox(phrases[XorString("visuals_no3dsky")].c_str(), &config->visuals.no3dSky);
     ImGui::Checkbox("Gray Textures", &config->visuals.drawgray);
-    if (config->visuals.drawFps) {
-        ImGui::Checkbox(phrases[XorString("visuals_drawPing")].c_str(), &config->visuals.drawPing);
-    }
+    ImGui::Checkbox(phrases[XorString("visuals_drawPing")].c_str(), &config->visuals.drawPing);
+    ImGui::Checkbox(phrases[XorString("visuals_drawTime")].c_str(), &config->visuals.drawTime);
     ImGui::Columns(1);
 }
 

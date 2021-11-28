@@ -394,66 +394,75 @@ void Misc::recoilCrosshair(ImDrawList* drawList) noexcept
 
 void Misc::watermark(ImDrawList* drawList) noexcept
 {
-    if (!&config->misc.watermark)
-        return;
-
-
-    float latency = 0.0f;
-    if (auto networkChannel = interfaces->engine->getNetworkChannel(); networkChannel && networkChannel->getLatency(0) > 0.0f)
-        latency = networkChannel->getLatency(0);
+    if (config->misc.watermark or config->visuals.drawFps or config->visuals.drawPing or config->visuals.drawTick) {
+        float latency = 0.0f;
+        if (auto networkChannel = interfaces->engine->getNetworkChannel(); networkChannel && networkChannel->getLatency(0) > 0.0f)
+            latency = networkChannel->getLatency(0);
     
-    std::string ping{ std::to_wstring(static_cast<int>(latency * 1000)) + L" ms" };
-    const auto tick = 1.f / memory->globalVars->intervalPerTick;
-    //FPS
-    static auto fps = 1.0f;
-    fps = 0.9f * fps + 0.1f * memory->globalVars->absoluteFrameTime;
+        std::string ping = "ms";
+        const auto tick = 1.f / memory->globalVars->intervalPerTick;
+        //FPS
+        static auto fps = 1.0f;
+        fps = 0.9f * fps + 0.1f * memory->globalVars->absoluteFrameTime;
 
-    //TIME
-    std::time_t t = std::time(nullptr);
-    std::ostringstream time;
-    time << std::put_time(std::localtime(&t), ("%H:%M:%S"));
+        //TIME
+        std::time_t t = std::time(nullptr);
+        std::ostringstream time;
+        time << std::put_time(std::localtime(&t), ("%H:%M:%S"));
 
-    std::ostringstream format;
-    format << "CS Cheat"
-        << " | " << (fps != 0.0f ? static_cast<int>(1 / fps) : 0) << " fps";
+        std::ostringstream format;
+        if (config->misc.watermark) {
+            format << config->misc.watermarkString;
+        }
 
-    if (interfaces->engine->isConnected()) {
-        format << " | local " << tick << " tick";
+        if (config->visuals.drawFps) {
+           format << " | " << (fps != 0.0f ? static_cast<int>(1 / fps) : 0) << " fps";
+        }
+
+        if (config->visuals.drawTick) {
+            format << " | local " << tick << " tick";
+        }
+        
+        if (config->visuals.drawPing) {
+            auto* pInfo = interfaces->engine->getNetworkChannel();
+            if (pInfo) {
+                format << " | " << ping << " ms "; //<< tick << " tick";
+            }
+            else {
+                format << " | " << "0 ms (Not Connected)";
+            }
+        }
+        
+        if (config->visuals.drawTime) {
+            format << " | " << time.str().c_str();
+        }
+
+        const auto textSize = ImGui::CalcTextSize(format.str().c_str());
+        const auto displaySize = ImGui::GetIO().DisplaySize;
+    
+        ImRect window{
+            displaySize.x - textSize.x - 9.f,
+            1.f,
+            displaySize.x - 1.f,
+            textSize.y + 9.f
+        };
+    
+        drawList->AddRectFilled(window.Min, window.Max, ImGui::GetColorU32(ImGuiCol_WindowBg), 4);
+        const int vertStartIdx = drawList->VtxBuffer.Size;
+        drawList->AddRect(window.Min, window.Max, ImGui::GetColorU32(ImGuiCol_TitleBgActive), 4);
+        const int vertEndIdx = drawList->VtxBuffer.Size;
+
+        float r, g, b;
+        std::tie(r, g, b) = rainbowColor(3.f);
+        /*shadeVertsHSVColorGradientKeepAlpha(drawList, vertStartIdx, vertEndIdx, window.GetTL(), window.GetBR(), ImColor(r, g, b, 1.f), ImGui::GetColorU32(ImGuiCol_TitleBgActive));*/
+
+        ImVec2 textPos{
+            window.GetCenter().x - (textSize.x / 2),
+            window.GetCenter().y - (textSize.y / 2)
+        };
+
+        drawList->AddText(textPos, ImGui::GetColorU32(ImGuiCol_Text), format.str().c_str());
     }
-    else if (interfaces->engine->isInGame()) {
-        auto* pInfo = interfaces->engine->getNetworkChannel();
-        if (pInfo) 
-            format << " | " << ping << " ms " << tick << " tick";
-    }
-    else if (interfaces->engine->isConnected())
-        format << " | loading";
-
-    format << " | " << time.str().c_str();
-
-    const auto textSize = ImGui::CalcTextSize(format.str().c_str());
-    const auto displaySize = ImGui::GetIO().DisplaySize;
-    
-    ImRect window{
-        displaySize.x - textSize.x - 9.f,
-        1.f,
-        displaySize.x - 1.f,
-        textSize.y + 9.f
-    };
-    
-    drawList->AddRectFilled(window.Min, window.Max, ImGui::GetColorU32(ImGuiCol_WindowBg), 4);
-    const int vertStartIdx = drawList->VtxBuffer.Size;
-    drawList->AddRect(window.Min, window.Max, ImGui::GetColorU32(ImGuiCol_TitleBgActive), 4);
-    const int vertEndIdx = drawList->VtxBuffer.Size;
-
-    float r, g, b;
-    std::tie(r, g, b) = rainbowColor(3.f);
-    shadeVertsHSVColorGradientKeepAlpha(drawList, vertStartIdx, vertEndIdx, window.GetTL(), window.GetBR(), ImColor(r, g, b, 1.f), ImGui::GetColorU32(ImGuiCol_TitleBgActive));
-
-    ImVec2 textPos{
-        window.GetCenter().x - (textSize.x / 2),
-        window.GetCenter().y - (textSize.y / 2)
-    };
-    drawList->AddText(textPos, ImGui::GetColorU32(ImGuiCol_Text), format.str().c_str());
 }
 
 static void shadeVertsHSVColorGradientKeepAlpha(ImDrawList* draw_list, int vert_start_idx, int vert_end_idx, ImVec2 gradient_p0, ImVec2 gradient_p1, ImU32 col0, ImU32 col1)

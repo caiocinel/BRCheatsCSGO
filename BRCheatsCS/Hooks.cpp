@@ -145,7 +145,9 @@ static HRESULT __stdcall present(IDirect3DDevice9* device, const RECT* src, cons
     Misc::drawFov(ImGui::GetBackgroundDrawList());
     Misc::recoilCrosshair(ImGui::GetBackgroundDrawList());
 	Misc::drawStartPos(ImGui::GetBackgroundDrawList(), quickPeekVector);
+
     Misc::drawWallbangVector(ImGui::GetBackgroundDrawList(), wallbangVector, rageBestDmg, rageBestChance);  
+
     Misc::watermark(ImGui::GetBackgroundDrawList());
 	Visuals::updateBeams();
 

@@ -187,6 +187,8 @@ void UpdateLanguage()
 		phrases[XorString("visuals_ragdollforce_strenght")] = XorString("Ragdoll Force Strenght");
 		phrases[XorString("visuals_drawFps")] = XorString("Draw Fps");
 		phrases[XorString("visuals_drawPing")] = XorString("Draw Ping");
+		phrases[XorString("visuals_drawTick")] = XorString("Draw Tick");
+		phrases[XorString("visuals_drawTime")] = XorString("Draw Time");
 
 		phrases[XorString("skinchanger_paintkit")] = XorString("Paint Kit");
 		phrases[XorString("skinchanger_quality")] = XorString("Quality");
@@ -475,6 +477,8 @@ void UpdateLanguage()
 		phrases[XorString("visuals_ragdollforce_strenght")] = XorString("Nivel de Forca do Ragdoll");
 		phrases[XorString("visuals_drawFps")] = XorString("Desenhar Fps");
 		phrases[XorString("visuals_drawPing")] = XorString("Desenhar Ping");
+		phrases[XorString("visuals_drawTick")] = XorString("Desenhar Tick");
+		phrases[XorString("visuals_drawTime")] = XorString("Desenhar Horario");
 
 		phrases[XorString("skinchanger_paintkit")] = XorString("Skin");
 		phrases[XorString("skinchanger_quality")] = XorString("Qualidade");

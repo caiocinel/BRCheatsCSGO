@@ -458,6 +458,8 @@ public:
 
         bool drawFps{ false };
         bool drawPing{ false };
+        bool drawTick{ false };
+        bool drawTime{ false };
 
         struct ColorCorrection {
             bool enabled = false;
@@ -571,7 +573,7 @@ public:
 
         SpectatorList spectatorList;
 
-        ColorToggle watermark;
+        bool watermark{ false };
         bool fixAnimationLOD{ false };
         bool fixBoneMatrix{ false };
         bool fixMovement{ false };
@@ -613,7 +615,7 @@ public:
         PreserveKillfeed preserveKillfeed;
         float aspectratio{ 0 };
         std::string killMessageString{ "Cheat" };
-        std::string waterMarkString{ "Cheat" };
+        std::string watermarkString{ "Cheat" };
         int banColor{ 6 };
         ColorToggle bombTimer{ 1.0f, 0.55f, 0.0f };
         int prepareRevolverKey{ 0 };

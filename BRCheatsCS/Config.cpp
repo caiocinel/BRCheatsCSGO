@@ -633,7 +633,6 @@ static void from_json(const json& j, Config::Misc& m)
     read(j, "Reveal money", m.revealMoney);
     read(j, "Reveal suspect", m.revealSuspect);
     read<value_t::object>(j, "Spectator list", m.spectatorList);
-    read<value_t::object>(j, "Watermark", m.watermark);
     read(j, "Fix animation LOD", m.fixAnimationLOD);
     read(j, "Fix bone matrix", m.fixBoneMatrix);
     read(j, "Fix movement", m.fixMovement);
@@ -1119,7 +1118,6 @@ static void to_json(json& j, const Config::Misc& o, const Config::Misc& dummy = 
     WRITE("Reveal money", revealMoney);
     WRITE("Reveal suspect", revealSuspect);
     WRITE("Spectator list", spectatorList);
-    WRITE("Watermark", watermark);
     WRITE("Fix animation LOD", fixAnimationLOD);
     WRITE("Fix bone matrix", fixBoneMatrix);
     WRITE("Fix movement", fixMovement);
