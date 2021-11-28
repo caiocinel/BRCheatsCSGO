@@ -403,7 +403,10 @@ void Misc::watermark() noexcept
         else
             interfaces->surface->setTextColor(config->misc.watermark.color);
 
-        interfaces->surface->printText(config->misc.waterMarkString);
+        //interfaces->surface->printText(config->misc.waterMarkString);
+
+        wchar_t* wszWaterMark = new wchar_t[config->misc.waterMarkString.size() + 1];
+        interfaces->surface->printText(wszWaterMark);
     }
 
     if (config->visuals.drawFps) {
