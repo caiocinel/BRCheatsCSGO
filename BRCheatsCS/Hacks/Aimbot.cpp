@@ -234,7 +234,7 @@ void Aimbot::run(UserCmd* cmd) noexcept
     if (!config->aimbot[weaponIndex].enabled)
         weaponIndex = 0;
 
-    if (!config->aimbot[weaponIndex].betweenShots && activeWeapon->nextPrimaryAttack() > memory->globalVars->serverTime())
+    if (!config->aimbot[weaponIndex].betweenShots && (activeWeapon->nextPrimaryAttack() > memory->globalVars->serverTime() || (activeWeapon->isFullAuto() && localPlayer->shotsFired() > 1)))
         return;
 
     if (!config->aimbot[weaponIndex].ignoreFlash && localPlayer->isFlashed())
@@ -264,7 +264,7 @@ void Aimbot::run(UserCmd* cmd) noexcept
         const auto localPlayerEyePosition = localPlayer->getEyePosition();
 
 
-        auto aimPunch = activeWeapon->requiresRecoilControl() ? localPlayer->getAimPunch() : Vector{ };
+        auto aimPunch = activeWeapon->requiresRecoilControl() && !activeWeapon->isInReload() ? localPlayer->getAimPunch() : Vector{};
         std::vector<Enemies> enemies;
         if (config->aimbot[weaponIndex].standaloneRCS && !config->aimbot[weaponIndex].silent) {
 
@@ -286,7 +286,7 @@ void Aimbot::run(UserCmd* cmd) noexcept
             if (localPlayer->getShotsFired() > config->aimbot[weaponIndex].shotsFired) {
                 setRandomSeed(*memory->predictionRandomSeed);
                 Vector currentPunch{ lastAimPunch.x - aimPunch.x, lastAimPunch.y - aimPunch.y, 0 };
-
+                
 
                 currentPunch.x *= config->aimbot[weaponIndex].recoilControlX;
                 currentPunch.y *= config->aimbot[weaponIndex].recoilControlY;
