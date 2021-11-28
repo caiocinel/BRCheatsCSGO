@@ -17,7 +17,7 @@ namespace Misc
     void spectatorList() noexcept;
     void noscopeCrosshair(ImDrawList* drawlist) noexcept;
     void recoilCrosshair(ImDrawList* drawList) noexcept;
-    void watermark() noexcept;
+    void Misc::watermark(ImDrawList* drawList) noexcept;
     void prepareRevolver(UserCmd*) noexcept;
     void fastPlant(UserCmd*) noexcept;
     void fastStop(UserCmd*) noexcept;

@@ -145,7 +145,8 @@ static HRESULT __stdcall present(IDirect3DDevice9* device, const RECT* src, cons
     Misc::drawFov(ImGui::GetBackgroundDrawList());
     Misc::recoilCrosshair(ImGui::GetBackgroundDrawList());
 	Misc::drawStartPos(ImGui::GetBackgroundDrawList(), quickPeekVector);
-    Misc::drawWallbangVector(ImGui::GetBackgroundDrawList(), wallbangVector, rageBestDmg, rageBestChance);
+    Misc::drawWallbangVector(ImGui::GetBackgroundDrawList(), wallbangVector, rageBestDmg, rageBestChance);  
+    Misc::watermark(ImGui::GetBackgroundDrawList());
 	Visuals::updateBeams();
 
     if (gui->open)
@@ -373,7 +374,6 @@ static void __stdcall paintTraverse(unsigned int panel, bool forceRepaint, bool 
     if (interfaces->panel->getName(panel) == "MatSystemTopPanel") {
         Misc::drawBombTimer();
         Misc::drawBombDamage();
-        Misc::watermark();
         Visuals::hitMarker();
     	Visuals::indicators();
     }

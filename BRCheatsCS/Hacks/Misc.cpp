@@ -392,50 +392,95 @@ void Misc::recoilCrosshair(ImDrawList* drawList) noexcept
         drawCrosshair(drawList, pos, Helpers::calculateColor(config->misc.recoilCrosshair), config->misc.recoilCrosshair.thickness);
 }
 
-void Misc::watermark() noexcept
+void Misc::watermark(ImDrawList* drawList) noexcept
 {
-    interfaces->surface->setTextFont(Surface::font);
-    interfaces->surface->setTextPosition(5, 0);
+    if (!&config->misc.watermark)
+        return;
 
-    if (config->misc.watermark.enabled) {
-        if (config->misc.watermark.rainbow)
-            interfaces->surface->setTextColor(rainbowColor(config->misc.watermark.rainbowSpeed));
-        else
-            interfaces->surface->setTextColor(config->misc.watermark.color);
 
-        //interfaces->surface->printText(config->misc.waterMarkString);
+    float latency = 0.0f;
+    if (auto networkChannel = interfaces->engine->getNetworkChannel(); networkChannel && networkChannel->getLatency(0) > 0.0f)
+        latency = networkChannel->getLatency(0);
+    
+    std::string ping{ std::to_wstring(static_cast<int>(latency * 1000)) + L" ms" };
+    const auto tick = 1.f / memory->globalVars->intervalPerTick;
+    //FPS
+    static auto fps = 1.0f;
+    fps = 0.9f * fps + 0.1f * memory->globalVars->absoluteFrameTime;
 
-        wchar_t* wszWaterMark = new wchar_t[config->misc.waterMarkString.size() + 1];
-        interfaces->surface->printText(wszWaterMark);
+    //TIME
+    std::time_t t = std::time(nullptr);
+    std::ostringstream time;
+    time << std::put_time(std::localtime(&t), ("%H:%M:%S"));
+
+    std::ostringstream format;
+    format << "CS Cheat"
+        << " | " << (fps != 0.0f ? static_cast<int>(1 / fps) : 0) << " fps";
+
+    if (interfaces->engine->isConnected()) {
+        format << " | local " << tick << " tick";
     }
+    else if (interfaces->engine->isInGame()) {
+        auto* pInfo = interfaces->engine->getNetworkChannel();
+        if (pInfo) 
+            format << " | " << ping << " ms " << tick << " tick";
+    }
+    else if (interfaces->engine->isConnected())
+        format << " | loading";
 
-    if (config->visuals.drawFps) {
-        static auto frameRate = 1.0f;
-        frameRate = 0.9f * frameRate + 0.1f * memory->globalVars->absoluteFrameTime;
-        const auto [screenWidth, screenHeight] = interfaces->surface->getScreenSize();
-        std::wstring fps{ std::to_wstring(static_cast<int>(1 / frameRate)) + L" fps" };
-        const auto [fpsWidth, fpsHeight] = interfaces->surface->getTextSize(Surface::font, fps.c_str());
-        interfaces->surface->setTextPosition(screenWidth - fpsWidth - 5, 0);
-        interfaces->surface->printText(fps.c_str());
+    format << " | " << time.str().c_str();
 
-        if (config->visuals.drawPing) {
-            float latency = 0.0f;
-            if (auto networkChannel = interfaces->engine->getNetworkChannel(); networkChannel && networkChannel->getLatency(0) > 0.0f)
-                latency = networkChannel->getLatency(0);
+    const auto textSize = ImGui::CalcTextSize(format.str().c_str());
+    const auto displaySize = ImGui::GetIO().DisplaySize;
+    
+    ImRect window{
+        displaySize.x - textSize.x - 9.f,
+        1.f,
+        displaySize.x - 1.f,
+        textSize.y + 9.f
+    };
+    
+    drawList->AddRectFilled(window.Min, window.Max, ImGui::GetColorU32(ImGuiCol_WindowBg), 4);
+    const int vertStartIdx = drawList->VtxBuffer.Size;
+    drawList->AddRect(window.Min, window.Max, ImGui::GetColorU32(ImGuiCol_TitleBgActive), 4);
+    const int vertEndIdx = drawList->VtxBuffer.Size;
 
-            if (interfaces->engine->isInGame()) {
-                std::wstring ping{ std::to_wstring(static_cast<int>(latency * 1000)) + L" ms" };
-                const auto pingWidth = interfaces->surface->getTextSize(Surface::font, ping.c_str()).first;
-                interfaces->surface->setTextPosition(screenWidth - pingWidth - 5, fpsHeight);
-                interfaces->surface->printText(ping.c_str());
-            }
-            else {
-                std::wstring ping = L"- Not in game -";
-                const auto pingWidth = interfaces->surface->getTextSize(Surface::font, ping.c_str()).first;
-                interfaces->surface->setTextPosition(screenWidth - pingWidth - 5, fpsHeight);
-                interfaces->surface->printText(ping.c_str());
-            }
-        }
+    float r, g, b;
+    std::tie(r, g, b) = rainbowColor(3.f);
+    shadeVertsHSVColorGradientKeepAlpha(drawList, vertStartIdx, vertEndIdx, window.GetTL(), window.GetBR(), ImColor(r, g, b, 1.f), ImGui::GetColorU32(ImGuiCol_TitleBgActive));
+
+    ImVec2 textPos{
+        window.GetCenter().x - (textSize.x / 2),
+        window.GetCenter().y - (textSize.y / 2)
+    };
+    drawList->AddText(textPos, ImGui::GetColorU32(ImGuiCol_Text), format.str().c_str());
+}
+
+static void shadeVertsHSVColorGradientKeepAlpha(ImDrawList* draw_list, int vert_start_idx, int vert_end_idx, ImVec2 gradient_p0, ImVec2 gradient_p1, ImU32 col0, ImU32 col1)
+{
+    ImVec2 gradient_extent = gradient_p1 - gradient_p0;
+    float gradient_inv_length2 = 1.0f / ImLengthSqr(gradient_extent);
+    ImDrawVert* vert_start = draw_list->VtxBuffer.Data + vert_start_idx;
+    ImDrawVert* vert_end = draw_list->VtxBuffer.Data + vert_end_idx;
+
+    ImVec4 col0HSV = ImGui::ColorConvertU32ToFloat4(col0);
+    ImVec4 col1HSV = ImGui::ColorConvertU32ToFloat4(col1);
+    ImGui::ColorConvertRGBtoHSV(col0HSV.x, col0HSV.y, col0HSV.z, col0HSV.x, col0HSV.y, col0HSV.z);
+    ImGui::ColorConvertRGBtoHSV(col1HSV.x, col1HSV.y, col1HSV.z, col1HSV.x, col1HSV.y, col1HSV.z);
+    ImVec4 colDelta = col1HSV - col0HSV;
+
+    for (ImDrawVert* vert = vert_start; vert < vert_end; vert++)
+    {
+        float d = ImDot(vert->pos - gradient_p0, gradient_extent);
+        float t = ImClamp(d * gradient_inv_length2, 0.0f, 1.0f);
+
+        float h = col0HSV.x + colDelta.x * t;
+        float s = col0HSV.y + colDelta.y * t;
+        float v = col0HSV.z + colDelta.z * t;
+
+        ImVec4 rgb;
+        ImGui::ColorConvertHSVtoRGB(h, s, v, rgb.x, rgb.y, rgb.z);
+        vert->col = (ImGui::ColorConvertFloat4ToU32(rgb) & ~IM_COL32_A_MASK) | (vert->col & IM_COL32_A_MASK);
     }
 }
 
