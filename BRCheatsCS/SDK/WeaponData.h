@@ -1,4 +1,5 @@
 #pragma once
+#define WIN32_LINUX(win32, linux) win32
 
 #include "Pad.h"
 
@@ -23,34 +24,35 @@ enum class WeaponType {
 };
 
 struct WeaponInfo {
-    PAD(20)
-        int maxClip;
-    PAD(112)
-        char* name;
-    PAD(60)
-        WeaponType type;
+    PAD(WIN32_LINUX(20, 32))
+    int maxClip;
+    PAD(WIN32_LINUX(112, 204))
+    const char* name;
+    PAD(WIN32_LINUX(60, 72))
+    WeaponType type;
     PAD(4)
-        int price;
-    PAD(0x8)
-        float cycletime;
+    int price;
+    PAD(WIN32_LINUX(8, 12))
+    float cycletime;
     PAD(12)
-        bool fullAuto;
+    bool fullAuto;
     PAD(3)
-        int damage;
+    int damage;
+    float headshotMultiplier;
     float armorRatio;
     int bullets;
     float penetration;
-    PAD(12)
-        float range;
+    PAD(8)
+    float range;
     float rangeModifier;
-    PAD(0x10)
-        bool silencer;
-    PAD(15)
-        float maxSpeed;
+    PAD(16)
+    bool silencer;
+    PAD(WIN32_LINUX(15, 23))
+    float maxSpeed;
     float maxSpeedAlt;
     PAD(100)
-        float recoilMagnitude;
+    float recoilMagnitude;
     float recoilMagnitudeAlt;
-    PAD(0x14)
-        float recoveryTimeStand;
+    PAD(16)
+    float recoveryTimeStand;
 };
