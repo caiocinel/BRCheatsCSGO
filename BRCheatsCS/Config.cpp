@@ -232,7 +232,7 @@ static void from_json(const json& j, Box& b)
 
     read(j, "Type", b.type);
     read(j, "Scale", b.scale);
-	read<value_t::object>(j, "Fill", b.fill);
+    read<value_t::object>(j, "Fill", b.fill);
 }
 
 static void from_json(const json& j, Shared& s)
@@ -283,7 +283,7 @@ static void from_json(const json& j, Player& p)
     read<value_t::object>(j, "Flash Duration", p.flashDuration);
     read(j, "Audible Only", p.audibleOnly);
     read(j, "Spotted Only", p.spottedOnly);
-	 read(j, "Health Bar", p.healthBar);
+    read(j, "Health Bar", p.healthBar);
     read<value_t::object>(j, "Skeleton", p.skeleton);
     read<value_t::object>(j, "Head Box", p.headBox);
 }
@@ -291,8 +291,8 @@ static void from_json(const json& j, Player& p)
 static void from_json(const json& j, ImGuiStruct& i)
 {
     read(j, "Enabled", i.enabled);
-    read(j, "No BackGround",i.noBackGround);
-    read(j, "No TittleBar",i.noTittleBar);
+    read(j, "No BackGround", i.noBackGround);
+    read(j, "No TittleBar", i.noTittleBar);
 }
 
 static void from_json(const json& j, ImVec2& v)
@@ -322,7 +322,7 @@ static void from_json(const json& j, Config::Aimbot& a)
     read(j, "Bone", a.bone);
     read(j, "Max aim inaccuracy", a.maxAimInaccuracy);
     read(j, "Max shot inaccuracy", a.maxShotInaccuracy);
-	read(j, "Hitchance", a.hitchance);
+    read(j, "Hitchance", a.hitchance);
     read(j, "Min damage", a.minDamage);
     read(j, "Killshot", a.killshot);
     read(j, "Between shots", a.betweenShots);
@@ -357,74 +357,7 @@ static void from_json(const json& j, Config::Backtrack& b)
     read(j, "Ignore smoke", b.ignoreSmoke);
     read(j, "Recoil based fov", b.recoilBasedFov);
     read(j, "Time limit", b.timeLimit);
-	read(j, "Fake Latency", b.fakeLatency);
-}
-
-static void from_json(const json& j, Config::AntiAim& a)
-{
-    read(j,"Enabled",a.general.enabled);
-	read(j,"YawInverseAngleKey",a.general.yawInverseAngleKey);
-	read(j,"YawInverseKeyMode",a.general.yawInverseKeyMode);
-	read(j,"YawInversed",a.general.yawInversed);
-	read(j,"Fenabled",a.general.fakeWalk.enabled);
-	read(j,"Fkey",a.general.fakeWalk.key);
-	read(j,"FkeyMode",a.general.fakeWalk.keyMode);
-	read(j,"FkeyToggled",a.general.fakeWalk.keyToggled);
-	read(j,"FmaxChoke",a.general.fakeWalk.maxChoke);
-
-	read(j,"Senabled",a.standing.enabled);
-	read(j,"SYenabled",a.standing.yaw.enabled);
-	read(j,"SYangle",a.standing.yaw.angle);
-	read(j,"SYFmode",a.standing.yaw.fake.mode);
-    read(j,"SYFjitterStep", a.standing.yaw.fake.step);
-	read(j,"SYFjitterMax",a.standing.yaw.fake.jitterMax);
-	read(j,"SYFjitterMin",a.standing.yaw.fake.jitterMin);
-	read(j,"SYDenabled",a.standing.yaw.desync.enabled);
-	read(j,"SYDbodyLean",a.standing.yaw.desync.bodyLean);
-	read(j,"SYDmode",a.standing.yaw.desync.mode);
-	read(j,"SYDstep",a.standing.yaw.desync.step);
-	read(j,"SYDjitterMax",a.standing.yaw.desync.jitterMax);
-	read(j,"SYDjitterMin",a.standing.yaw.desync.jitterMin);
-	read(j,"SYDLenabled",a.standing.yaw.desync.LBYBreaker.enabled);
-	read(j,"SYDLangle",a.standing.yaw.desync.LBYBreaker.angle);
-	read(j,"SPenabled",a.standing.pitch.enabled);
-	read(j,"SPangle",a.standing.pitch.angle);
-
-	read(j, "Menabled", a.moving.enabled);
-	read(j, "MYenabled", a.moving.yaw.enabled);
-	read(j, "MYangle", a.moving.yaw.angle);
-	read(j, "MYFmode", a.moving.yaw.fake.mode);
-    read(j, "MYFjitterStep", a.moving.yaw.fake.step);
-	read(j, "MYFjitterMax", a.moving.yaw.fake.jitterMax);
-	read(j, "MYFjitterMin", a.moving.yaw.fake.jitterMin);
-	read(j, "MYDenabled", a.moving.yaw.desync.enabled);
-	read(j, "MYDbodyLean", a.moving.yaw.desync.bodyLean);
-	read(j, "MYDmode", a.moving.yaw.desync.mode);
-	read(j, "MYDstep", a.moving.yaw.desync.step);
-	read(j, "MYDjitterMax", a.moving.yaw.desync.jitterMax);
-	read(j, "MYDjitterMin", a.moving.yaw.desync.jitterMin);
-	read(j, "MYDLenabled", a.moving.yaw.desync.LBYBreaker.enabled);
-	read(j, "MYDLangle", a.moving.yaw.desync.LBYBreaker.angle);
-	read(j, "MPenabled", a.moving.pitch.enabled);
-	read(j, "MPangle", a.moving.pitch.angle);
-
-	read(j, "Ienabled", a.inAir.enabled);
-	read(j, "IYenabled", a.inAir.yaw.enabled);
-	read(j, "IYangle", a.inAir.yaw.angle);
-	read(j, "IYFmode", a.inAir.yaw.fake.mode);
-    read(j, "IYFjitterStep", a.inAir.yaw.fake.step);
-	read(j, "IYFjitterMax", a.inAir.yaw.fake.jitterMax);
-	read(j, "IYFjitterMin", a.inAir.yaw.fake.jitterMin);
-	read(j, "IYDenabled", a.inAir.yaw.desync.enabled);
-	read(j, "IYDbodyLean", a.inAir.yaw.desync.bodyLean);
-	read(j, "IYDmode", a.inAir.yaw.desync.mode);
-	read(j, "IYDstep", a.inAir.yaw.desync.step);
-	read(j, "IYDjitterMax", a.inAir.yaw.desync.jitterMax);
-	read(j, "IYDjitterMin", a.inAir.yaw.desync.jitterMin);
-	read(j, "IYDLenabled", a.inAir.yaw.desync.LBYBreaker.enabled);
-	read(j, "IYDLangle", a.inAir.yaw.desync.LBYBreaker.angle);
-	read(j, "IPenabled", a.inAir.pitch.enabled);
-	read(j, "IPangle", a.inAir.pitch.angle);
+    read(j, "Fake Latency", b.fakeLatency);
 }
 
 static void from_json(const json& j, Config::Glow& g)
@@ -515,7 +448,7 @@ static void from_json(const json& j, Config::Visuals& v)
     read(j, "Rainbow crosshair", v.rainbowCrosshair);
     read(j, "Rainbow crosshair speed", v.rainbowCrosshairSpeed);
     read<value_t::object>(j, "Color correction", v.colorCorrection);
-	read(j, "Asuswalls", v.asusWalls);
+    read(j, "Asuswalls", v.asusWalls);
 }
 
 static void from_json(const json& j, sticker_setting& s)
@@ -701,7 +634,7 @@ void Config::load(size_t id) noexcept
     else {
         return;
     }
-    
+
 
 
 
@@ -710,7 +643,6 @@ void Config::load(size_t id) noexcept
     read(j, "Aimbot", aimbot);
     read(j, "Triggerbot", triggerbot);
     read<value_t::object>(j, "Backtrack", backtrack);
-    read<value_t::object>(j, "Anti aim", antiAim);
     read(j, "Glow", glow);
     read(j, "Chams", chams);
     read<value_t::object>(j, "ESP", streamProofESP);
@@ -794,7 +726,7 @@ static void to_json(json& j, const Box& o, const Box& dummy = {})
     to_json(j, static_cast<const ColorToggleRounding&>(o), dummy);
     WRITE("Type", type);
     WRITE("Scale", scale);
-	WRITE("Fill", fill);
+    WRITE("Fill", fill);
 }
 
 static void to_json(json& j, const Shared& o, const Shared& dummy = {})
@@ -814,7 +746,7 @@ static void to_json(json& j, const Player& o, const Player& dummy = {})
     WRITE("Flash Duration", flashDuration);
     WRITE("Audible Only", audibleOnly);
     WRITE("Spotted Only", spottedOnly);
-	  WRITE("Health Bar", healthBar);
+    WRITE("Health Bar", healthBar);
     WRITE("Skeleton", skeleton);
     WRITE("Head Box", headBox);
 }
@@ -849,9 +781,9 @@ static void to_json(json& j, const Projectile& o, const Projectile& dummy = {})
 
 static void to_json(json& j, const ImGuiStruct& o, const ImGuiStruct& dummy = {})
 {
-	WRITE("Enabled", enabled);
-	WRITE("No BackGround", noBackGround);
-	WRITE("No TittleBar", noTittleBar);
+    WRITE("Enabled", enabled);
+    WRITE("No BackGround", noBackGround);
+    WRITE("No TittleBar", noTittleBar);
 }
 
 static void to_json(json& j, const ImVec2& o, const ImVec2& dummy = {})
@@ -883,7 +815,7 @@ static void to_json(json& j, const Config::Aimbot& o, const Config::Aimbot& dumm
     WRITE("Recoil control Y", recoilControlY);
     WRITE("Max aim inaccuracy", maxAimInaccuracy);
     WRITE("Max shot inaccuracy", maxShotInaccuracy);
-	WRITE("Hitchance", hitchance);
+    WRITE("Hitchance", hitchance);
     WRITE("Min damage", minDamage);
     WRITE("Killshot", killshot);
     WRITE("Between shots", betweenShots);
@@ -917,70 +849,7 @@ static void to_json(json& j, const Config::Backtrack& o, const Config::Backtrack
     WRITE("Ignore smoke", ignoreSmoke);
     WRITE("Recoil based fov", recoilBasedFov);
     WRITE("Time limit", timeLimit);
-	WRITE("Fake Latency", fakeLatency);
-}
-
-static void to_json(json& j, const Config::AntiAim& o, const Config::AntiAim& dummy = {})
-{
-    WRITE("Enabled", general.enabled);
-	WRITE("YawInverseAngleKey", general.yawInverseAngleKey);
-	WRITE("YawInverseKeyMode", general.yawInverseKeyMode);
-	WRITE("YawInversed", general.yawInversed);
-	WRITE("Fenavled", general.fakeWalk.enabled);
-	WRITE("Fkey", general.fakeWalk.key);
-	WRITE("FkeyMode", general.fakeWalk.keyMode);
-	WRITE("FkeyToggled", general.fakeWalk.keyToggled);
-	WRITE("FmaxChoke", general.fakeWalk.maxChoke);
-	WRITE("Senabled", standing.enabled);
-	WRITE("SYangle", standing.yaw.angle);
-	WRITE("SYFmode", standing.yaw.fake.mode);
-    WRITE("SYFjitterstep", standing.yaw.fake.step);
-	WRITE("SYFjitterMax", standing.yaw.fake.jitterMax);
-	WRITE("SYFjitterMin", standing.yaw.fake.jitterMin);
-	WRITE("SYDenabled", standing.yaw.desync.enabled);
-	WRITE("SYDbodyLean", standing.yaw.desync.bodyLean);
-	WRITE("SYDmode", standing.yaw.desync.mode);
-	WRITE("SYDstep", standing.yaw.desync.step);
-	WRITE("SYDjitterMax", standing.yaw.desync.jitterMax);
-	WRITE("SYDjitterMin", standing.yaw.desync.jitterMin);
-	WRITE("SYDLenabled", standing.yaw.desync.LBYBreaker.enabled);
-	WRITE("SYDLangle", standing.yaw.desync.LBYBreaker.angle);
-	WRITE("SPenabled", standing.pitch.enabled);
-	WRITE("SPangle", standing.pitch.angle);
-	//Moving
-	WRITE("Menabled", moving.enabled);
-	WRITE("MYenabled", moving.yaw.enabled);
-	WRITE("MYangle", moving.yaw.angle);
-	WRITE("MYFmode", moving.yaw.fake.mode);
-	WRITE("MYFjitterMax", moving.yaw.fake.jitterMax);
-	WRITE("MYFjitterMin", moving.yaw.fake.jitterMin);
-	WRITE("MYDenabled", moving.yaw.desync.enabled);
-	WRITE("MYDbodyLean", moving.yaw.desync.bodyLean);
-	WRITE("MYDmode", moving.yaw.desync.mode);
-	WRITE("MYDstep", moving.yaw.desync.step);
-
-	WRITE("MYDjitterMin", moving.yaw.desync.jitterMin);
-	WRITE("MYDLenabled", moving.yaw.desync.LBYBreaker.enabled);
-	WRITE("MYDLangle", moving.yaw.desync.LBYBreaker.angle);
-	WRITE("MPenabled", moving.pitch.enabled);
-	WRITE("MPangle", moving.pitch.angle);
-	//IN AIR
-	WRITE("Ienabled", inAir.enabled);
-	WRITE("IYenabled", inAir.yaw.enabled);
-	WRITE("IYangle", inAir.yaw.angle);
-	WRITE("IYFmode", inAir.yaw.fake.mode);
-	WRITE("IYFjitterMax", inAir.yaw.fake.jitterMax);
-	WRITE("IYFjitterMin", inAir.yaw.fake.jitterMin);
-	WRITE("IYDenabled", inAir.yaw.desync.enabled);
-
-	WRITE("IYDmode", inAir.yaw.desync.mode);
-	WRITE("IYDstep", inAir.yaw.desync.step);
-	WRITE("IYDjitterMax", inAir.yaw.desync.jitterMax);
-	WRITE("IYDjitterMin", inAir.yaw.desync.jitterMin);
-	WRITE("IYDLenabled", inAir.yaw.desync.LBYBreaker.enabled);
-	WRITE("IYDLangle", inAir.yaw.desync.LBYBreaker.angle);
-	WRITE("IPenabled", inAir.pitch.enabled);
-	WRITE("IPangle", inAir.pitch.angle);
+    WRITE("Fake Latency", fakeLatency);
 }
 
 static void to_json(json& j, const Config::Glow& o, const Config::Glow& dummy = {})
@@ -1087,8 +956,6 @@ static void to_json(json& j, const PreserveKillfeed& o, const PreserveKillfeed& 
 
 static void to_json(json& j, const Config::Misc& o, const Config::Misc& dummy = {})
 {
-    to_json(j, static_cast<const Config::Misc&>(o), dummy);
-
     WRITE("Lang", lang);
     WRITE("Menu key", menuKey);
     WRITE("Anti AFK kick", antiAfkKick);
@@ -1118,6 +985,7 @@ static void to_json(json& j, const Config::Misc& o, const Config::Misc& dummy = 
     WRITE("Reveal money", revealMoney);
     WRITE("Reveal suspect", revealSuspect);
     WRITE("Spectator list", spectatorList);
+    WRITE("Watermark", watermark);
     WRITE("Fix animation LOD", fixAnimationLOD);
     WRITE("Fix bone matrix", fixBoneMatrix);
     WRITE("Fix movement", fixMovement);
@@ -1208,7 +1076,7 @@ static void to_json(json& j, const Config::Visuals& o)
     WRITE("Rainbow crosshair", rainbowCrosshair);
     WRITE("Rainbow crosshair speed", rainbowCrosshairSpeed);
     WRITE("Color correction", colorCorrection);
-	WRITE("Asuswalls", asusWalls);
+    WRITE("Asuswalls", asusWalls);
 }
 
 static void to_json(json& j, const ImVec4& o)
@@ -1296,7 +1164,6 @@ void Config::save(size_t id) const noexcept
         j["Aimbot"] = aimbot;
         j["Triggerbot"] = triggerbot;
         j["Backtrack"] = backtrack;
-        j["Anti aim"] = antiAim;
         j["Glow"] = glow;
         j["Chams"] = chams;
         j["ESP"] = streamProofESP;
@@ -1345,7 +1212,6 @@ void Config::reset() noexcept
     skinChanger = { };
     sound = { };
     profilechanger = { };
-    antiAim = { };
     misc = { };
 }
 
