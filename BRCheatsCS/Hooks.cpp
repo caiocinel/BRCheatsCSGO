@@ -88,21 +88,6 @@ static LRESULT __stdcall wndProc(HWND window, UINT msg, WPARAM wParam, LPARAM lP
         gui = std::make_unique<GUI>();
         hooks->install();
 
-      //  const bool loaded = config->load(u8"default", false);
-
-
-        std::ostringstream welcomeMsg;
-        welcomeMsg << "Let's get started!\n";
-        welcomeMsg << "To open/hide HUD press \"";
-        welcomeMsg << interfaces->inputSystem->virtualKeyToString(config->misc.menuKey);
-        welcomeMsg << "\" on your keyboard.\n\n";
-        welcomeMsg << "Configs are stored in Documents/CS_Cheat/ directory.";
-     //   welcomeMsg << "Made by Caillou & MarshallSCPT.\n";
-     //   welcomeMsg << "BRCheatsCSGO tries to load a config named \"default\" on start-up,\nand it appears that it was ";
-       // welcomeMsg << (loaded ? "loaded successfuly." : "not found.");
-
-        interfaces->gameUI->createCommandMsgBox("Welcome to CSGO Cheat", welcomeMsg.str().c_str());
-
         return true;
     }(window);
 
