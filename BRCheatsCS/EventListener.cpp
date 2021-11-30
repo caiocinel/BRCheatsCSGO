@@ -47,7 +47,8 @@ void EventListener::fireGameEvent(GameEvent* event)
 		Misc::preserveKillfeed(true);
 		SkinChanger::scheduleHudUpdate();
 
-	case fnv::hash("item_purchase"):
+	/*case fnv::hash("item_purchase"):*/
+
 	case fnv::hash("round_freeze_end"):
 		Misc::purchaseList(event);
 		break;

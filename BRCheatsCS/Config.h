@@ -530,8 +530,8 @@ public:
 
     struct Style {
         int menuStyle{ 1 };
-        int menuColors{ 0 };
-    } style;
+        int menuColors{ 3 };
+    } Style;
 
     struct Misc {
         int lang{ 0 };
