@@ -3003,20 +3003,21 @@ void GUI::renderConfigsWindow(bool contentOnly) noexcept
         ImGui::Begin("Configs", &window.configs, windowFlags);
     }
 
-    if (ImGui::BeginTabBar("Configs", ImGuiTabBarFlags_NoTooltip))
-    {
-        if (ImGui::BeginTabItem("Config " ICON_FA_COG))
-        {
-            renderConfigWindow(true);
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("EzConfig " ICON_FA_USERS_COG))
-        {
-            renderAutoConfigWindow(true);
-            ImGui::EndTabItem();
-        }
-        ImGui::EndTabBar();
-    }
+    //if (ImGui::BeginTabBar("Configs", ImGuiTabBarFlags_NoTooltip))
+    //{
+    //    if (ImGui::BeginTabItem("Config " ICON_FA_COG))
+    //    {
+    //        
+    //        ImGui::EndTabItem();
+    //    }
+    //    if (ImGui::BeginTabItem("EzConfig " ICON_FA_USERS_COG))
+    //    {
+    //        renderAutoConfigWindow(true);
+    //        ImGui::EndTabItem();
+    //    }
+    //    ImGui::EndTabBar();
+    //}
+    renderConfigWindow(true);
 
     if (!contentOnly)
         ImGui::End();
@@ -3194,7 +3195,7 @@ void GUI::drawDemo() noexcept
 void GUI::renderGuiStyle2() noexcept
 {
 
-    ImGui::SetNextWindowSize({600.0f, 0.0f});
+    ImGui::SetNextWindowSize({697.0f, 0.0f});
     ImGui::Begin("Counter Strike: Global Offensive", nullptr, windowFlags);
     if (ImGui::Button("      " ICON_FA_CROSSHAIRS "\nAimhacks", ImVec2(97.0f, 0.0f)))
     {
@@ -3224,6 +3225,11 @@ void GUI::renderGuiStyle2() noexcept
     if (ImGui::Button("     " ICON_FA_ASTERISK "\n  Miscs  ", ImVec2(97.0f, 0.0f)))
     {
         window.tab = 5;
+    }
+    ImGui::SameLine(0, 0);
+    if (ImGui::Button("    " ICON_FA_COGS "\nConfig", ImVec2(97.0f, 0.0f)))
+    {
+        window.tab = 6;
     }
     ImGui::SameLine(0, 0);
     if (ImGui::Button("      " ICON_FA_ATOM "\nEzConfig", ImVec2(97.0f, 0.0f)))
@@ -3271,12 +3277,11 @@ void GUI::renderGuiStyle2() noexcept
     if (ImGui::Button("PT-BR " ICON_FA_GEM))
         config->misc.lang = 1;
     ImGui::SameLine();
-    if (ImGui::Button("Unload " ICON_FA_WINDOW_CLOSE))
-        hooks->uninstall();
-    ImGui::SameLine();
 
     RightText();
-    if (ImGui::Button("Config " ICON_FA_COGS))
-        window.tab = 6;
+    if (ImGui::Button("Unload " ICON_FA_WINDOW_CLOSE))
+        hooks->uninstall();
+    //if (ImGui::Button("Config " ICON_FA_COGS))
+    //    window.tab = 6;
     ImGui::End();
 }
