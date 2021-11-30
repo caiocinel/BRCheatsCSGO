@@ -2361,9 +2361,7 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
                     if (ImGui::IsItemClicked())
                     {
                         config->load(i);
-                        updateColors();
                         SkinChanger::scheduleHudUpdate();
-                        Misc::updateClanTag(true);
                     }
                     ImGui::Separator();
                     ImGui::BeginGroup();
