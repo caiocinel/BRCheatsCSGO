@@ -296,7 +296,7 @@ void UpdateLanguage()
 		phrases[XorString("config_load")] = XorString("Load ");
 		phrases[XorString("config_save")] = XorString("Save ");
 		phrases[XorString("config_delete")] = XorString("Delete ");
-		phrases[XorString("config_using")] = XorString("Using %s:");
+		phrases[XorString("config_using")] = XorString("Selected: %s .");
 
 		phrases[XorString("ezconfig_legitaimbot")] = XorString("Almost imperceptible Aimbot");
 		phrases[XorString("ezconfig_simplewall")] = XorString("A basic glow through walls");
@@ -583,7 +583,7 @@ void UpdateLanguage()
 		phrases[XorString("config_create")] = XorString("Criar Config");
 		phrases[XorString("config_reset")] = XorString("Resetar Config");
 		phrases[XorString("config_toreset")] = XorString("Config para resetar");
-		phrases[XorString("config_using")] = XorString("Usando %s:");
+		phrases[XorString("config_using")] = XorString("Selecionada: %s");
 		phrases[XorString("config_load")] = XorString("Carregar ");
 		phrases[XorString("config_save")] = XorString("Salvar ");
 		phrases[XorString("config_delete")] = XorString("Deletar ");
@@ -593,8 +593,8 @@ void UpdateLanguage()
 		phrases[XorString("ezconfig_fullwall")] = XorString("Wallhack completo com auxiliares");
 		phrases[XorString("ezconfig_utilities")] = XorString("Alguns utilitarios, como ver patentes, dinheiro e algumas outras opçoes interessantes");
 		phrases[XorString("ezconfig_bunnyhop")] = XorString("Ativa o Auto Bunny Hopping (segure espaço)");
-		phrases[XorString("ezconfig_reset")] = XorString("Redefine todas as configuraçoes de cheat");
-		phrases[XorString("ezconfig_fpsboost")] = XorString("Aumenta o FPS em ate 70% desativando efeitos do jogo");
+		phrases[XorString("ezconfig_reset")] = XorString("Redefine todas as configuraçoes de cheat.");
+		phrases[XorString("ezconfig_fpsboost")] = XorString("Aumenta o consideravelmente o fps do jogo desativando efeitos.");
 
 	}
 }
