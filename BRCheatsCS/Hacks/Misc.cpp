@@ -412,29 +412,35 @@ void Misc::watermark(ImDrawList* drawList) noexcept
 
         std::ostringstream format;
         if (config->misc.watermark) {
-            format << config->misc.watermarkString;
+            format << config->misc.watermarkString + "\n";
         }
 
         if (config->visuals.drawFps) {
-           format << " | " << (fps != 0.0f ? static_cast<int>(1 / fps) : 0) << " fps";
+           format << (fps != 0.0f ? static_cast<int>(1 / fps) : 0) << " fps\n";
         }
 
         if (config->visuals.drawTick) {
-            format << " | local " << tick << " tick";
+            format << tick << " tick\n";
         }
         
         if (config->visuals.drawPing) {
+            float latency = 0.0f;
+            if (auto networkChannel = interfaces->engine->getNetworkChannel(); networkChannel && networkChannel->getLatency(0) > 0.0f)
+                latency = networkChannel->getLatency(0);
+
+
+            std::int32_t ping{ static_cast<int>(latency * 1000) };
             auto* pInfo = interfaces->engine->getNetworkChannel();
             if (pInfo) {
-                format << " | " << ping << " ms "; //<< tick << " tick";
+                format << ping << " ms\n";
             }
             else {
-                format << " | " << "0 ms (Not Connected)";
+                format << "0 ms (Not Connected)\n";
             }
         }
         
         if (config->visuals.drawTime) {
-            format << " | " << time.str().c_str();
+            format << time.str().c_str();
         }
 
         const auto textSize = ImGui::CalcTextSize(format.str().c_str());
