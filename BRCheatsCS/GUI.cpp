@@ -2865,6 +2865,7 @@ void GUI::renderAutoConfigWindow(bool contentOnly) noexcept
         config->visuals.noShadows = true;
         config->visuals.noBloom = true;
         config->visuals.no3dSky = true;
+        config->visuals.drawFps = true;
     };
     ImGui::SameLine();
     ImGui::Text(phrases[XorString("ezconfig_fpsboost")].c_str());
@@ -2872,10 +2873,8 @@ void GUI::renderAutoConfigWindow(bool contentOnly) noexcept
     ImGui::Separator();
     if (ImGui::Button("Reset"))
     {
-
         config->reset();
         Misc::updateClanTag(true);
-        SkinChanger::scheduleHudUpdate();
     };
     ImGui::SameLine();
     ImGui::Text(phrases[XorString("ezconfig_reset")].c_str());
@@ -3271,13 +3270,20 @@ void GUI::renderGuiStyle2() noexcept
     }
 
     ImGui::Separator();
-    if (ImGui::Button("EN-US " ICON_FA_FLAG_USA))
-        config->misc.lang = 0;
-    ImGui::SameLine();
-    if (ImGui::Button("PT-BR " ICON_FA_GEM))
-        config->misc.lang = 1;
-    ImGui::SameLine();
 
+    if (config->misc.lang == 1) {
+        if (ImGui::Button("EN-US " ICON_FA_FLAG_USA))
+        {
+            config->misc.lang = 0;
+        }
+    }
+    else {
+        if (ImGui::Button("PT-BR " ICON_FA_GEM))
+        {
+            config->misc.lang = 1;
+        }
+    }
+    ImGui::SameLine();
     RightText();
     if (ImGui::Button("Unload " ICON_FA_WINDOW_CLOSE))
         hooks->uninstall();
