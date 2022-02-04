@@ -10,6 +10,12 @@ static auto calculateVmtLength(uintptr_t* vmt) noexcept
     return length;
 }
 
+void MinHook::detour(uintptr_t base, void* fun) noexcept
+{
+    this->base = (LPVOID)base;
+    MH_CreateHook((LPVOID)base, fun, reinterpret_cast<LPVOID*>(&original));
+}
+
 void MinHook::init(void* base) noexcept
 {
     this->base = base;

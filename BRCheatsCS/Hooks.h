@@ -32,7 +32,10 @@ public:
     std::add_pointer_t<int __fastcall(SoundInfo&)> originalDispatchSound;
     
     
-
+    MinHook newFunctionClientDLL;
+    MinHook newFunctionEngineDLL;
+    MinHook newFunctionStudioRenderDLL;
+    MinHook newFunctionMaterialSystemDLL;
     HookType bspQuery;
     HookType client;
     HookType clientMode;

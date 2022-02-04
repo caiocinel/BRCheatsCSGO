@@ -6,6 +6,7 @@
 class MinHook {
 public:
     void init(void* base) noexcept;
+    void detour(uintptr_t base, void* fun) noexcept;
     void restore() noexcept {}
     void hookAt(std::size_t index, void* fun) noexcept;
 
@@ -24,4 +25,5 @@ public:
 private:
     void* base;
     std::unique_ptr<uintptr_t[]> originals;
+    uintptr_t original;
 };

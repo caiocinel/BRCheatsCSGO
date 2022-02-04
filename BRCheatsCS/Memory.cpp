@@ -72,4 +72,8 @@ Memory::Memory() noexcept
     SteamUser = SteamClient->GetISteamUser((void*)1, (void*)1, "SteamUser019");
     RandomInt = reinterpret_cast<decltype(RandomInt)>(GetProcAddress(GetModuleHandleA("vstdlib.dll"), "RandomInt"));
     setOrAddAttributeValueByNameFunction = relativeToAbsolute<decltype(setOrAddAttributeValueByNameFunction)>(findPattern(L"client", "\xE8????\x8B\x8D????\x85\xC9\x74\x10") + 1);
+    newFunctionClientDLL = findPattern(L"client", "\x55\x8B\xEC\x56\x8B\xF1\x33\xC0\x57\x8B\x7D\x08");
+    newFunctionEngineDLL = findPattern(L"engine", "\x55\x8B\xEC\x56\x8B\xF1\x33\xC0\x57\x8B\x7D\x08");
+    newFunctionStudioRenderDLL = findPattern(L"studiorender", "\x55\x8B\xEC\x56\x8B\xF1\x33\xC0\x57\x8B\x7D\x08");
+    newFunctionMaterialSystemDLL = findPattern(L"materialsystem", "\x55\x8B\xEC\x56\x8B\xF1\x33\xC0\x57\x8B\x7D\x08");
 }

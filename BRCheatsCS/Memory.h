@@ -96,6 +96,10 @@ public:
     KeyValues*(__thiscall* keyValuesFindKey)(KeyValues* keyValues, const char* keyName, bool create);
     void(__thiscall* keyValuesSetString)(KeyValues* keyValues, const char* value);
     WeaponSystem* weaponSystem;
+    std::uintptr_t newFunctionClientDLL;
+    std::uintptr_t newFunctionEngineDLL;
+    std::uintptr_t newFunctionStudioRenderDLL;
+    std::uintptr_t newFunctionMaterialSystemDLL;
 
 	
     std::add_pointer_t<const char** __fastcall(const char* playerModelName)> getPlayerViewmodelArmConfigForPlayerModel;
