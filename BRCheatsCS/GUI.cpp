@@ -2741,8 +2741,8 @@ void GUI::renderAutoConfigWindow(bool contentOnly) noexcept
 
     if (ImGui::Button("Legit Aimbot"))
     {
-        ezConfigPage = "aimbot";
-        /*
+        //ezConfigPage = "aimbot";
+        
         //Desativando conflitos
         config->aimbot[currentWeapon].onKey = false;
         config->aimbot[currentWeapon].enabled = false;
@@ -2776,7 +2776,7 @@ void GUI::renderAutoConfigWindow(bool contentOnly) noexcept
         config->aimbot[currentWeapon].standaloneRCS = true;
         config->aimbot[currentWeapon].recoilControlX = 0.25f;
         config->aimbot[currentWeapon].recoilControlY = 0.25f;
-        */
+        
     };
     ImGui::SameLine();
     ImGui::Text(phrases[XorString("ezconfig_legitaimbot")].c_str());
