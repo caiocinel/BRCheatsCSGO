@@ -267,11 +267,12 @@ void Aimbot::run(UserCmd* cmd) noexcept
         auto aimPunch = activeWeapon->requiresRecoilControl() && !activeWeapon->isInReload() ? localPlayer->getAimPunch() : Vector{};
         std::vector<Enemies> enemies;
         if (config->aimbot[weaponIndex].standaloneRCS && !config->aimbot[weaponIndex].silent) {
-
+            static Vector lastAimPunch{ };
             if (config->aimbot[weaponIndex].onKeyRCS) {
                 if (!config->aimbot[weaponIndex].RCSkeyMode) {
-                    if (!GetAsyncKeyState(config->aimbot[weaponIndex].RCSkey))
+                    if (!GetAsyncKeyState(config->aimbot[weaponIndex].RCSkey)) {
                         return;
+                    }
                 }
                 else {
                     static bool toggle = true;
@@ -281,18 +282,21 @@ void Aimbot::run(UserCmd* cmd) noexcept
                         return;
                 }
             }
+          
+            
+            setRandomSeed(*memory->predictionRandomSeed);
+            Vector currentPunch{ lastAimPunch.x - aimPunch.x, lastAimPunch.y - aimPunch.y, 0 };  
 
-            static Vector lastAimPunch{ };
-            if (localPlayer->getShotsFired() > config->aimbot[weaponIndex].shotsFired) {
-                setRandomSeed(*memory->predictionRandomSeed);
-                Vector currentPunch{ lastAimPunch.x - aimPunch.x, lastAimPunch.y - aimPunch.y, 0 };
-                
-
-                currentPunch.x *= config->aimbot[weaponIndex].recoilControlX;
-                currentPunch.y *= config->aimbot[weaponIndex].recoilControlY;
-
-                cmd->viewangles += currentPunch;
+            currentPunch.x *= config->aimbot[weaponIndex].recoilControlX;
+            currentPunch.y *= config->aimbot[weaponIndex].recoilControlY;
+			
+            if (fabsf(currentPunch.x) > 10.0 || fabsf(currentPunch.y) > 10.0) {
+                currentPunch.x = 0;
+                currentPunch.y = 0;
             }
+		
+            cmd->viewangles += currentPunch;
+            
             interfaces->engine->setViewAngles(cmd->viewangles);
             lastAimPunch = aimPunch;
         }
@@ -316,7 +320,7 @@ void Aimbot::run(UserCmd* cmd) noexcept
         auto boneList = config->aimbot[weaponIndex].bone == 1 ? std::initializer_list{ 8, 4, 3, 7, 6, 5 } : std::initializer_list{ 8, 7, 6, 5, 4, 3 };
 
         for (const auto& target : enemies)
-        {
+        {            
             const auto entity = interfaces->entityList->getEntity(target.id);
 
             for (auto bone : boneList) {

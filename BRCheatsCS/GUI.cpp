@@ -416,7 +416,6 @@ void GUI::renderAimbotWindow(bool contentOnly) noexcept
         ImGui::Combo(" ", &config->aimbot[currentWeapon].RCSkeyMode, XorString("Hold\0Toggle\0"));
         ImGui::PopItemWidth();
         ImGui::PopID();
-        ImGui::InputInt(phrases[XorString("aimbot_ignoreshots")].c_str(), &config->aimbot[currentWeapon].shotsFired);
         ImGui::SliderFloat(phrases[XorString("aimbot_rcs_x")].c_str(), &config->aimbot[currentWeapon].recoilControlX, 0.0f, 1.0f, "%.5f");
         ImGui::SliderFloat(phrases[XorString("aimbot_rcs_y")].c_str(), &config->aimbot[currentWeapon].recoilControlY, 0.0f, 1.0f, "%.5f");
     }
