@@ -1748,14 +1748,6 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
     ImGui::SameLine();
     hotkey(config->visuals.zoomKey);
 
-    ImGui::Checkbox(phrases[XorString("visuals_watermark")].c_str(), &config->misc.watermark);
-    if (config->misc.watermark) {
-        ImGui::SameLine();
-        ImGui::PushID(0);
-        ImGui::InputText("", &config->misc.watermarkString);
-        ImGui::PopID();
-    }
-
     ImGui::Checkbox(phrases[XorString("visuals_ragdollforce")].c_str(), &config->misc.ragdollForce);
     if (config->misc.ragdollForce) {
         ImGui::SameLine();
@@ -1806,12 +1798,6 @@ void GUI::renderVisualsWindow(bool contentOnly) noexcept
     ImGui::PopItemWidth();
     ImGui::Combo(phrases[XorString("visuals_hitmarker")].c_str(), &config->visuals.hitMarker, XorString("None\0Default (Cross)\0"));
     ImGui::SliderFloat(phrases[XorString("visuals_hitmarker_time")].c_str(), &config->visuals.hitMarkerTime, 0.1f, 1.5f, XorString("%.2fs"));
-    ImGui::Checkbox(phrases[XorString("visuals_indicators")].c_str(), &config->visuals.indicatorsEnabled);
-    ImGui::SameLine();
-    ImGui::PushID(8);
-    ImGui::SetNextItemWidth(175.0f);
-    ImGuiCustom::MultiCombo("", config->visuals.indicators, config->visuals.selectedIndicators, 5);
-    ImGui::PopID();
     ImGui::Checkbox(phrases[XorString("visuals_rainbowcrosshair")].c_str(), &config->visuals.rainbowCrosshair);
     ImGui::SameLine();
     ImGui::PushItemWidth(100.0f);
@@ -1834,42 +1820,10 @@ void GUI::renderWorldWindow(bool contentOnly) noexcept
         ImGui::SetNextWindowSize({700.0f, 0.0f});
         ImGui::Begin(phrases[XorString("window_world")].c_str(), &window.world, windowFlags);
     }
-    ImGui::Columns(2);
+    ImGui::Columns(1);
     ImGui::Combo(phrases[XorString("visuals_skybox")].c_str(), &config->visuals.skybox, Helpers::skyboxList.data(), Helpers::skyboxList.size());
     ImGuiCustom::colorPicker(phrases[XorString("visuals_worldcolor")].c_str(), config->visuals.world);
     ImGuiCustom::colorPicker(phrases[XorString("visuals_skycolor")].c_str(), config->visuals.sky);
-
-    /*
-    ImGui::Checkbox(phrases[XorString("visuals_nightmode")].c_str(), &config->visuals.nightMode);
-    ImGui::Checkbox(phrases[XorString("visuals_asuswalls")].c_str(), &config->visuals.asusWalls);
-    */
-    ImGui::NextColumn();
-    ImGui::Checkbox(phrases[XorString("visuals_colorcorrection")].c_str(), &config->visuals.colorCorrection.enabled);
-    ImGui::SameLine();
-    bool ccPopup = ImGui::Button(phrases[XorString("global_edit")].c_str());
-    if (ccPopup)
-        ImGui::OpenPopup(XorString("##popup"));
-
-    if (ImGui::BeginPopup(XorString("##popup")))
-    {
-        ImGui::VSliderFloat(XorString("##1"), {40.0f, 160.0f}, &config->visuals.colorCorrection.blue, 0.0f, 1.0f, XorString("Blue\n%.3f"));
-        ImGui::SameLine();
-        ImGui::VSliderFloat(XorString("##2"), {40.0f, 160.0f}, &config->visuals.colorCorrection.red, 0.0f, 1.0f, XorString("Red\n%.3f"));
-        ImGui::SameLine();
-        ImGui::VSliderFloat(XorString("##3"), {40.0f, 160.0f}, &config->visuals.colorCorrection.mono, 0.0f, 1.0f, XorString("Mono\n%.3f"));
-        ImGui::SameLine();
-        ImGui::VSliderFloat(XorString("##4"), {40.0f, 160.0f}, &config->visuals.colorCorrection.saturation, 0.0f, 1.0f, XorString("Sat\n%.3f"));
-        ImGui::SameLine();
-        ImGui::VSliderFloat(XorString("##5"), {40.0f, 160.0f}, &config->visuals.colorCorrection.ghost, 0.0f, 1.0f, XorString("Ghost\n%.3f"));
-        ImGui::SameLine();
-        ImGui::VSliderFloat(XorString("##6"), {40.0f, 160.0f}, &config->visuals.colorCorrection.green, 0.0f, 1.0f, XorString("Green\n%.3f"));
-        ImGui::SameLine();
-        ImGui::VSliderFloat(XorString("##7"), {40.0f, 160.0f}, &config->visuals.colorCorrection.yellow, 0.0f, 1.0f, XorString("Yellow\n%.3f"));
-        ImGui::SameLine();
-        ImGui::EndPopup();
-    }
-
-    ImGui::Columns(1);
 
     if (!contentOnly)
         ImGui::End();

@@ -41,7 +41,7 @@
 
 item_setting* get_by_definition_index(WeaponId weaponId)
 {
-    const auto it = std::find_if(config->skinChanger.begin(), config->skinChanger.end(), [weaponId](const item_setting& e) { return e.enabled && e.itemId == weaponId; });
+    const auto it = std::find_if(config->skinChanger.begin(), config->skinChanger.end(), [weaponId](const item_setting& e) { return e.itemId == weaponId; });
     return it == config->skinChanger.end() ? nullptr : &*it;
 }
 
